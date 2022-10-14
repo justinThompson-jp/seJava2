@@ -25,3 +25,10 @@ hs_err_pid*
 # Eclispe folders
 .settings/
 bin/
+<<<<<<< HEAD
+=======
+test/
+
+# Eclispe files/folders
+.settings/
+>>>>>>> e4059ea83fb3f86562bc8c8c200b7113d2cdaec9
