@@ -40,7 +40,7 @@ public class MoveFile {
 	// dummy main for testing movement
 	public static void main(String[] args) {
 
-		MoveFile test = new MoveFile("test.txt","testfolder1","testfolder2");
+		MoveFile test = new MoveFile("test.txt","test/testfolder1","test/testfolder2");
 		test = null;
 	}
 }
