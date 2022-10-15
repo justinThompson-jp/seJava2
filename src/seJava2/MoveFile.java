@@ -24,17 +24,25 @@ public class MoveFile {
 	* Currently prints error message if target directory doesn't<br>
 	*  exist or if duplicate file name is detected
 	* 
-	* @param  String _file_name&ensp;-The name of the file to be moved
-	* @param  String _old_path&emsp;- The file's current relative directory path
-	* @param  String _new_path&ensp;- The file's target relative directory path 
+	* @param  String _file_name - The name of the file to be moved
+	* @param  String _old_path - The file's current relative directory path
+	* @param  String _new_path - The file's target relative directory path 
 	* @return none
 	*/
 	private MoveFile(String _file_name, String _old_path, String _new_path) {
 		// new_path variable used to check if folder exists
-		new_path = _new_path;
-		old_loc = Paths.get(_old_path + "/" + _file_name);
-		new_loc = Paths.get(new_path + "/" +_file_name);
+		this.new_path = _new_path;
+		this.old_loc = Paths.get(_old_path + "/" + _file_name);
+		this.new_loc = Paths.get(new_path + "/" +_file_name);
 		Move();
+	}
+	
+	// Getter method(s)
+	// this should be the only needed getter method
+	// if we create the function to create a new folder when the target folder
+	// doesn't exist this can be used to get the new folder's name/path
+	public String getNewPath() {
+		return this.new_path;
 	}
 	
 	/*	
@@ -53,7 +61,7 @@ public class MoveFile {
 	 *				Rename file being moved
 	 *				Cancel move
 	*/
-	public void Move() {
+	private void Move() {
 		try {
 			// check if destination folder exists before trying to perform the move
 			if(Files.exists(Paths.get(new_path))) {
@@ -82,7 +90,6 @@ public class MoveFile {
 	
 	// dummy main for testing movement
 	public static void main(String[] args) {
-
 		//MoveFile test = new MoveFile("test.txt","bin/testfolder1","bin/testfolder2");
 		//test = null;
 	}
