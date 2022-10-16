@@ -5,11 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/*
- *	Connoisseur / seJava2
- *	CS4800 Software Engineering
- *	Author: Jacob Crawford
- */
 public class MoveFile {
 	private Path curr_path, target_path;
 	private String target_dir;
@@ -30,6 +25,7 @@ public class MoveFile {
 	 * @param String _target_dir - The file's target directory path
 	 * @author Jacob Crawford
 	 */
+	// TODO this could be refactored to take File objects as inputs
 	private MoveFile(String _curr_dir, String _target_dir, String _file_name) {
 		// new_path variable used to check if folder exists
 		this.target_dir = _target_dir;
@@ -83,11 +79,11 @@ public class MoveFile {
 						Files.move(curr_path, target_path);
 						// if a duplicate fileName exists, then print an error message(for now)
 					} else {
-						System.out.println("ERR: Duplicate file name in target folder, move aborted");
+						System.out.println("ERR: Duplicate file name in target directory, move aborted");
 					}
 					// if destination folder doesn't exist, then print an error message(for now)
 				} else {
-					System.out.println("ERR: Target folder not found, move aborted");
+					System.out.println("ERR: Target directory not found, move aborted");
 				}
 			// if file to be moved doesn't exist, then print an error message
 			} else {

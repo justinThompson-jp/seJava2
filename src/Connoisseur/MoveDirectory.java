@@ -5,11 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/*
- *	Connoisseur / seJava2
- *	CS4800 Software Engineering
- *	Author: Jacob Crawford
- */
 public class MoveDirectory {
 	private Path curr_path, target_path;
 	private String target_dir;
@@ -29,6 +24,7 @@ public class MoveDirectory {
 	 * @param String _target_dir - The file's target directory path
 	 * @author Jacob Crawford
 	 */
+	// TODO this could be refactored to take File objects as inputs
 	private MoveDirectory(String curr_dir, String _target_dir) {
 		this.target_dir = _target_dir;
 		this.curr_path = Paths.get(curr_dir);
@@ -37,7 +33,7 @@ public class MoveDirectory {
 		 * _new_path in order to move the old directory into
 		 * the new one
 		 */ 
-		this.target_path = Paths.get(_target_dir + pluckDirectory(curr_dir));
+		this.target_path = Paths.get(_target_dir + curr_path.getFileName());
 		move();
 	}
 
@@ -87,15 +83,15 @@ public class MoveDirectory {
 						Files.move(curr_path, target_path);
 					// if a duplicate filename exists, then print an error message(for now)
 					} else {
-						
+						System.out.println("ERR: Duplicate directory name in target directory, move aborted");
 					}
 				// if destination folder doesn't exist, then print an error message(for now)
 				} else {
-					
+					System.out.println("ERR: Target directory not found, move aborted");					
 				}
 			// if directory to be moved doesn't exist, then print an error message
 			} else {
-				
+				System.out.println("ERR: Selected directory not found");
 			}
 		} catch (IOException e) {
 			System.out.println("ERR: MoveDirectory failed");
@@ -103,29 +99,12 @@ public class MoveDirectory {
 		}
 	}
 
-	/*
-	 * Parses through _path String to pluck last directory name Used with
-	 * MoveDirectory method
-	 */
-	private String pluckDirectory(String _dir) {
-		String result = "";
-		/*
-		 * iterates backwards through the string starting just before the last character
-		 * upon finding the index of the next instance of '/' creates a substring
-		 * starting there and saves it to result
-		 */
-		for (int index = _dir.length() - 1; index >= 0; index--) {
-			if (_dir.charAt(index) == '/') {
-				result = _dir.substring(index + 1);
-			}
-		}
-
-		return result;
-	}
-
 	// dummy main for testing directory movement
 	public static void main(String[] args) {
-		// MoveDirectory test = new MoveDirectory("bin/testfolder1/","bin/testfolder2/");
-		// test = null;
+		 MoveDirectory test = new MoveDirectory("bin/testfolder1/","bin/testfolder2/");
+		 test = null;
+
+		//Path test = Paths.get("bin/testfolder1/");
+		//System.out.println(test.getFileName());
 	}
 }
