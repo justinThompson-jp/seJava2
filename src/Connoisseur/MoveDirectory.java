@@ -101,10 +101,8 @@ public class MoveDirectory {
 
 	// dummy main for testing directory movement
 	public static void main(String[] args) {
-		 MoveDirectory test = new MoveDirectory("bin/testfolder1/","bin/testfolder2/");
-		 test = null;
+		//MoveDirectory test = new MoveDirectory("../seJava2/bin/testfolder1/","bin/testfolder2/");
+		//test = null;
 
-		//Path test = Paths.get("bin/testfolder1/");
-		//System.out.println(test.getFileName());
 	}
 }
