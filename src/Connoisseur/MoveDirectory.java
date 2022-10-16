@@ -8,11 +8,11 @@ import java.nio.file.Paths;
 /*
  *	Connoisseur / seJava2
  *	CS4800 Software Engineering
- *
+ *	Author: Jacob Crawford
  */
 public class MoveDirectory {
-	private Path old_dir, target_dir;
-	private String target_path;
+	private Path curr_path, target_path;
+	private String target_dir;
 
 	/**
 	 * The object will take String parameters to create directory<br>
@@ -27,53 +27,78 @@ public class MoveDirectory {
 	 * 
 	 * @param String _old_dir - The file's current directory path
 	 * @param String _target_dir - The file's target directory path
-	 * @return none
+	 * @author Jacob Crawford
 	 */
-	private MoveDirectory(String _old_dir, String _target_dir) {
-		this.target_path = _target_dir;
-		this.old_dir = Paths.get(_old_dir);
+	private MoveDirectory(String curr_dir, String _target_dir) {
+		this.target_dir = _target_dir;
+		this.curr_path = Paths.get(curr_dir);
 		/*
 		 * appends the final directory from _old_path onto
 		 * _new_path in order to move the old directory into
 		 * the new one
 		 */ 
-		this.target_dir = Paths.get(_target_dir + pluckDirectory(_old_dir));
+		this.target_path = Paths.get(_target_dir + pluckDirectory(curr_dir));
 		move();
 	}
 
 	/*
-	 * Getter method(s)
-	 * this should be the only needed getter method
-	 * if we create the functionality to create a new folder when
-	 * the target folder doesn't exist this can be used to get the
-	 * new folder's name/path
+	 *	Getter method(s)
+	 *		This should be the only needed getter method
+	 *		If/when we create the functionality to create a new folder
+	 *		when the target folder doesn't exist this can be used to
+	 *		get the new folder's name/path
 	 */
-	public String getNewPath() {
-		return this.target_path;
+	public String getTargetDirectory() {
+		return this.target_dir;
 	}
 	
 	/*
-	 * Setter Method(s)
-	 * Not needed, object should only exist long enough
-	 * to move the file or to error out, the private
-	 * variables should not be altered/alterable
+	 *	Setter Method(s)
+	 *		Not needed, object should only exist long enough
+	 *		to move the file or to error out, the private
+	 *		variables should not be altered/alterable
 	 */
 
 	/*
-	 * Moves DIRECTORY from old location into the specified directory Outputs error
-	 * text if duplicate directory name exists destination directory does not exist
+	 *	Moves DIRECTORY from old location into the specified directory
+	 * 		Outputs error text if:
+	 * 			directory to be moved does not exist
+	 * 			destination directory does not exist
+	 * 			duplicate directory name exists
 	 * 
-	 * TODO handling of edge cases
-	 *		i.e target directory doesn't exist
-	 *			duplicate directory names
-	 *			destination folder does not exist
-	 *			etc...
+	 *	Later features/ideas:
+	 * 		If destination folder doesn't exist,
+	 * 			Then prompt user if they want to create new folder or cancel move
+	 *		If duplicate folder name exist in destination folder
+	 *			Then prompt user to either
+	 *				Overwrite existing directory
+	 *				Rename Directory being moved
+	 *				Merge Directories, possibly overwriting/renaming duplicate files within
+	 *				Cancel move
 	 */
 	private void move() {
 		try {
-			Files.move(old_dir, target_dir);
+			// check if directory to be moved exists
+			if (Files.exists(curr_path)) {
+				// check if destination folder exists
+				if (Files.exists(Paths.get(target_dir))) {
+					// check for duplicate directory name in destination folder
+					if (Files.notExists(target_path)) {
+						Files.move(curr_path, target_path);
+					// if a duplicate filename exists, then print an error message(for now)
+					} else {
+						
+					}
+				// if destination folder doesn't exist, then print an error message(for now)
+				} else {
+					
+				}
+			// if directory to be moved doesn't exist, then print an error message
+			} else {
+				
+			}
 		} catch (IOException e) {
-			System.out.println("Move Directory Failed");
+			System.out.println("ERR: MoveDirectory failed");
 			e.printStackTrace();
 		}
 	}
