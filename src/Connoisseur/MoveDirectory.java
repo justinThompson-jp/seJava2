@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MoveDirectory {
-	private Path curr_path, target_path;
+	private Path curr_start_path, target_end_path;
 	private String target_dir;
 
 	/**
@@ -20,20 +20,20 @@ public class MoveDirectory {
 	 * Currently prints error message if target directory doesn't<br>
 	 * exist or if duplicate file name is detected
 	 * 
-	 * @param String _old_dir - The file's current directory path
-	 * @param String _target_dir - The file's target directory path
+	 * @param String _curr_dir_path - The directory's current path
+	 * @param String _target_dir_path - The path of the destination directory
 	 * @author Jacob Crawford
 	 */
 	// TODO this could be refactored to take File objects as inputs
-	private MoveDirectory(String curr_dir, String _target_dir) {
-		this.target_dir = _target_dir;
-		this.curr_path = Paths.get(curr_dir);
+	private MoveDirectory(String curr_dir_path, String _target_dir_path) {
+		this.target_dir = _target_dir_path;
+		this.curr_start_path = Paths.get(curr_dir_path);
 		/*
 		 * appends the final directory from _old_path onto
 		 * _new_path in order to move the old directory into
 		 * the new one
 		 */ 
-		this.target_path = Paths.get(_target_dir + curr_path.getFileName());
+		this.target_end_path = Paths.get(_target_dir_path + curr_start_path.getFileName());
 		move();
 	}
 
@@ -75,13 +75,13 @@ public class MoveDirectory {
 	private void move() {
 		try {
 			// check if directory to be moved exists
-			if (Files.exists(curr_path)) {
+			if (Files.exists(curr_start_path)) {
 				// check if destination folder exists
 				if (Files.exists(Paths.get(target_dir))) {
 					// check for duplicate directory name in destination folder
-					if (Files.notExists(target_path)) {
-						Files.move(curr_path, target_path);
-					// if a duplicate filename exists, then print an error message(for now)
+					if (Files.notExists(target_end_path)) {
+						Files.move(curr_start_path, target_end_path);
+					// if a duplicate directory name exists, then print an error message(for now)
 					} else {
 						System.out.println("ERR: Duplicate directory name in target directory, move aborted");
 					}
@@ -101,8 +101,8 @@ public class MoveDirectory {
 
 	// dummy main for testing directory movement
 	public static void main(String[] args) {
-		//MoveDirectory test = new MoveDirectory("../seJava2/bin/testfolder1/","bin/testfolder2/");
-		//test = null;
+		// MoveDirectory test = new MoveDirectory("../seJava2/bin/testfolder1/","bin/testfolder2/");
+		// test = null;
 
 	}
 }

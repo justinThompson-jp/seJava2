@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MoveFile {
-	private Path curr_path, target_path;
+	private Path curr_start_path, target_end_path;
 	private String target_dir;
 	
 	/**
@@ -20,17 +20,16 @@ public class MoveFile {
 	 * Currently prints error message if target directory doesn't<br>
 	 * exist or if duplicate file name is detected
 	 * 
-	 * @param String _file_name - The name of the file to be moved
-	 * @param String _old_dir - The file's current directory path
-	 * @param String _target_dir - The file's target directory path
+	 * @param String _curr_file_path - The file's current directory path, including the name.ext
+	 * @param String _target_dir_path - The path of the destination directory
 	 * @author Jacob Crawford
 	 */
 	// TODO this could be refactored to take File objects as inputs
-	private MoveFile(String _curr_dir, String _target_dir, String _file_name) {
+	private MoveFile(String _curr_file_path, String _target_dir_path) {
 		// new_path variable used to check if folder exists
-		this.target_dir = _target_dir;
-		this.curr_path	= Paths.get(_curr_dir + _file_name);
-		this.target_path = Paths.get(_target_dir + _file_name);
+		this.target_dir = _target_dir_path;
+		this.curr_start_path = Paths.get(_curr_file_path);
+		this.target_end_path = Paths.get(_target_dir_path + curr_start_path.getFileName());
 		move();
 	}
 
@@ -71,12 +70,12 @@ public class MoveFile {
 	private void move() {
 		try {
 			// check if file to be moved exists
-			if (Files.exists(curr_path)) {
+			if (Files.exists(curr_start_path)) {
 				// check if destination folder exists
 				if (Files.exists(Paths.get(target_dir))) {
 					// check for duplicate file name in destination folder
-					if (Files.notExists(target_path)) {
-						Files.move(curr_path, target_path);
+					if (Files.notExists(target_end_path)) {
+						Files.move(curr_start_path, target_end_path);
 						// if a duplicate fileName exists, then print an error message(for now)
 					} else {
 						System.out.println("ERR: Duplicate file name in target directory, move aborted");
@@ -97,7 +96,7 @@ public class MoveFile {
 
 	// dummy main for testing file movement
 	public static void main(String[] args) {
-		// MoveFile test = new MoveFile("bin/testfolder1/","bin/testfolder2/","test.txt");
-		// test = null;
+		//MoveFile test = new MoveFile("bin/testfolder1/test.txt","bin/testfolder2/");
+		//test = null;
 	}
 }
