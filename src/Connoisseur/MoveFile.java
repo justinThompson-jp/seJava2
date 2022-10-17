@@ -76,6 +76,7 @@ public class MoveFile {
 					// check for duplicate file name in destination folder
 					if (Files.notExists(target_end_path)) {
 						Files.move(curr_start_path, target_end_path);
+						System.out.println("Successfully moved " + curr_start_path + " to " + target_end_path);
 						// if a duplicate fileName exists, then print an error message(for now)
 					} else {
 						System.out.println("ERR: Duplicate file name in target directory, move aborted");
@@ -96,7 +97,7 @@ public class MoveFile {
 
 	// dummy main for testing file movement
 	public static void main(String[] args) {
-		//MoveFile test = new MoveFile("bin/testfolder1/test.txt","bin/testfolder2/");
-		//test = null;
+		// MoveFile test = new MoveFile("D:\\Users\\jdcra\\Documents\\School\\FALL2022\\CS4800\\seJava2\\bin\\testfolder1\\test.txt","bin/testfolder2/");
+		// test = null;
 	}
 }
