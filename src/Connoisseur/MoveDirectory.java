@@ -74,31 +74,37 @@ public class MoveDirectory {
 	 */
 	private void move() {
 		try {
-			// check if directory to be moved exists
-			if (Files.exists(curr_start_path)) {
-				// check if destination folder exists
-				if (Files.exists(Paths.get(target_dir))) {
-					// check for duplicate directory name in destination folder
-					if (Files.notExists(target_end_path)) {
-						Files.move(curr_start_path, target_end_path);
-						System.out.println("Successfully moved " + curr_start_path + " to " + target_end_path);
-					// if a duplicate directory name exists, then print an error message(for now)
-					} else {
-						System.out.println("ERR: Duplicate directory name in target directory, move aborted");
-					}
-				// if destination folder doesn't exist, then print an error message(for now)
-				} else {
-					System.out.println("ERR: Target directory not found, move aborted");					
-				}
 			// if directory to be moved doesn't exist, then print an error message
-			} else {
+			if (Files.exists(curr_start_path)) {
 				System.out.println("ERR: Selected directory not found");
+				return;
 			}
+			// if destination folder doesn't exist, then print an error message(for now)
+			if (Files.exists(Paths.get(target_dir))) {
+				System.out.println("ERR: Target directory not found, move aborted");
+				return;
+			}
+			// if a duplicate directory name exists, then print an error message(for now)
+			if (Files.exists(target_end_path)) {
+				//promptMergeDirectory();
+				System.out.println("ERR: Duplicate directory name in target directory, move aborted");
+				return;
+			}
+			Files.move(curr_start_path, target_end_path);
+			System.out.println("Successfully moved " + curr_start_path + " to " + target_end_path);
+			
 		} catch (IOException e) {
 			System.out.println("ERR: MoveDirectory failed");
 			e.printStackTrace();
 		}
 	}
+
+	/*	send request to UI layer to display window asking if User want to merge directories
+	 *	if yes, then iterate through contents of curr_start_path and move them to target_end_path
+	 *		if another duplicate directory is encountered prompt user again(undecided)
+	 *	if no, then cancel move
+	*/
+	public void promptMergeDirectory() {}
 
 	// dummy main for testing directory movement
 	public static void main(String[] args) {

@@ -69,31 +69,36 @@ public class MoveFile {
 	 */
 	private void move() {
 		try {
-			// check if file to be moved exists
-			if (Files.exists(curr_start_path)) {
-				// check if destination folder exists
-				if (Files.exists(Paths.get(target_dir))) {
-					// check for duplicate file name in destination folder
-					if (Files.notExists(target_end_path)) {
-						Files.move(curr_start_path, target_end_path);
-						System.out.println("Successfully moved " + curr_start_path + " to " + target_end_path);
-						// if a duplicate fileName exists, then print an error message(for now)
-					} else {
-						System.out.println("ERR: Duplicate file name in target directory, move aborted");
-					}
-					// if destination folder doesn't exist, then print an error message(for now)
-				} else {
-					System.out.println("ERR: Target directory not found, move aborted");
-				}
 			// if file to be moved doesn't exist, then print an error message
-			} else {
+			if (Files.notExists(curr_start_path)) {
 				System.out.println("ERR: Selected file not found, move aborted");
+				return;
 			}
+			// if destination folder doesn't exist, then print an error message(for now)
+			if (Files.notExists(Paths.get(target_dir))) {
+				System.out.println("ERR: Target directory not found, move aborted");
+				return;
+			}
+			// if a duplicate fileName exists in directory, then print an error message(for now)
+			if (Files.exists(target_end_path)) {
+				//promptOverwrite();
+				System.out.println("ERR: Duplicate file name in target directory, move aborted");
+				return;
+			}
+			Files.move(curr_start_path, target_end_path);
+			System.out.println("Successfully moved " + curr_start_path + " to " + target_end_path);
+			
 		} catch (IOException e) {
 			System.out.println("ERR: MoveFile failed");
 			e.printStackTrace();
 		}
 	}
+
+	/*	send request to UI layer to display window asking if User want to overwrite duplicate file in target directory
+	 *	if yes, then Files.move(curr_start_path, target_end_path, REPLACE_EXISTING);
+	 *	if no, then cancel move
+	*/
+	public void promptOverwrite() {}
 
 	// dummy main for testing file movement
 	public static void main(String[] args) {
