@@ -1,5 +1,10 @@
 package Connoisseur;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class FileManager {
 
 	private static final String SP = File.separator;
