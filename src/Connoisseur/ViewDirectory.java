@@ -1,4 +1,4 @@
-package view;
+package Connoisseur;
 
 import java.util.Scanner;
 import java.io.*;
