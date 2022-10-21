@@ -1,4 +1,4 @@
-package view;
+package Connoisseur;
 
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
