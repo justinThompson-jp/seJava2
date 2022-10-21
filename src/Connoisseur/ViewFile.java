@@ -1,5 +1,7 @@
 package Connoisseur;
 
+/* Source: https://stackoverflow.com/questions/16952727/how-to-use-readattributes-method */
+
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Scanner;

@@ -1,5 +1,8 @@
 package Connoisseur;
 
+/* Source: pathnames class from 
+			https://stackabuse.com/java-list-files-in-a-directory/ */
+
 import java.util.Scanner;
 import java.io.*;
 
