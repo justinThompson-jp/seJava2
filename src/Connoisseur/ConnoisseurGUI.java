@@ -3,10 +3,8 @@ package Connoisseur;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JDesktopPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
-import javax.swing.JMenuBar;
 import javax.swing.JSplitPane;
 import javax.swing.JPanel;
 
