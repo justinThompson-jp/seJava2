@@ -25,9 +25,9 @@ public class MoveDirectory {
 	 * @author Jacob Crawford
 	 */
 	// TODO this could be refactored to take File objects as inputs
-	private MoveDirectory(String curr_dir_path, String _target_dir_path) {
+	private MoveDirectory(String _curr_dir_path, String _target_dir_path) {
 		this.target_dir = _target_dir_path;
-		this.curr_start_path = Paths.get(curr_dir_path);
+		this.curr_start_path = Paths.get(_curr_dir_path);
 		/*
 		 * appends the final directory from _old_path onto
 		 * _new_path in order to move the old directory into
@@ -47,13 +47,29 @@ public class MoveDirectory {
 	public String getTargetDirectory() {
 		return this.target_dir;
 	}
+	public Path getStartPath() {
+		return this.curr_start_path;
+	}
+	public Path getTargetPath() {
+		return this.target_end_path;
+	}
 	
 	/*
 	 *	Setter Method(s)
-	 *		Not needed, object should only exist long enough
+	 *		Should not need to be used, added just in case
+	 *		object should only exist long enough
 	 *		to move the file or to error out, the private
 	 *		variables should not be altered/alterable
 	 */
+	public void setTargetDirectory(String _target_dir) {
+		this.target_dir = _target_dir;
+	}
+	public void setStartPath(String _curr_dir_path) {
+		this.curr_start_path = Paths.get(_curr_dir_path);
+	}
+	public void setEndPath(String _target_end_path) {
+		this.target_end_path = Paths.get(_target_end_path);
+	}
 
 	/*
 	 *	Moves DIRECTORY from old location into the specified directory
@@ -86,8 +102,9 @@ public class MoveDirectory {
 			}
 			// if a duplicate directory name exists, then print an error message(for now)
 			if (Files.exists(target_end_path)) {
-				//promptMergeDirectory();
-				System.out.println("ERR: Duplicate directory name in target directory, move aborted");
+				// for now lets just assume yes merge
+				promptMergeDirectory();
+				//System.out.println("ERR: Duplicate directory name in target directory, move aborted");
 				return;
 			}
 			Files.move(curr_start_path, target_end_path);
@@ -99,17 +116,22 @@ public class MoveDirectory {
 		}
 	}
 
-	/*	send request to UI layer to display window asking if User want to merge directories
+	/*	
+	 *	Send request to UI layer to display window asking if User want to merge directories
 	 *	if yes, then iterate through contents of curr_start_path and move them to target_end_path
 	 *		if another duplicate directory is encountered prompt user again(undecided)
 	 *	if no, then cancel move
 	*/
-	public void promptMergeDirectory() {}
+	public void promptMergeDirectory() {
+		// create a list of all the contents of the directory
+	}
 
 	// dummy main for testing directory movement
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// MoveDirectory test = new MoveDirectory("D:\\Users\\jdcra\\Documents\\School\\FALL2022\\CS4800\\seJava2\\bin\\testfolder1","bin/testfolder2/");
 		// test = null;
-
+		
+		
+		
 	}
 }

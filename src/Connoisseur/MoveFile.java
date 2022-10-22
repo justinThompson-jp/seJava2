@@ -43,13 +43,29 @@ public class MoveFile {
 	public String getTargetDirectory() {
 		return this.target_dir;
 	}
-
+	public Path getStartPath() {
+		return this.curr_start_path;
+	}
+	public Path getTargetPath() {
+		return this.target_end_path;
+	}
+	
 	/*
 	 *	Setter Method(s)
-	 *		Not needed, object should only exist long enough
+	 *		Should not need to be used, added just in case
+	 *		object should only exist long enough
 	 *		to move the file or to error out, the private
 	 *		variables should not be altered/alterable
 	 */
+	public void setTargetDirectory(String _target_dir) {
+		this.target_dir = _target_dir;
+	}
+	public void setStartPath(String _curr_dir_path) {
+		this.curr_start_path = Paths.get(_curr_dir_path);
+	}
+	public void setEndPath(String _target_end_path) {
+		this.target_end_path = Paths.get(_target_end_path);
+	}
 
 	/*
 	 *	Moves FILE from old directory to new directory
@@ -94,7 +110,8 @@ public class MoveFile {
 		}
 	}
 
-	/*	send request to UI layer to display window asking if User want to overwrite duplicate file in target directory
+	/*	
+	 *	Send request to UI layer to display window asking if User want to overwrite duplicate file in target directory
 	 *	if yes, then Files.move(curr_start_path, target_end_path, REPLACE_EXISTING);
 	 *	if no, then cancel move
 	*/
