@@ -9,6 +9,7 @@ public class MoveFile {
 	private Path curr_start_path, target_end_path;
 	private String target_dir;
 	
+	// Constructor(s)
 	/**
 	 * The object will take String parameters to create directory<br>
 	 * paths of the specified file's current and the target directory.
@@ -22,6 +23,9 @@ public class MoveFile {
 	 * 
 	 * @param String _curr_file_path - The file's current directory path, including the name.ext
 	 * @param String _target_dir_path - The path of the destination directory
+	 * @exception ErrorMessage if target file is not found
+	 * @exception ErrorMessage if destination directory is not found
+	 * @exception ErrorMessage if duplicate file is found in destination directory<br>Later to be changed to prompt to GUI
 	 * @author Jacob Crawford
 	 */
 	// Idea this could be refactored to take File or Path objects as inputs
@@ -35,36 +39,30 @@ public class MoveFile {
 
 	/*
 	 *	Getter method(s)
-	 *		This should be the only needed getter method
-	 *		If/when we create the functionality to create a new folder
-	 *		when the target folder doesn't exist this can be used to
-	 *		get the new folder's name/path
+	 *		Should not need to be used, added just in case
 	 */
 	public String getTargetDirectory() {
 		return this.target_dir;
 	}
-	public Path getStartPath() {
-		return this.curr_start_path;
+	public String getStartPath() {
+		return this.curr_start_path.toString();
 	}
-	public Path getTargetPath() {
-		return this.target_end_path;
+	public String getTargetPath() {
+		return this.target_end_path.toString();
 	}
 	
 	/*
 	 *	Setter Method(s)
 	 *		Should not need to be used, added just in case
-	 *		object should only exist long enough
-	 *		to move the file or to error out, the private
-	 *		variables should not be altered/alterable
 	 */
-	public void setTargetDirectory(String _target_dir) {
-		this.target_dir = _target_dir;
+	public void setTargetDirectory(String _new_target_dir) {
+		this.target_dir = _new_target_dir;
 	}
-	public void setStartPath(String _curr_dir_path) {
-		this.curr_start_path = Paths.get(_curr_dir_path);
+	public void setStartPath(String _new_curr_dir_path) {
+		this.curr_start_path = Paths.get(_new_curr_dir_path);
 	}
-	public void setEndPath(String _target_end_path) {
-		this.target_end_path = Paths.get(_target_end_path);
+	public void setEndPath(String _new_target_end_path) {
+		this.target_end_path = Paths.get(_new_target_end_path);
 	}
 
 	/*
@@ -85,6 +83,8 @@ public class MoveFile {
 	 */
 	private void move() {
 		try {
+
+			System.out.println("Attempt Move " + curr_start_path.toString() + " to " + target_end_path.toString());
 			// if file to be moved doesn't exist, then print an error message
 			if (Files.notExists(curr_start_path)) {
 				System.out.println("ERR: Selected file not found, move aborted");
@@ -114,6 +114,8 @@ public class MoveFile {
 	 *	Send request to UI layer to display window asking if User want to overwrite duplicate file in target directory
 	 *	if yes, then Files.move(curr_start_path, target_end_path, REPLACE_EXISTING);
 	 *	if no, then cancel move
+	 *	TODO make it send message to GUI/UI with a popup, enclose working code in if-else or guard clause
+	 *	TODO write this method
 	*/
 	public void promptOverwrite() {}
 
