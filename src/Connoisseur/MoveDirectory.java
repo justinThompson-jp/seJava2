@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 
 public class MoveDirectory {
 	private Path curr_start_path, target_end_path;
-	private String target_dir;
 
 	// Constructor(s)
 	/**
@@ -28,9 +27,8 @@ public class MoveDirectory {
 	 * @exception ErrorMessage if destination directory is not found 
 	 * @author Jacob Crawford
 	 */
-	// Idea this could be refactored to take File or Path objects as inputs
 	public MoveDirectory(String _curr_dir_path, String _target_dir_path) {
-		this.target_dir = _target_dir_path;
+		// TODO convert input paths into absolute paths
 		this.curr_start_path = Paths.get(_curr_dir_path);
 		/*
 		 * appends the final directory from _old_path onto
@@ -40,14 +38,18 @@ public class MoveDirectory {
 		this.target_end_path = Paths.get(_target_dir_path + "\\" + curr_start_path.getFileName());
 		move();
 	}
+	// empty constructor
+	// use if you want to make multiple moves with the same object
+	public MoveDirectory() {
+		this.curr_start_path = null;
+		this.target_end_path = null;
+		// doesn't automatically run move() after assigning variables
+	}
 
 	/*
 	 *	Getter method(s)
 	 *		Should not need to be used, added just in case
 	 */
-	public String getTargetDirectory() {
-		return this.target_dir;
-	}
 	public String getStartPath() {
 		return this.curr_start_path.toString();
 	}
@@ -59,14 +61,15 @@ public class MoveDirectory {
 	 *	Setter Method(s)
 	 *		Should not need to be used, added just in case
 	 */
-	public void setTargetDirectory(String _new_target_dir) {
-		this.target_dir = _new_target_dir;
-	}
 	public void setStartPath(String _new_curr_dir_path) {
 		this.curr_start_path = Paths.get(_new_curr_dir_path);
 	}
 	public void setEndPath(String _new_target_end_path) {
-		this.target_end_path = Paths.get(_new_target_end_path);
+		if (this.curr_start_path != null) {
+			this.target_end_path = Paths.get(_new_target_end_path + "\\" + curr_start_path.getFileName());
+		} else {
+			System.out.println("ERR: You need to call setStartPath() before calling setEndPath()");
+		}
 	}
 
 	/*
@@ -88,15 +91,15 @@ public class MoveDirectory {
 	 */
 	private void move() {
 		try {
-			System.out.println("Attempt Move " + curr_start_path.toString() + " to " + target_end_path.toString());
+			System.out.println("Attempt Move " + curr_start_path + " to " + target_end_path);
 			// if directory to be moved doesn't exist, then print an error message
 			if (Files.notExists(curr_start_path)) {
-				System.out.println("ERR: " + curr_start_path.toString() + "  not found");
+				System.out.println("ERR: " + curr_start_path + "  not found");
 				return;
 			}
 			// if destination folder doesn't exist, then print an error message(for now)
-			if (Files.notExists(Paths.get(target_dir))) {
-				System.out.println("ERR: " + target_dir + "  not found, move aborted");
+			if (Files.notExists(target_end_path.getParent())) {
+				System.out.println("ERR: " + target_end_path.getParent() + "  not found, move aborted");
 				return;
 			}
 			// if a duplicate directory name exists, then print an error message(for now)
@@ -137,6 +140,7 @@ public class MoveDirectory {
         dir_contents = dir.list();
         
 		// iterate through the list, creating Path objects using the target_end_path appended with the current item on the list
+        // TODO use empty constructors for MoveDirectory and MoveFile to reduce number of object created
 		for (int i = 0; i < dir_contents.length; i++) {
 			String temp_curr = curr_start_path.toString() + "\\" + dir_contents[i];
 			String temp_dest = target_end_path.toString();
@@ -154,6 +158,8 @@ public class MoveDirectory {
 		}
 		// after loop is done moving all contents of curr_start_path to target_end_path, delete curr_start_path directory
 		DeleteDirectory cleanup = new DeleteDirectory(_old_dir.toString());
+		
+		// object cleanup  TODO set new reusable MoveFile and MoveDirectory to null here 
 		cleanup = null;
 	}
 
@@ -161,6 +167,9 @@ public class MoveDirectory {
 	public static void main(String[] args) throws IOException {
 		//MoveDirectory test = new MoveDirectory("bin/testfolder1","bin/testfolder2/");
 		//test = null;
+		
+		//Path test = Paths.get("D:/Users/jdcra/Documents/School/FALL2022/CS4800/seJava2/bin/testfolder1");
+		//System.out.println(test.getParent().getParent().getParent());
 				
 	}
 }

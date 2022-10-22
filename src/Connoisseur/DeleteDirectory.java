@@ -24,8 +24,15 @@ public class DeleteDirectory {
 	 * @author Jacob Crawford
 	 */
 	public DeleteDirectory(String _target_path) {
+		// TODO convert input paths into absolute paths
 		this.target_dir = Paths.get(_target_path);
 		delete();
+	}
+	// empty constructor
+	// use if you want to delete multiple directories with a single object
+	public DeleteDirectory() {
+		this.target_dir = null;
+		// doesn't automatically run delete() after assigning variables
 	}
 	
 	// Getter method(s)
@@ -41,11 +48,11 @@ public class DeleteDirectory {
 	private void delete() {
 		try {
 			if (Files.notExists(target_dir)) {
-				System.out.println("ERR: " + target_dir.toString() + " not found, delete aborted");
+				System.out.println("ERR: " + target_dir + " not found, delete aborted");
 				return;
 			}
 			Files.delete(target_dir);
-			System.out.println("Successfully deleted " + target_dir.toString());
+			System.out.println("Successfully deleted " + target_dir);
 		} catch (IOException e) {
 			System.out.println("ERR: DeleteDirectory failed");
 			e.printStackTrace();

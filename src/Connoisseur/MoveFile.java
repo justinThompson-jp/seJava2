@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 
 public class MoveFile {
 	private Path curr_start_path, target_end_path;
-	private String target_dir;
 	
 	// Constructor(s)
 	/**
@@ -28,22 +27,23 @@ public class MoveFile {
 	 * @exception ErrorMessage if duplicate file is found in destination directory<br>Later to be changed to prompt to GUI
 	 * @author Jacob Crawford
 	 */
-	// Idea this could be refactored to take File or Path objects as inputs
 	public MoveFile(String _curr_file_path, String _target_dir_path) {
-		// new_path variable used to check if folder exists
-		this.target_dir = _target_dir_path;
+		// TODO convert input paths into absolute paths
 		this.curr_start_path = Paths.get(_curr_file_path);
 		this.target_end_path = Paths.get(_target_dir_path + curr_start_path.getFileName());
 		move();
 	}
-
+	// empty constructor
+	// use if you want to make multiple moves with the same object
+	public MoveFile() {
+		this.curr_start_path = null;
+		this.target_end_path = null;
+		// doesn't automatically run move() after assigning variables
+	}
 	/*
 	 *	Getter method(s)
 	 *		Should not need to be used, added just in case
 	 */
-	public String getTargetDirectory() {
-		return this.target_dir;
-	}
 	public String getStartPath() {
 		return this.curr_start_path.toString();
 	}
@@ -55,9 +55,6 @@ public class MoveFile {
 	 *	Setter Method(s)
 	 *		Should not need to be used, added just in case
 	 */
-	public void setTargetDirectory(String _new_target_dir) {
-		this.target_dir = _new_target_dir;
-	}
 	public void setStartPath(String _new_curr_dir_path) {
 		this.curr_start_path = Paths.get(_new_curr_dir_path);
 	}
@@ -84,15 +81,15 @@ public class MoveFile {
 	private void move() {
 		try {
 
-			System.out.println("Attempt Move " + curr_start_path.toString() + " to " + target_end_path.toString());
+			System.out.println("Attempt Move " + curr_start_path + " to " + target_end_path);
 			// if file to be moved doesn't exist, then print an error message
 			if (Files.notExists(curr_start_path)) {
-				System.out.println("ERR: Selected file not found, move aborted");
+				System.out.println("ERR: " + curr_start_path + " not found, move aborted");
 				return;
 			}
 			// if destination folder doesn't exist, then print an error message(for now)
-			if (Files.notExists(Paths.get(target_dir))) {
-				System.out.println("ERR: Target directory not found, move aborted");
+			if (Files.notExists(target_end_path.getParent())) {
+				System.out.println("ERR: " + target_end_path.getParent() + " not found, move aborted");
 				return;
 			}
 			// if a duplicate fileName exists in directory, then print an error message(for now)
