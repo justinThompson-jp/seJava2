@@ -1,5 +1,6 @@
 package Connoisseur;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,8 +25,8 @@ public class MoveDirectory {
 	 * @param String _target_dir_path - The path of the destination directory
 	 * @author Jacob Crawford
 	 */
-	// TODO this could be refactored to take File objects as inputs
-	private MoveDirectory(String _curr_dir_path, String _target_dir_path) {
+	// Idea this could be refactored to take File or Path objects as inputs
+	public MoveDirectory(String _curr_dir_path, String _target_dir_path) {
 		this.target_dir = _target_dir_path;
 		this.curr_start_path = Paths.get(_curr_dir_path);
 		/*
@@ -103,7 +104,7 @@ public class MoveDirectory {
 			// if a duplicate directory name exists, then print an error message(for now)
 			if (Files.exists(target_end_path)) {
 				// for now lets just assume yes merge
-				promptMergeDirectory();
+				promptMergeDirectory(curr_start_path);
 				//System.out.println("ERR: Duplicate directory name in target directory, move aborted");
 				return;
 			}
@@ -122,16 +123,44 @@ public class MoveDirectory {
 	 *		if another duplicate directory is encountered prompt user again(undecided)
 	 *	if no, then cancel move
 	*/
-	public void promptMergeDirectory() {
+	public void promptMergeDirectory(Path _old_dir) {
 		// create a list of all the contents of the directory
+		// would prefer to do this by calling ViewDirectory class but that doesn't work currently
+		
+		// mostly copy pasted from ViewDirectory class
+		String[] dir_contents = null; // Creates an array in which we will store the names of files and directories
+
+        // Create new File instance by converting the given pathname string into an abstract pathname
+        File dir = new File(_old_dir.toString());
+        
+        // Populate array with names of files and directories
+        dir_contents = dir.list();
+		
+		// iterate through the list, creating Path objects using the target_end_path appended with the current item on the list
+		for (int i = 1; i < dir_contents.length; i++) {
+			String temp_curr = curr_start_path.toString() + "/" + dir_contents[i];
+			String temp_dest = target_end_path.toString();
+			
+			// check if temp_dest points to a directory
+			if (Files.isDirectory(Paths.get(temp_dest))) {
+				
+				MoveDirectory temp = new MoveDirectory(temp_curr, temp_dest + "/" + dir_contents[i]);
+				temp = null;
+			// else temp_dest must be pointing at a file
+			} else {
+				
+				MoveFile temp = new MoveFile(temp_curr, temp_dest);
+				temp = null;
+			}
+		}
+		// TODO after loop is done moving all contents of curr_start_path to target_end_path, delete curr_start_path directory
+		// TODO need to test if these even work properly
 	}
 
 	// dummy main for testing directory movement
 	public static void main(String[] args) throws IOException {
-		// MoveDirectory test = new MoveDirectory("D:\\Users\\jdcra\\Documents\\School\\FALL2022\\CS4800\\seJava2\\bin\\testfolder1","bin/testfolder2/");
+		// MoveDirectory test = new MoveDirectory("bin/testfolder1","bin/testfolder2/");
 		// test = null;
-		
-		
-		
+				
 	}
 }

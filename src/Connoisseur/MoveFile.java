@@ -24,8 +24,8 @@ public class MoveFile {
 	 * @param String _target_dir_path - The path of the destination directory
 	 * @author Jacob Crawford
 	 */
-	// TODO this could be refactored to take File objects as inputs
-	private MoveFile(String _curr_file_path, String _target_dir_path) {
+	// Idea this could be refactored to take File or Path objects as inputs
+	public MoveFile(String _curr_file_path, String _target_dir_path) {
 		// new_path variable used to check if folder exists
 		this.target_dir = _target_dir_path;
 		this.curr_start_path = Paths.get(_curr_file_path);
