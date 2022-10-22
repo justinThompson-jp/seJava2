@@ -89,7 +89,7 @@ public class MoveDirectory {
 	 *				Merge Directories, possibly overwriting/renaming duplicate files within
 	 *				Cancel move
 	 */
-	private void move() {
+	public void move() {
 		try {
 			System.out.println("Attempt Move " + curr_start_path + " to " + target_end_path);
 			// if directory to be moved doesn't exist, then print an error message
@@ -104,9 +104,7 @@ public class MoveDirectory {
 			}
 			// if a duplicate directory name exists, then print an error message(for now)
 			if (Files.exists(target_end_path)) {
-				// for now lets just assume yes merge
 				promptMergeDirectory(curr_start_path);
-				//System.out.println("ERR: Duplicate directory name in target directory, move aborted");
 				return;
 			}
 			Files.move(curr_start_path, target_end_path);
@@ -123,44 +121,55 @@ public class MoveDirectory {
 	 *	if yes, then iterate through contents of curr_start_path and move them to target_end_path
 	 *		if another duplicate directory is encountered prompt user again(undecided)
 	 *	if no, then cancel move
-	 *	TODO make it send message to GUI/UI with a popup, enclose working code in if-else or guard clause
 	*/
-	public void promptMergeDirectory(Path _old_dir) {
+	private void promptMergeDirectory(Path _old_dir) {
 		
-		/*
-		 * Would prefer to do this by calling ViewDirectory class but that doesn't work currently
-		 * ideally calling it with
-		 * ViewDirectory dir = new ViewDirectory(String path);
-		 * then String[] dir_contents = dir.listContents();
-		 * or something equivalent
-		*/
-		// create a list of all the contents of the directory
-		String[] dir_contents = null;
-        File dir = new File(_old_dir.toString());
-        dir_contents = dir.list();
-        
-		// iterate through the list, creating Path objects using the target_end_path appended with the current item on the list
-        // TODO use empty constructors for MoveDirectory and MoveFile to reduce number of object created
-		for (int i = 0; i < dir_contents.length; i++) {
-			String temp_curr = curr_start_path.toString() + "\\" + dir_contents[i];
-			String temp_dest = target_end_path.toString();
-			
-			// check if temp_dest points to a directory
-			if (Files.isDirectory(Paths.get(temp_dest))) {
-				MoveDirectory temp = new MoveDirectory(temp_curr, temp_dest);
-				temp = null;
-			
-			// else temp_dest must be pointing at a file
-			} else {
-				MoveFile temp = new MoveFile(temp_curr, temp_dest);
-				temp = null;
+		// TODO change "true" to a call to GUI layer, for now it's assumed yes
+		boolean merge = true;
+		
+		if (merge) {
+			/*
+			 * Would prefer to do this by calling ViewDirectory class but that doesn't work currently
+			 * ideally calling it by doing
+			 * ViewDirectory dir = new ViewDirectory(String path);
+			 * then String[] dir_contents = dir.listContents();
+			 * or something equivalent
+			*/
+			// create a list of all the contents of the directory
+			String[] dir_contents = null;
+	        File dir = new File(_old_dir.toString());
+	        dir_contents = dir.list();
+	        
+			// iterate through the list, creating Path objects using the target_end_path appended with the current item on the list
+	        MoveDirectory temp_dir = new MoveDirectory();
+	        MoveFile temp_file = new MoveFile();
+			for (int i = 0; i < dir_contents.length; i++) {
+				String temp_curr = curr_start_path.toString() + "\\" + dir_contents[i];
+				String temp_dest = target_end_path.toString();
+				
+				// check if temp_dest points to a directory
+				if (Files.isDirectory(Paths.get(temp_dest))) {
+					temp_dir.setStartPath(temp_curr);
+					temp_dir.setEndPath(temp_dest);
+					temp_dir.move();
+				
+				// else temp_dest must be pointing at a file
+				} else {
+					temp_file.setStartPath(temp_curr);
+					temp_file.setEndPath(temp_dest);
+					temp_file.move();
+				}
 			}
+			// after loop is done moving all contents of curr_start_path to target_end_path, delete curr_start_path directory
+			DeleteDirectory del = new DeleteDirectory(_old_dir.toString());
+			
+			// object cleanup
+			temp_dir = null;
+			temp_file = null;
+			del = null;
+		} else {
+			System.out.println("ERR: Duplicate directory name in target directory, move aborted");
 		}
-		// after loop is done moving all contents of curr_start_path to target_end_path, delete curr_start_path directory
-		DeleteDirectory cleanup = new DeleteDirectory(_old_dir.toString());
-		
-		// object cleanup  TODO set new reusable MoveFile and MoveDirectory to null here 
-		cleanup = null;
 	}
 
 	// dummy main for testing directory movement
