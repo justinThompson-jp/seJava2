@@ -40,6 +40,7 @@ public class MoveDirectory {
 	}
 	// empty constructor
 	// use if you want to make multiple moves with the same object
+	// TODO add documentation/instructions for empty constructor use
 	public MoveDirectory() {
 		this.curr_start_path = null;
 		this.target_end_path = null;
@@ -168,7 +169,7 @@ public class MoveDirectory {
 			temp_file = null;
 			del = null;
 		} else {
-			System.out.println("ERR: Duplicate directory name in target directory, move aborted");
+			System.out.println("Move canceled");
 		}
 	}
 

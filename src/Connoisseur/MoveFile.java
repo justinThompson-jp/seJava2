@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class MoveFile {
 	private Path curr_start_path, target_end_path;
@@ -35,6 +36,7 @@ public class MoveFile {
 	}
 	// empty constructor
 	// use if you want to make multiple moves with the same object
+	// TODO add documentation/instructions for empty constructor use
 	public MoveFile() {
 		this.curr_start_path = null;
 		this.target_end_path = null;
@@ -78,7 +80,7 @@ public class MoveFile {
 	 *				Rename file being moved
 	 *				Cancel move
 	 */
-	private void move() {
+	public void move() {
 		try {
 
 			System.out.println("Attempt Move " + curr_start_path + " to " + target_end_path);
@@ -94,8 +96,7 @@ public class MoveFile {
 			}
 			// if a duplicate fileName exists in directory, then print an error message(for now)
 			if (Files.exists(target_end_path)) {
-				//promptOverwrite();
-				System.out.println("ERR: Duplicate file name in target directory, move aborted");
+				promptOverwrite();
 				return;
 			}
 			Files.move(curr_start_path, target_end_path);
@@ -111,10 +112,22 @@ public class MoveFile {
 	 *	Send request to UI layer to display window asking if User want to overwrite duplicate file in target directory
 	 *	if yes, then Files.move(curr_start_path, target_end_path, REPLACE_EXISTING);
 	 *	if no, then cancel move
-	 *	TODO make it send message to GUI/UI with a popup, enclose working code in if-else or guard clause
-	 *	TODO write this method
 	*/
-	public void promptOverwrite() {}
+	public void promptOverwrite() {
+		// TODO change "true" to a call to GUI, for now lets assume yes overwrite
+		boolean overwrite = true;
+		
+		if (overwrite) {
+			try {
+				Files.move(curr_start_path, target_end_path, REPLACE_EXISTING);
+			} catch (IOException e) {
+				System.out.println("ERR: Overwrite failed");
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Move canceled");
+		}
+	}
 
 	// dummy main for testing file movement
 	public static void main(String[] args) {
