@@ -113,7 +113,7 @@ public class MoveFile {
 	 *	if yes, then Files.move(curr_start_path, target_end_path, REPLACE_EXISTING);
 	 *	if no, then cancel move
 	*/
-	public void promptOverwrite() {
+	private void promptOverwrite() {
 		// TODO change "true" to a call to GUI, for now lets assume yes overwrite
 		boolean overwrite = true;
 		

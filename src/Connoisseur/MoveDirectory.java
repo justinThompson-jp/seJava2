@@ -54,7 +54,7 @@ public class MoveDirectory {
 	public String getStartPath() {
 		return this.curr_start_path.toString();
 	}
-	public String getTargetPath() {
+	public String getEndPath() {
 		return this.target_end_path.toString();
 	}
 	
