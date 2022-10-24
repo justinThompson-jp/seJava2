@@ -162,7 +162,7 @@ public class MoveDirectory {
 				}
 			}
 			// after loop is done moving all contents of curr_start_path to target_end_path, delete curr_start_path directory
-			DeleteDirectory del = new DeleteDirectory(_old_dir.toString());
+			Delete del = new Delete(_old_dir.toString());
 			
 			// object cleanup
 			temp_dir = null;
