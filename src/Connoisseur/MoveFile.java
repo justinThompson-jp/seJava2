@@ -1,5 +1,6 @@
 package Connoisseur;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,8 +31,8 @@ public class MoveFile {
 	 */
 	public MoveFile(String _curr_file_path, String _target_dir_path) {
 		// TODO convert input paths into absolute paths
-		this.curr_start_path = Paths.get(_curr_file_path);
-		this.target_end_path = Paths.get(_target_dir_path + curr_start_path.getFileName());
+		this.curr_start_path = Paths.get(toAbsolute(_curr_file_path));
+		this.target_end_path = Paths.get(toAbsolute(_target_dir_path + curr_start_path.getFileName()));
 		move();
 	}
 	// empty constructor
@@ -58,10 +59,10 @@ public class MoveFile {
 	 *		Should not need to be used, added just in case
 	 */
 	public void setStartPath(String _new_curr_dir_path) {
-		this.curr_start_path = Paths.get(_new_curr_dir_path);
+		this.curr_start_path = Paths.get(toAbsolute(_new_curr_dir_path));
 	}
 	public void setEndPath(String _new_target_end_path) {
-		this.target_end_path = Paths.get(_new_target_end_path);
+		this.target_end_path = Paths.get(toAbsolute(_new_target_end_path));
 	}
 
 	/*
@@ -108,7 +109,7 @@ public class MoveFile {
 		}
 	}
 
-	/*	
+	/*
 	 *	Send request to UI layer to display window asking if User want to overwrite duplicate file in target directory
 	 *	if yes, then Files.move(curr_start_path, target_end_path, REPLACE_EXISTING);
 	 *	if no, then cancel move
@@ -129,9 +130,21 @@ public class MoveFile {
 		}
 	}
 
+	private static String toAbsolute(String _rel_path) {
+		File file = new File(_rel_path);
+		String abs_path = file.getAbsolutePath();
+		return abs_path;
+	}
+
 	// dummy main for testing file movement
 	public static void main(String[] args) {
-		// MoveFile test = new MoveFile("D:\\Users\\jdcra\\Documents\\School\\FALL2022\\CS4800\\seJava2\\bin\\testfolder1\\test.txt","bin/testfolder2/");
+		// MoveFile test = new MoveFile("bin/testfolder1/test.txt","bin/testfolder2/");
 		// test = null;
+		
+		//String test = "bin/test/testfolder1/test.txt";
+		//File testfile = new File(test);
+		//System.out.println(testfile.getPath());
+		//System.out.println(testfile.getAbsolutePath());
+		
 	}
 }

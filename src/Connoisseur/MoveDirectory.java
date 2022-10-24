@@ -29,13 +29,13 @@ public class MoveDirectory {
 	 */
 	public MoveDirectory(String _curr_dir_path, String _target_dir_path) {
 		// TODO convert input paths into absolute paths
-		this.curr_start_path = Paths.get(_curr_dir_path);
+		this.curr_start_path = Paths.get(toAbsolute(_curr_dir_path));
 		/*
 		 * appends the final directory from _old_path onto
 		 * _new_path in order to move the old directory into
 		 * the new one
 		 */ 
-		this.target_end_path = Paths.get(_target_dir_path + "\\" + curr_start_path.getFileName());
+		this.target_end_path = Paths.get(toAbsolute(_target_dir_path + "\\" + curr_start_path.getFileName()));
 		move();
 	}
 	// empty constructor
@@ -63,11 +63,11 @@ public class MoveDirectory {
 	 *		Should not need to be used, added just in case
 	 */
 	public void setStartPath(String _new_curr_dir_path) {
-		this.curr_start_path = Paths.get(_new_curr_dir_path);
+		this.curr_start_path = Paths.get(toAbsolute(_new_curr_dir_path));
 	}
 	public void setEndPath(String _new_target_end_path) {
 		if (this.curr_start_path != null) {
-			this.target_end_path = Paths.get(_new_target_end_path + "\\" + curr_start_path.getFileName());
+			this.target_end_path = Paths.get(toAbsolute(_new_target_end_path + "\\" + curr_start_path.getFileName()));
 		} else {
 			System.out.println("ERR: You need to call setStartPath() before calling setEndPath()");
 		}
@@ -171,6 +171,12 @@ public class MoveDirectory {
 		} else {
 			System.out.println("Move canceled");
 		}
+	}
+
+	private static String toAbsolute(String _rel_path) {
+		File file = new File(_rel_path);
+		String abs_path = file.getAbsolutePath();
+		return abs_path;
 	}
 
 	// dummy main for testing directory movement
