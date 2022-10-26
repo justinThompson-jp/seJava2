@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MoveDirectory {
-	private Path curr_start_path, target_end_path;
+	private Path curr_dir_path, target_end_path;
 
 	// Constructor(s)
 	/**
@@ -28,21 +28,35 @@ public class MoveDirectory {
 	 * @author Jacob Crawford
 	 */
 	public MoveDirectory(String _curr_dir_path, String _target_dir_path) {
-		// TODO convert input paths into absolute paths
-		this.curr_start_path = Paths.get(toAbsolute(_curr_dir_path));
+		this.curr_dir_path = Paths.get(toAbsolute(_curr_dir_path));
 		/*
 		 * appends the final directory from _old_path onto
 		 * _new_path in order to move the old directory into
 		 * the new one
 		 */ 
-		this.target_end_path = Paths.get(toAbsolute(_target_dir_path + "\\" + curr_start_path.getFileName()));
+		this.target_end_path = Paths.get(toAbsolute(_target_dir_path + "\\" + curr_dir_path.getFileName()));
 		move();
 	}
 	// empty constructor
 	// use if you want to make multiple moves with the same object
-	// TODO add documentation/instructions for empty constructor use
+	/**
+	 * Empty constructor for MoveDirectory object.
+	 * <br><br>
+	 * This checks if the target directory exists and if the target directory
+	 * already has a directory with the same name.
+	 * <br> <br>
+	 * Currently prints error message if target directory doesn't<br>
+	 * exist or if duplicate file name is detected
+	 * 
+	 * @param String _curr_dir_path - The directory's current path
+	 * @param String _target_dir_path - The path of the destination directory
+	 * @exception ErrorMessage if target file is not found
+	 * @exception ErrorMessage if destination directory is not found
+	 * @exception ErrorMessage if duplicate file is found in destination directory<br>Later to be changed to prompt to GUI
+	 * @author Jacob Crawford
+	 */
 	public MoveDirectory() {
-		this.curr_start_path = null;
+		this.curr_dir_path = null;
 		this.target_end_path = null;
 		// doesn't automatically run move() after assigning variables
 	}
@@ -51,10 +65,10 @@ public class MoveDirectory {
 	 *	Getter method(s)
 	 *		Should not need to be used, added just in case
 	 */
-	public String getStartPath() {
-		return this.curr_start_path.toString();
+	public String getCurrPath() {
+		return this.curr_dir_path.toString();
 	}
-	public String getEndPath() {
+	public String getTargetPath() {
 		return this.target_end_path.toString();
 	}
 	
@@ -62,15 +76,15 @@ public class MoveDirectory {
 	 *	Setter Method(s)
 	 *		Should not need to be used, added just in case
 	 */
-	public void setStartPath(String _new_curr_dir_path) {
-		this.curr_start_path = Paths.get(toAbsolute(_new_curr_dir_path));
+	public void setCurrPath(String _new_curr_dir_path) {
+		this.curr_dir_path = Paths.get(toAbsolute(_new_curr_dir_path));
 	}
-	public void setEndPath(String _new_target_end_path) {
-		if (this.curr_start_path != null) {
-			this.target_end_path = Paths.get(toAbsolute(_new_target_end_path + "\\" + curr_start_path.getFileName()));
-		} else {
-			System.out.println("ERR: You need to call setStartPath() before calling setEndPath()");
+	public void setTargetPath(String _new_target_end_path) {
+		if (this.curr_dir_path == null) {
+			System.out.println("ERR: curr_start_path must be assigned before target_end_path");
+			return;
 		}
+		this.target_end_path = Paths.get(toAbsolute(_new_target_end_path + "\\" + curr_dir_path.getFileName()));
 	}
 
 	/*
@@ -91,11 +105,19 @@ public class MoveDirectory {
 	 *				Cancel move
 	 */
 	public void move() {
+		if (target_end_path == null) {
+			if (curr_dir_path == null) {
+				System.out.println("ERR: Need to assign curr_dir_path and target_end_path");
+				return;
+			}
+			System.out.println("ERR: Need to assign target_end_path");
+			return;
+		}
 		try {
-			System.out.println("Attempt Move " + curr_start_path + " to " + target_end_path);
+			System.out.println("Attempt to move directory " + curr_dir_path + " to " + target_end_path);
 			// if directory to be moved doesn't exist, then print an error message
-			if (Files.notExists(curr_start_path)) {
-				System.out.println("ERR: " + curr_start_path + "  not found");
+			if (Files.notExists(curr_dir_path)) {
+				System.out.println("ERR: " + curr_dir_path + "  not found");
 				return;
 			}
 			// if destination folder doesn't exist, then print an error message(for now)
@@ -105,11 +127,11 @@ public class MoveDirectory {
 			}
 			// if a duplicate directory name exists, then print an error message(for now)
 			if (Files.exists(target_end_path)) {
-				promptMergeDirectory(curr_start_path);
+				promptMergeDirectory(curr_dir_path);
 				return;
 			}
-			Files.move(curr_start_path, target_end_path);
-			System.out.println("Successfully moved " + curr_start_path + " to " + target_end_path);
+			Files.move(curr_dir_path, target_end_path);
+			System.out.println("Successfully moved directory " + curr_dir_path + " to " + target_end_path);
 			
 		} catch (IOException e) {
 			System.out.println("ERR: MoveDirectory failed");
@@ -129,6 +151,7 @@ public class MoveDirectory {
 		boolean merge = true;
 		
 		if (merge) {
+			System.out.println("Merge directories " + curr_dir_path + " and " + target_end_path);
 			/*
 			 * Would prefer to do this by calling ViewDirectory class but that doesn't work currently
 			 * ideally calling it by doing
@@ -145,19 +168,19 @@ public class MoveDirectory {
 	        MoveDirectory temp_dir = new MoveDirectory();
 	        MoveFile temp_file = new MoveFile();
 			for (int i = 0; i < dir_contents.length; i++) {
-				String temp_curr = curr_start_path.toString() + "\\" + dir_contents[i];
+				String temp_curr = curr_dir_path.toString() + "\\" + dir_contents[i];
 				String temp_dest = target_end_path.toString();
 				
 				// check if temp_dest points to a directory
-				if (Files.isDirectory(Paths.get(temp_dest))) {
-					temp_dir.setStartPath(temp_curr);
-					temp_dir.setEndPath(temp_dest);
+				if (Files.isDirectory(Paths.get(temp_curr))) {
+					temp_dir.setCurrPath(temp_curr);
+					temp_dir.setTargetPath(temp_dest);
 					temp_dir.move();
 				
 				// else temp_dest must be pointing at a file
 				} else {
-					temp_file.setStartPath(temp_curr);
-					temp_file.setEndPath(temp_dest);
+					temp_file.setCurrPath(temp_curr);
+					temp_file.setTargetPath(temp_dest);
 					temp_file.move();
 				}
 			}
@@ -185,7 +208,10 @@ public class MoveDirectory {
 		//test = null;
 		
 		//Path test = Paths.get("D:/Users/jdcra/Documents/School/FALL2022/CS4800/seJava2/bin/testfolder1");
-		//System.out.println(test.getParent().getParent().getParent());
-				
+		//Path test = Paths.get(toAbsolute("bin/testfolder1"));
+		//while (test != null) {
+		//	System.out.println(test.getFileName());
+		//	test = test.getParent();
+		//}
 	}
 }
