@@ -3,10 +3,12 @@ package Connoisseur;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JToolBar;
-import javax.swing.JTree;
-import javax.swing.JSplitPane;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JTree;
+
+import Connoisseur.gui.CMenuBar;
+import Connoisseur.gui.CToolBar;
 
 public class ConnoisseurGUI {
 
@@ -44,8 +46,10 @@ public class ConnoisseurGUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JToolBar toolBar = new JToolBar();
-		toolBar.setBounds(0, 0, 704, 16);
+		CMenuBar menuBar = new CMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		CToolBar toolBar = new CToolBar(0, 0, 704, 25);
 		frame.getContentPane().add(toolBar);
 		
 		JTree tree = new JTree();

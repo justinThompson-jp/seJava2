@@ -77,7 +77,7 @@ public class FileManager {
 	}
 	
 	/**
-	 * Delete's a directory or file located at the given path
+	 * Deletes a directory or file located at the given path
 	 * @param path - path to file/directory
 	 * @author Jonathan Vallejo
 	 */
@@ -114,7 +114,7 @@ public class FileManager {
 	}
 	
 	/**
-	 * Delete's the given directory or file
+	 * Deletes the given directory or file
 	 * @param file - file to delete
 	 * @author Jonathan Vallejo
 	 */
