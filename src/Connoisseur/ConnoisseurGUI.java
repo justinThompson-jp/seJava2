@@ -1,6 +1,7 @@
 package Connoisseur;
 
 import java.awt.EventQueue;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -9,6 +10,8 @@ import javax.swing.JTree;
 
 import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
+import Connoisseur.gui.FileSystemModel;
+import javax.swing.JScrollPane;
 
 public class ConnoisseurGUI {
 
@@ -52,10 +55,6 @@ public class ConnoisseurGUI {
 		CToolBar toolBar = new CToolBar(0, 0, 704, 25);
 		frame.getContentPane().add(toolBar);
 		
-		JTree tree = new JTree();
-		tree.setBounds(0, 27, 120, 414);
-		frame.getContentPane().add(tree);
-		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setBounds(130, 302, 564, 128);
 		frame.getContentPane().add(splitPane);
@@ -63,5 +62,16 @@ public class ConnoisseurGUI {
 		JPanel panel = new JPanel();
 		panel.setBounds(130, 27, 564, 264);
 		frame.getContentPane().add(panel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 27, 120, 381);
+		frame.getContentPane().add(scrollPane);
+		
+		JTree tree = new JTree();
+		tree.setModel(new FileSystemModel(new File("C:\\")));
+		/* Populates tree with given directory
+		 * TODO: Get rid of hardcoded directory name
+		 */
+		scrollPane.setViewportView(tree);
 	}
 }
