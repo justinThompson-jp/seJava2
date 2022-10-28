@@ -71,7 +71,6 @@ public class Delete {
 	}
 
 	private static String toAbsolute(String _rel_path) {
-		File file = new File(_rel_path);
 		String abs_path = new File(_rel_path).getAbsolutePath();
 		return abs_path;
 	}
