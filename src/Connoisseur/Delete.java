@@ -52,7 +52,7 @@ public class Delete {
 		this.target = Paths.get(toAbsolute(_new_target));
 	}
 	
-	private void delete() {
+	public void delete() {
 		if (target == null) {
 			System.out.println("ERR: No target set to be deleted");
 			return;
