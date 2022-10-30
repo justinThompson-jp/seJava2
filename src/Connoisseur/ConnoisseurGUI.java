@@ -55,13 +55,13 @@ public class ConnoisseurGUI {
 		frame.setJMenuBar(menuBar);
 		
 		JSplitPane splitPane_1 = new JSplitPane();
-		splitPane_1.setResizeWeight(0.25);
+		splitPane_1.setResizeWeight(0.4);
 		frame.getContentPane().add(splitPane_1, BorderLayout.CENTER);
 		
 		JSplitPane splitPane_2 = new JSplitPane();
 		splitPane_1.setRightComponent(splitPane_2);
 		splitPane_2.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		splitPane_2.setResizeWeight(.6);
+		splitPane_2.setResizeWeight(0.7);
 		
 		JScrollPane folder_contents = new JScrollPane();
 		splitPane_2.setLeftComponent(folder_contents);
@@ -69,7 +69,8 @@ public class ConnoisseurGUI {
 		JPanel contents = new JPanel();
 		folder_contents.setViewportView(contents);
 		
-		JLabel folder_contents_label = new JLabel("path name");
+		JLabel folder_contents_label = new JLabel("<change this name to current folder name>");
+		folder_contents_label.setEnabled(false);
 		folder_contents.setColumnHeaderView(folder_contents_label);
 		
 		JSplitPane splitPane_3 = new JSplitPane();
@@ -79,9 +80,10 @@ public class ConnoisseurGUI {
 		JPanel file_metadata = new JPanel();
 		splitPane_3.setLeftComponent(file_metadata);
 		
-		JLabel lblNewLabel_1 = new JLabel("file name");
-		lblNewLabel_1.setVerticalAlignment(SwingConstants.TOP);
-		file_metadata.add(lblNewLabel_1);
+		JLabel file_metadata_label = new JLabel("<change this name to current file name>");
+		file_metadata_label.setEnabled(false);
+		file_metadata_label.setVerticalAlignment(SwingConstants.TOP);
+		file_metadata.add(file_metadata_label);
 		
 		JScrollPane folder_tree = new JScrollPane();
 		splitPane_1.setLeftComponent(folder_tree);
