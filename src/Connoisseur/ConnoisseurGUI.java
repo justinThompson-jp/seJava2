@@ -14,10 +14,7 @@ import Connoisseur.gui.FileSystemModel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 
 public class ConnoisseurGUI {
 
