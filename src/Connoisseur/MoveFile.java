@@ -1,3 +1,11 @@
+/* 
+ * Fall 2022
+ * CS4800 - Software Engineering
+ * Group - Java2
+ * 
+ * Class initially created by Jacob Crawford
+ */
+
 package Connoisseur;
 
 import java.io.File;
@@ -12,22 +20,14 @@ public class MoveFile {
 	
 	// Constructor(s)
 	/**
-	 * The object will take String parameters to create directory<br>
-	 * paths of the specified file's current and the target directory.
-	 * <br><br>
-	 * This checks if the target directory exists and if the target directory
-	 * already has a<br>
-	 * file with the same name/extension.
-	 * <br> <br>
-	 * Currently prints error message if target directory doesn't<br>
-	 * exist or if duplicate file name is detected
+	 * This will create a MoveFile object with input curr_file_path and target_end_path, then it will automatically run MoveFile.move()
+	 * <p>
+	 * The object will take String parameters to create directory paths of the specified file's current and the target directory.<br>
+	 * These string inputs will be first run through the MoveFile.toAbsolute() method to ensure that they are absolute paths
+	 * </p>
 	 * 
 	 * @param String _curr_file_path - The file's current path, including the name.ext
 	 * @param String _target_dir_path - The path of the destination directory
-	 * @exception ErrorMessage if target file is not found
-	 * @exception ErrorMessage if destination directory is not found
-	 * @exception ErrorMessage if duplicate file is found in destination directory<br>Later to be changed to prompt to GUI
-	 * @author Jacob Crawford
 	 */
 	public MoveFile(String _curr_file_path, String _target_dir_path) {
 		this.curr_file_path = Paths.get(toAbsolute(_curr_file_path));
@@ -41,34 +41,24 @@ public class MoveFile {
 	 * <p>
 	 * This object will not move anything on initial creation.<br>
 	 * MoveFile.setStartPath(String _new_curr_file_path) and MoveFile.setEndPath(String _new_target_end_path) must be ran before running MoveFile.move()<br>
-	 * curr_start_path must be set before target_end_path
+	 * curr_start_path must be set before target_end_path can be assigned
 	 * </p>
-	 * 
-	 * @exception ErrorMessage if target file is not found
-	 * @exception ErrorMessage if destination directory is not found
-	 * @exception ErrorMessage if duplicate file is found in destination directory<br>Later to be changed to prompt to GUI
-	 * @author Jacob Crawford
 	 */
 	public MoveFile() {
 		this.curr_file_path = null;
 		this.target_end_path = null;
 		// doesn't automatically run move() after assigning variables
 	}
-	/*
-	 *	Getter method(s)
-	 *		Should not need to be used, added just in case
-	 */
-	public String getCurrPath() {
+
+	// Getter method(s) 
+	String getCurrPath() {
 		return this.curr_file_path.toString();
 	}
 	public String getTargetPath() {
 		return this.target_end_path.toString();
 	}
 	
-	/*
-	 *	Setter Method(s)
-	 *		Should not need to be used, added just in case
-	 */
+	// Setter method(s)
 	public void setCurrPath(String _new_curr_file_path) {
 		this.curr_file_path = Paths.get(toAbsolute(_new_curr_file_path));
 	}
@@ -80,22 +70,16 @@ public class MoveFile {
 		this.target_end_path = Paths.get(toAbsolute(_new_target_end_path + "\\" +curr_file_path.getFileName()));
 	}
 
-	/*
-	 *	Moves FILE from old directory to new directory
-	 * 		Outputs error text if:
-	 * 			file to be moved does not exist
-	 * 			destination directory does not exist
-	 * 			duplicate file name exists in destination folder
-	 * 
-	 *	Later features/ideas:
-	 * 		If destination folder doesn't exist,
-	 * 			Then prompt user if they want to create new folder or cancel move
-	 *		If duplicate file name exist in destination folder
-	 *			Then prompt user to either
-	 *				Overwrite existing file
-	 *				Rename file being moved
-	 *				Cancel move
-	 */
+	/**
+	  * Moves the file specified by the MoveFile object into the destination directory
+	  * <p>
+	  * Method performs several guard clauses checking for edge cases before attempting to move<br>
+	  * If a duplicate file exists in the destination directory, then this will call the promptOverwriteFile() method
+	  * </p>
+	  * 
+	  * @exception ErrorMessage if target file is not found
+	  * @exception ErrorMessage if destination directory is not found
+	  */
 	public void move() {
 		if (target_end_path == null) {
 			if (curr_file_path == null) {
@@ -120,7 +104,7 @@ public class MoveFile {
 			}
 			// if a duplicate fileName exists in directory, then print an error message(for now)
 			if (Files.exists(target_end_path)) {
-				promptOverwrite();
+				promptOverwriteFile();
 				return;
 			}
 			Files.move(curr_file_path, target_end_path);
@@ -137,7 +121,15 @@ public class MoveFile {
 	 *	if yes, then Files.move(curr_file_path, target_end_path, REPLACE_EXISTING);
 	 *	if no, then cancel move
 	*/
-	private void promptOverwrite() {
+	/**	
+	  * This will send a call to the GUI and depending on the User's response will either overwrite a duplicate or cancel the move
+	  * <p>
+	  * This first calls the GUI layer to ask the User if they want to overwrite duplicate files<br>
+	  * If yes, then this will call the Files.move() method with the REPLACE_EXISTING StandardCopyOption
+	  * If no, then the method will cancel the move and send a message to the console.
+	  * </p>
+	  */
+	private void promptOverwriteFile() {
 		// TODO change "true" to a call to GUI, for now lets assume yes overwrite
 		boolean overwrite = true;
 		
@@ -153,6 +145,16 @@ public class MoveFile {
 		}
 	}
 
+	/** 
+	  * Converts a relative path to an absolute path
+	  * <p>
+	  * This converts the input String _rel_path first to a File object, then back to a String object named abs_path.<br>
+	  * This String abs_path is then returned to the caller.
+	  * </p>
+	  * 
+	  * @param String _rel_path - relative path to specified file or directory
+	  * @return String abs_path - absolute path to specified file or directory
+	  */
 	private static String toAbsolute(String _rel_path) {
 		String abs_path = new File(_rel_path).getAbsolutePath();
 		return abs_path;
