@@ -12,6 +12,12 @@ import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
 import Connoisseur.gui.FileSystemModel;
 import javax.swing.JScrollPane;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 public class ConnoisseurGUI {
 
@@ -47,31 +53,50 @@ public class ConnoisseurGUI {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 720, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
 		
 		CMenuBar menuBar = new CMenuBar();
 		frame.setJMenuBar(menuBar);
 		
-		CToolBar toolBar = new CToolBar(0, 0, 704, 25);
-		frame.getContentPane().add(toolBar);
+		JSplitPane splitPane_1 = new JSplitPane();
+		splitPane_1.setResizeWeight(0.25);
+		frame.getContentPane().add(splitPane_1, BorderLayout.CENTER);
 		
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setBounds(130, 302, 564, 128);
-		frame.getContentPane().add(splitPane);
+		JSplitPane splitPane_2 = new JSplitPane();
+		splitPane_1.setRightComponent(splitPane_2);
+		splitPane_2.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		splitPane_2.setResizeWeight(.6);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(130, 27, 564, 264);
-		frame.getContentPane().add(panel);
+		JScrollPane folder_contents = new JScrollPane();
+		splitPane_2.setLeftComponent(folder_contents);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 27, 120, 381);
-		frame.getContentPane().add(scrollPane);
+		JPanel contents = new JPanel();
+		folder_contents.setViewportView(contents);
+		
+		JLabel folder_contents_label = new JLabel("path name");
+		folder_contents.setColumnHeaderView(folder_contents_label);
+		
+		JSplitPane splitPane_3 = new JSplitPane();
+		splitPane_3.setResizeWeight(.8);
+		splitPane_2.setRightComponent(splitPane_3);
+		
+		JPanel file_metadata = new JPanel();
+		splitPane_3.setLeftComponent(file_metadata);
+		
+		JLabel lblNewLabel_1 = new JLabel("file name");
+		lblNewLabel_1.setVerticalAlignment(SwingConstants.TOP);
+		file_metadata.add(lblNewLabel_1);
+		
+		JScrollPane folder_tree = new JScrollPane();
+		splitPane_1.setLeftComponent(folder_tree);
 		
 		JTree tree = new JTree();
-		tree.setModel(new FileSystemModel(new File("C:\\")));
-		/* Populates tree with given directory
-		 * TODO: Get rid of hardcoded directory name
-		 */
-		scrollPane.setViewportView(tree);
+		folder_tree.setViewportView(tree);
+		tree.setModel(new FileSystemModel(new File(System.getProperty("user.home"))));
+		
+		JLabel lblNewLabel = new JLabel("Library");
+		folder_tree.setColumnHeaderView(lblNewLabel);
+		
+		CToolBar toolBar = new CToolBar(0, 0, 704, 25);
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 	}
 }
