@@ -116,11 +116,6 @@ public class MoveFile {
 		}
 	}
 
-	/*
-	 *	Send request to UI layer to display window asking if User want to overwrite duplicate file in target directory
-	 *	if yes, then Files.move(curr_file_path, target_end_path, REPLACE_EXISTING);
-	 *	if no, then cancel move
-	*/
 	/**	
 	  * This will send a call to the GUI and depending on the User's response will either overwrite a duplicate or cancel the move
 	  * <p>
