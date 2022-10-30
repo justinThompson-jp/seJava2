@@ -1,3 +1,11 @@
+/* 
+ * Fall 2022
+ * CS4800 - Software Engineering
+ * Group - Java2
+ * 
+ * Class initially created by Jacob Crawford
+ */
+
 package Connoisseur;
 
 import java.io.File;
@@ -19,7 +27,6 @@ public class Delete {
 	 * @param String _target_path - The path of the directory to be deleted
 	 * @exception ErrorMessage if _target_path is invalid
 	 * @exception ErrorMessage if _target_path is not found
-	 * @author Jacob Crawford
 	 */
 	public Delete(String _target_path) {
 		this.target = Paths.get(toAbsolute(_target_path));
@@ -35,7 +42,6 @@ public class Delete {
 	 * </p>
 	 * @exception ErrorMessage if _target_path is invalid
 	 * @exception ErrorMessage if _target_path is not found
-	 * @author Jacob Crawford
 	 */
 	public Delete() {
 		this.target = null;
@@ -52,6 +58,15 @@ public class Delete {
 		this.target = Paths.get(toAbsolute(_new_target));
 	}
 	
+	/**
+	  * Deletes the file specified by the Delete object
+	  * <p>
+	  * If the path to the target object has not been specified yet,<br>
+	  * then it will output an error message to the console
+	  * </p>
+	  * @exception ErrorMessage if target not set
+	  * @exception ErrorMessage if target not found
+	  */
 	public void delete() {
 		if (target == null) {
 			System.out.println("ERR: No target set to be deleted");
@@ -70,6 +85,16 @@ public class Delete {
 		}
 	}
 
+	/** 
+	  * Converts a relative path to an absolute path
+	  * <p>
+	  * This converts the input String _rel_path first to a File object, then back to a String object named abs_path.<br>
+	  * This String abs_path is then returned to the caller.
+	  * </p>
+	  * 
+	  * @param String _rel_path - relative path to specified file or directory
+	  * @return String abs_path - absolute path to specified file or directory
+	  */
 	private static String toAbsolute(String _rel_path) {
 		String abs_path = new File(_rel_path).getAbsolutePath();
 		return abs_path;
