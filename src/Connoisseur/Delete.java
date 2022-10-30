@@ -1,3 +1,11 @@
+/* 
+ * Fall 2022
+ * CS4800 - Software Engineering
+ * Group - Java2
+ * 
+ * Class initially created by Jacob Crawford
+ */
+
 package Connoisseur;
 
 import java.io.File;
@@ -19,7 +27,6 @@ public class Delete {
 	 * @param String _target_path - The path of the directory to be deleted
 	 * @exception ErrorMessage if _target_path is invalid
 	 * @exception ErrorMessage if _target_path is not found
-	 * @author Jacob Crawford
 	 */
 	public Delete(String _target_path) {
 		this.target = Paths.get(toAbsolute(_target_path));
@@ -35,7 +42,6 @@ public class Delete {
 	 * </p>
 	 * @exception ErrorMessage if _target_path is invalid
 	 * @exception ErrorMessage if _target_path is not found
-	 * @author Jacob Crawford
 	 */
 	public Delete() {
 		this.target = null;
@@ -59,8 +65,7 @@ public class Delete {
 	  * then it will output an error message to the console
 	  * </p>
 	  * @exception ErrorMessage if target not set
-	  * @exception ErrorMessage if target not found 
-	  * 
+	  * @exception ErrorMessage if target not found
 	  */
 	public void delete() {
 		if (target == null) {
@@ -89,7 +94,6 @@ public class Delete {
 	  * 
 	  * @param String _rel_path - relative path to specified file or directory
 	  * @return String abs_path - absolute path to specified file or directory
-	  * 
 	  */
 	private static String toAbsolute(String _rel_path) {
 		String abs_path = new File(_rel_path).getAbsolutePath();
