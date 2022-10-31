@@ -5,7 +5,7 @@ package Connoisseur;
 	Justin Thompson
 */
 
-import java.util.Scanner;
+//import java.util.Scanner;
 import java.io.*;
 
 public class ViewDirectory {
