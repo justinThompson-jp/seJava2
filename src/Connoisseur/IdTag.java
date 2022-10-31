@@ -1,4 +1,4 @@
-package connoisseur;
+package Connoisseur;
 
 import java.io.Serializable;
 
