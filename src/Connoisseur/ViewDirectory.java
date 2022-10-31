@@ -23,8 +23,6 @@ public class ViewDirectory {
         // Populate array with names of files and directories
         pathnames = f.list();
 
-
-        
         // For each pathname in the pathnames array print the names of files and directories
         for (String pathname : pathnames) {
             System.out.println(pathname);

@@ -1,7 +1,7 @@
 package Connoisseur;
 
 /*
-*	@authors: Justin Thompson, Jonathan Vallejo
+*	@authors: Justin Thompson, Jonathan Vallejo, Jacob Crawford
 */
 
 import java.awt.EventQueue;
@@ -128,7 +128,7 @@ public class ConnoisseurGUI {
 		// file metadata
 		JPanel file_metadata = new JPanel();
 		splitPane_3.setLeftComponent(file_metadata);
-		
+	
 		JLabel file_metadata_label = new JLabel("<change this name to current file name>");
 		file_metadata_label.setEnabled(false);
 		file_metadata_label.setVerticalAlignment(SwingConstants.NORTH);
