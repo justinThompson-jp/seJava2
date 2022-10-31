@@ -15,7 +15,11 @@ import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
 import Connoisseur.gui.FileSystemModel;
 import javax.swing.JScrollPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
 import javax.swing.table.DefaultTableModel;
 
 public class ConnoisseurGUI {
@@ -23,7 +27,9 @@ public class ConnoisseurGUI {
 	private JFrame frame;
 	private JTable table;
 	private DefaultTableModel model = new DefaultTableModel();
-
+	
+	private String default_dir = System.getProperty("user.home");
+	
 	/**
 	 * Launch the application.
 	 */
@@ -44,6 +50,7 @@ public class ConnoisseurGUI {
 	 * Create the application.
 	 */
 	public ConnoisseurGUI() {
+		default_dir = System.getProperty("user.home");
 		initialize();
 	}
 
@@ -54,36 +61,54 @@ public class ConnoisseurGUI {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 720, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
 		
 		CMenuBar menuBar = new CMenuBar();
 		frame.setJMenuBar(menuBar);
-		
+
 		CToolBar toolBar = new CToolBar(0, 0, 704, 25);
-		frame.getContentPane().add(toolBar);
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setBounds(130, 280, 564, 128);
-		frame.getContentPane().add(splitPane);
+		// splits folder_tree from the rest
+		JSplitPane splitPane_1 = new JSplitPane();
+		splitPane_1.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		frame.getContentPane().add(splitPane_1, BorderLayout.CENTER);
+		splitPane_1.setResizeWeight(0.4);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 27, 120, 381);
-		frame.getContentPane().add(scrollPane);
+		// splits folder_contents from the rest
+		JSplitPane splitPane_2 = new JSplitPane();
+		splitPane_2.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		splitPane_1.setRightComponent(splitPane_2);
+		splitPane_2.setResizeWeight(0.7);
+
+		// splits file_metadata from last section
+		JSplitPane splitPane_3 = new JSplitPane();
+		splitPane_3.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		splitPane_2.setRightComponent(splitPane_3);
+		splitPane_3.setResizeWeight(.8);
 		
+		// file tree
+		JScrollPane folder_tree = new JScrollPane();
+		splitPane_1.setLeftComponent(folder_tree);
+
+		
+		JLabel folder_tree_label = new JLabel("Library");
+		folder_tree.setColumnHeaderView(folder_tree_label);
+
 		JTree tree = new JTree();
-		tree.setModel(new FileSystemModel(new File("C:\\")));
-		/* Populates tree with given directory
-		 * TODO: Get rid of hardcoded directory name
-		 */
-		scrollPane.setViewportView(tree);
+
+		tree.setModel(new FileSystemModel(new File(default_dir)));
+		folder_tree.setViewportView(tree);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(130, 36, 564, 233);
-		frame.getContentPane().add(scrollPane_1);
+		// folder contents
+		JScrollPane folder_contents = new JScrollPane();
+		splitPane_2.setLeftComponent(folder_contents);
+
+		JLabel folder_contents_label = new JLabel("<change this name to current folder name>");
+		folder_contents_label.setEnabled(false);
+		folder_contents.setColumnHeaderView(folder_contents_label);
 		
 		ViewDirectory dir = new ViewDirectory();
-		dir.Directory();
-		
+		dir.Directory(default_dir);
 		
 		Object[] columns = {"Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
 		Object[] children = ViewDirectory.pathnames;
@@ -98,6 +123,18 @@ public class ConnoisseurGUI {
 		for (int i = 0; i < children.length; i++) {
 		table.setValueAt(children[i], i, 0);
 		}
-		scrollPane_1.setViewportView(table);
+
+		folder_contents.setViewportView(table);
+		// file metadata
+		JPanel file_metadata = new JPanel();
+		splitPane_3.setLeftComponent(file_metadata);
+		
+		JLabel file_metadata_label = new JLabel("<change this name to current file name>");
+		file_metadata_label.setEnabled(false);
+		file_metadata_label.setVerticalAlignment(SwingConstants.NORTH);
+		file_metadata.add(file_metadata_label);
+		
+		// last/undecided panel SplitPane_3.setRightComponent()
+
 	}
 }
