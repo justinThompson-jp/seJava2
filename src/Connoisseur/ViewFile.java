@@ -1,6 +1,8 @@
 package Connoisseur;
 
-/* Source: https://stackoverflow.com/questions/16952727/how-to-use-readattributes-method */
+/* Source: https://stackoverflow.com/questions/16952727/how-to-use-readattributes-method 
+ * Justin Thompson
+ */
 
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -23,11 +25,18 @@ public class ViewFile {
         Path path = Paths.get(pathname);
         try {
          attr = Files.readAttributes(path, BasicFileAttributes.class);
-         mdata.add("Creation time: " + attr.creationTime());
-         mdata.add("Last access time: " + attr.lastAccessTime());
-         mdata.add("Last modified time: " + attr.lastModifiedTime());
-         mdata.add("File size: " + attr.size() + " bytes");
+         mdata.add(attr.creationTime() + "");
+         mdata.add(attr.lastAccessTime() + "");
+         mdata.add(attr.lastModifiedTime() + "");
+         mdata.add(attr.size() + " bytesT");
          System.out.println(mdata);
+         
+         for (int i = 0; i < mdata.size(); i++) {
+        	 String s = mdata.get(i);
+        	 String t = s.substring(0, s.indexOf("T"));
+        	 mdata.set(i, t);
+        	 System.out.println(mdata.get(i));
+         }
         } catch (IOException e) {
          System.out.println("Invalid file path: " + e.getMessage());
         }
