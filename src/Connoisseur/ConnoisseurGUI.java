@@ -71,7 +71,7 @@ public class ConnoisseurGUI {
 		frame.getContentPane().add(scrollPane);
 		
 		JTree tree = new JTree();
-		tree.setModel(new FileSystemModel(new File("C:\\")));
+		tree.setModel(new FileSystemModel(new File(System.getProperty("user.home"))));
 		/* Populates tree with given directory
 		 * TODO: Get rid of hardcoded directory name
 		 */

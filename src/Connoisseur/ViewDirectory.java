@@ -20,7 +20,7 @@ public class ViewDirectory {
 		
 		while (pathnames == null) {
 			System.out.println("Insert directory path: ");
-			path = "C:\\";
+			path = System.getProperty("user.home");
 			
 	        // Create new File instance by converting the given pathname string into an abstract pathname
 	        File f = new File(path);
