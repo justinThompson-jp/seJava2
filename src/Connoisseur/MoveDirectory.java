@@ -1,3 +1,11 @@
+/* 
+ * Fall 2022
+ * CS4800 - Software Engineering
+ * Group - Java2
+ * 
+ * Class initially created by Jacob Crawford
+ */
+
 package Connoisseur;
 
 import java.io.File;
@@ -23,9 +31,6 @@ public class MoveDirectory {
 	 * 
 	 * @param String _curr_dir_path - The directory's current path
 	 * @param String _target_dir_path - The path of the destination directory
-	 * @exception ErrorMessage if target directory is not found
-	 * @exception ErrorMessage if destination directory is not found 
-	 * @author Jacob Crawford
 	 */
 	public MoveDirectory(String _curr_dir_path, String _target_dir_path) {
 		this.curr_dir_path = Paths.get(toAbsolute(_curr_dir_path));
@@ -41,19 +46,11 @@ public class MoveDirectory {
 	// use if you want to make multiple moves with the same object
 	/**
 	 * Empty constructor for MoveDirectory object.
-	 * <br><br>
-	 * This checks if the target directory exists and if the target directory
-	 * already has a directory with the same name.
-	 * <br> <br>
-	 * Currently prints error message if target directory doesn't<br>
-	 * exist or if duplicate file name is detected
-	 * 
-	 * @param String _curr_dir_path - The directory's current path
-	 * @param String _target_dir_path - The path of the destination directory
-	 * @exception ErrorMessage if target file is not found
-	 * @exception ErrorMessage if destination directory is not found
-	 * @exception ErrorMessage if duplicate file is found in destination directory<br>Later to be changed to prompt to GUI
-	 * @author Jacob Crawford
+	 * <p>
+	 * This object will not move anything on initial creation.<br>
+	 * MoveDirectory.setStartPath(String _new_curr_dir_path) and MoveDirectory.setEndPath(String _new_target_end_path) must be ran before running MoveDirectory.move()<br>
+	 * curr_dir_path must be set before target_end_path can be assigned
+	 * </p>
 	 */
 	public MoveDirectory() {
 		this.curr_dir_path = null;
@@ -61,10 +58,7 @@ public class MoveDirectory {
 		// doesn't automatically run move() after assigning variables
 	}
 
-	/*
-	 *	Getter method(s)
-	 *		Should not need to be used, added just in case
-	 */
+	// Getter method(s)
 	public String getCurrPath() {
 		return this.curr_dir_path.toString();
 	}
@@ -72,10 +66,7 @@ public class MoveDirectory {
 		return this.target_end_path.toString();
 	}
 	
-	/*
-	 *	Setter Method(s)
-	 *		Should not need to be used, added just in case
-	 */
+	// Setter method(s)
 	public void setCurrPath(String _new_curr_dir_path) {
 		this.curr_dir_path = Paths.get(toAbsolute(_new_curr_dir_path));
 	}
@@ -87,23 +78,17 @@ public class MoveDirectory {
 		this.target_end_path = Paths.get(toAbsolute(_new_target_end_path + "\\" + curr_dir_path.getFileName()));
 	}
 
-	/*
-	 *	Moves DIRECTORY from old location into the specified directory
-	 * 		Outputs error text if:
-	 * 			directory to be moved does not exist
-	 * 			destination directory does not exist
-	 * 			duplicate directory name exists
-	 * 
-	 *	Later features/ideas:
-	 * 		If destination folder doesn't exist,
-	 * 			Then prompt user if they want to create new folder or cancel move
-	 *		If duplicate folder name exist in destination folder
-	 *			Then prompt user to either
-	 *				Overwrite existing directory
-	 *				Rename Directory being moved
-	 *				Merge Directories, possibly overwriting/renaming duplicate files within
-	 *				Cancel move
-	 */
+
+	/**
+	  * Moves the directory specified by the MoveDirectory object into the destination directory
+	  * <p>
+	  * Method performs several guard clauses checking for edge cases before attempting to move<br>
+	  * If a duplicate directory exists in the destination directory, then this will call the promptMergeDirectory() method
+	  * </p>
+	  * 
+	  * @exception ErrorMessage if target directory is not found
+	  * @exception ErrorMessage if destination directory is not found
+	  */
 	public void move() {
 		if (target_end_path == null) {
 			if (curr_dir_path == null) {
@@ -139,12 +124,17 @@ public class MoveDirectory {
 		}
 	}
 
-	/*	
-	 *	Send request to UI layer to display window asking if User want to merge directories
-	 *	if yes, then iterate through contents of curr_start_path and move them to target_end_path
-	 *		if another duplicate directory is encountered prompt user again(undecided)
-	 *	if no, then cancel move
-	*/
+	/**	
+	  * This will send a call to the GUI and depending on the User's response will either merge the directories or cancel the move
+	  * <p>
+	  * This first calls the GUI layer to ask the User if they want to merge duplicate directories<br>
+	  * If yes, then this will create a list of the contents of the current directory,
+	  * then begin moving those listed files and directories to the duplicate directory using a MoveFile and MoveDirectory object.<br>
+	  * After moving all the contents of the target directory to the duplicated directory, the method will delete the target directory using a Delete object.<br>
+	  * If no, then the method will cancel the move and send a message to the console.<br><br>
+	  * All exceptions are handled with the MoveFile and MoveDirectory objects.
+	  * </p>
+	  */
 	private void promptMergeDirectory(Path _old_dir) {
 		
 		// TODO change "true" to a call to GUI layer, for now it's assumed yes
@@ -196,6 +186,16 @@ public class MoveDirectory {
 		}
 	}
 
+	/** 
+	  * Converts a relative path to an absolute path
+	  * <p>
+	  * This converts the input String _rel_path first to a File object, then back to a String object named abs_path.<br>
+	  * This String abs_path is then returned to the caller.
+	  * </p>
+	  * 
+	  * @param String _rel_path - relative path to specified file or directory
+	  * @return String abs_path - absolute path to specified file or directory
+	  */
 	private static String toAbsolute(String _rel_path) {
 		String abs_path = new File(_rel_path).getAbsolutePath();
 		return abs_path;
