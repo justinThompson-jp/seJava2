@@ -13,6 +13,7 @@ public class ViewDirectory {
 	static int dirLength;
 	static String[] pathnames = null; // Creates an array in which we will store the names of files and directories
 	
+
 	public void Directory(String _path) {
 		
         //Scanner userIn = new Scanner(System.in);
@@ -21,6 +22,7 @@ public class ViewDirectory {
 		//while (pathnames == null) {
 			System.out.println("Insert directory path: ");
 			//path = "C:\\";
+
 			
 	        // Create new File instance by converting the given pathname string into an abstract pathname
 	        File f = new File(path);

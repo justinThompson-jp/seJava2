@@ -29,7 +29,7 @@ public class ConnoisseurGUI {
 	private DefaultTableModel model = new DefaultTableModel();
 	
 	private String default_dir = System.getProperty("user.home");
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -89,11 +89,13 @@ public class ConnoisseurGUI {
 		// file tree
 		JScrollPane folder_tree = new JScrollPane();
 		splitPane_1.setLeftComponent(folder_tree);
+
 		
 		JLabel folder_tree_label = new JLabel("Library");
 		folder_tree.setColumnHeaderView(folder_tree_label);
 
 		JTree tree = new JTree();
+
 		tree.setModel(new FileSystemModel(new File(default_dir)));
 		folder_tree.setViewportView(tree);
 		
@@ -108,7 +110,6 @@ public class ConnoisseurGUI {
 		ViewDirectory dir = new ViewDirectory();
 		dir.Directory(default_dir);
 		
-		
 		Object[] columns = {"Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
 		Object[] children = ViewDirectory.pathnames;
 		int h = children.length; // Used to create amount of rows for table
@@ -122,6 +123,7 @@ public class ConnoisseurGUI {
 		for (int i = 0; i < children.length; i++) {
 		table.setValueAt(children[i], i, 0);
 		}
+
 		folder_contents.setViewportView(table);
 		// file metadata
 		JPanel file_metadata = new JPanel();
