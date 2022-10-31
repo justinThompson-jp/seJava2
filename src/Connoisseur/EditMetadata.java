@@ -22,7 +22,7 @@ import org.jaudiotagger.tag.TagException;
  *
  */
 
-public class EditMetaData {
+public class EditMetadata {
 	
 	public static final IdTag getIdTag(File file, String fileName) throws IOException, UnsupportedAudioFileException,
 	CannotReadException, TagException, InvalidAudioFrameException, ReadOnlyFileException {
