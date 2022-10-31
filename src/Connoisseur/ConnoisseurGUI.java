@@ -1,10 +1,13 @@
 package Connoisseur;
 
+/*
+*	@authors: Justin Thompson, Jonathan Vallejo
+*/
+
 import java.awt.EventQueue;
 import java.io.File;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 
@@ -12,10 +15,14 @@ import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
 import Connoisseur.gui.FileSystemModel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class ConnoisseurGUI {
 
 	private JFrame frame;
+	private JTable table;
+	private DefaultTableModel model = new DefaultTableModel();
 
 	/**
 	 * Launch the application.
@@ -56,12 +63,8 @@ public class ConnoisseurGUI {
 		frame.getContentPane().add(toolBar);
 		
 		JSplitPane splitPane = new JSplitPane();
-		splitPane.setBounds(130, 302, 564, 128);
+		splitPane.setBounds(130, 280, 564, 128);
 		frame.getContentPane().add(splitPane);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(130, 27, 564, 264);
-		frame.getContentPane().add(panel);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 27, 120, 381);
@@ -73,5 +76,28 @@ public class ConnoisseurGUI {
 		 * TODO: Get rid of hardcoded directory name
 		 */
 		scrollPane.setViewportView(tree);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(130, 36, 564, 233);
+		frame.getContentPane().add(scrollPane_1);
+		
+		ViewDirectory dir = new ViewDirectory();
+		dir.Directory();
+		
+		
+		Object[] columns = {"Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
+		Object[] children = ViewDirectory.pathnames;
+		int h = children.length; // Used to create amount of rows for table
+		int k = columns.length;// Used to create amount of columns for table
+		model = new DefaultTableModel(h,k);
+		model.setColumnIdentifiers(columns);
+		
+		table = new JTable(model);
+		
+		// Fill first column with names of files pulled from ViewDirectory
+		for (int i = 0; i < children.length; i++) {
+		table.setValueAt(children[i], i, 0);
+		}
+		scrollPane_1.setViewportView(table);
 	}
 }
