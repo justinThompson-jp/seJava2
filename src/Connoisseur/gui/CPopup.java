@@ -1,3 +1,4 @@
+
 /* 
  * Fall 2022
  * CS4800 - Software Engineering
@@ -33,5 +34,4 @@ public class CPopup extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
 }
