@@ -29,6 +29,8 @@ public class CPopup extends JFrame implements ActionListener{
 	 * the class that called it
 	 */
 
+	
+	// this will check for and respond to the user selecting the yes/no button 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
