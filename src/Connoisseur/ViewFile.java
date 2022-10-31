@@ -40,6 +40,7 @@ public class ViewFile {
         } catch (IOException e) {
          System.out.println("Invalid file path: " + e.getMessage());
         }
+        userIn.close();
 	}
     public static void main(String[] args) throws IOException {
     	FileAttributes();
