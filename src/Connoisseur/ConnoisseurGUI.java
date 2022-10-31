@@ -133,32 +133,6 @@ public class ConnoisseurGUI {
 		file_metadata.add(file_metadata_label);
 		
 		// last/undecided panel SplitPane_3.setRightComponent()
-		/*
-=======
 
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(130, 36, 564, 233);
-		frame.getContentPane().add(scrollPane_1);
-		
-		ViewDirectory dir = new ViewDirectory();
-		dir.Directory();
-		
-		
-		Object[] columns = {"Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
-		Object[] children = ViewDirectory.pathnames;
-		int h = children.length; // Used to create amount of rows for table
-		int k = columns.length;// Used to create amount of columns for table
-		model = new DefaultTableModel(h,k);
-		model.setColumnIdentifiers(columns);
-		
-		table = new JTable(model);
-		
-		// Fill first column with names of files pulled from ViewDirectory
-		for (int i = 0; i < children.length; i++) {
-		table.setValueAt(children[i], i, 0);
-		}
-		contents.setViewportView(table);
->>>>>>> branch 'main' of https://github.com/justinThompson-jp/seJava2
-	*/
 	}
 }
