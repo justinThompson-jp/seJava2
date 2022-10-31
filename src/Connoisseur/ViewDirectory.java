@@ -1,22 +1,26 @@
 package Connoisseur;
 
 /* Source: pathnames class from 
-			https://stackabuse.com/java-list-files-in-a-directory/ */
+			https://stackabuse.com/java-list-files-in-a-directory/ 
+	Justin Thompson
+*/
 
 import java.util.Scanner;
 import java.io.*;
 
 public class ViewDirectory {
 	
-	public static void Directory() {
+	static int dirLength;
+	static String[] pathnames = null; // Creates an array in which we will store the names of files and directories
+	
+	public void Directory() {
 		
         Scanner userIn = new Scanner(System.in);
 		String path;
-		String[] pathnames = null; // Creates an array in which we will store the names of files and directories
-
+		
 		while (pathnames == null) {
 			System.out.println("Insert directory path: ");
-			path = userIn.nextLine();
+			path = "C:\\";
 			
 	        // Create new File instance by converting the given pathname string into an abstract pathname
 	        File f = new File(path);
@@ -30,9 +34,11 @@ public class ViewDirectory {
         for (String pathname : pathnames) {
             System.out.println(pathname);
         }	
+        dirLength = pathnames.length;
 	}
-	
+/*
 	public static void main(String[] args) {
 		Directory();
 	}
+*/
 }
