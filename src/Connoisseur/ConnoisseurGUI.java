@@ -80,7 +80,8 @@ public class ConnoisseurGUI {
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
 		/*
-		 * Code by Jacob Crawford, Justin Thompson
+		 * Code by Justin Thompson
+		 * Rearranged/added descriptive names and comments by Jacob Crawford
 		 * START BLOCK
 		 */
 		// splits folder_tree from the rest
@@ -104,7 +105,7 @@ public class ConnoisseurGUI {
 		 * END BLOCK
 		 */
 		
-		// file tree
+		// folder tree
 		JScrollPane folder_tree = new JScrollPane();
 		splitPane_1.setLeftComponent(folder_tree);
 
