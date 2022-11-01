@@ -36,6 +36,8 @@ public class ConnoisseurGUI {
 	 * END BLOCK
 	 */
 	
+	// Saves the path to the System.getProperty("user.home") for easy access
+	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
 	private String default_dir = System.getProperty("user.home");
 	
 	/*
@@ -133,12 +135,43 @@ public class ConnoisseurGUI {
 		JScrollPane folder_contents = new JScrollPane();
 		right_vert_split.setLeftComponent(folder_contents);
 		
+		JTable table  = displayFolderContents(default_dir);
+		folder_contents.setViewportView(table);
+
+		// file metadata(left component of bot_right_hori_split, which is the right component of right_vert_split, which is the right component of main_hori_split)
+		JPanel file_metadata = new JPanel();
+		bot_right_hori_split.setLeftComponent(file_metadata);
+
+		JLabel file_metadata_label = new JLabel("<change this name to current file name>");
+		file_metadata_label.setEnabled(false);
+		file_metadata_label.setVerticalAlignment(SwingConstants.NORTH);
+		file_metadata.add(file_metadata_label);
+		
+		// last/undecided panel SplitPane_3.setRightComponent()(right component of bot_right_hori_split)
+
+	}
+	
+	/**
+	  * Returns a JTable object of the contents of input directory
+	  * 
+	  * <p>
+	  * Lorem ispum dolor...
+	  * </p>
+	  * <p>
+	  * The bulk of the contents of this method were written by Justin Thompson
+	  * Conversion from direct call to method done by Jacob Crawford
+	  * </p>
+	  * 
+	  * @param String _dir - String path to target directory
+	  * @return JTable table - Formatted JTable of the contents of target directory
+	  */
+	private JTable displayFolderContents(String _dir) {
 		/*
 		 * Code by Justin Thompson
 		 * START BLOCK
 		 */
 		ViewDirectory dir = new ViewDirectory();
-		dir.Directory(default_dir);
+		dir.Directory(_dir);
 		
 		Object[] columns = {"Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
 		Object[] children = ViewDirectory.pathnames;
@@ -153,22 +186,10 @@ public class ConnoisseurGUI {
 		for (int i = 0; i < children.length; i++) {
 		table.setValueAt(children[i], i, 0);
 		}
-
-		folder_contents.setViewportView(table);
 		/*
 		 * END BLOCK
 		 */
 		
-		// file metadata(left component of bot_right_hori_split, which is the right component of right_vert_split, which is the right component of main_hori_split)
-		JPanel file_metadata = new JPanel();
-		bot_right_hori_split.setLeftComponent(file_metadata);
-
-		JLabel file_metadata_label = new JLabel("<change this name to current file name>");
-		file_metadata_label.setEnabled(false);
-		file_metadata_label.setVerticalAlignment(SwingConstants.NORTH);
-		file_metadata.add(file_metadata_label);
-		
-		// last/undecided panel SplitPane_3.setRightComponent()(right component of bot_right_hori_split)
-
+		return table;
 	}
 }
