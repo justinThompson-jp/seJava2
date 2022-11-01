@@ -24,15 +24,26 @@ import javax.swing.table.DefaultTableModel;
 
 public class ConnoisseurGUI {
 
+	/*
+	 * Code by Justin Thompson
+	 * START BLOCK
+	 */
 	private JFrame frame;
 	private JTable table;
 	private DefaultTableModel model = new DefaultTableModel();
+	/*
+	 * Code by Justin Thompson
+	 * END BLOCK
+	 */
 	
 	private String default_dir = System.getProperty("user.home");
 	
-	/**
-	 * Launch the application.
+	/*
+	 * Code by Justin Thompson
+	 * START BLOCK
 	 */
+	
+	//Launch the application.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -46,28 +57,32 @@ public class ConnoisseurGUI {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
+
+	//Create the application.
 	public ConnoisseurGUI() {
-		default_dir = System.getProperty("user.home");
+		default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	//Initialize the contents of the frame.
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 720, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		/*
+		 * Code by Justin Thompson
+		 * END BLOCK
+		 */
 		CMenuBar menuBar = new CMenuBar();
 		frame.setJMenuBar(menuBar);
 
 		CToolBar toolBar = new CToolBar(0, 0, 704, 25);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
+		/*
+		 * Code by Jacob Crawford, Justin Thompson
+		 * START BLOCK
+		 */
 		// splits folder_tree from the rest
 		JSplitPane splitPane_1 = new JSplitPane();
 		splitPane_1.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
@@ -85,6 +100,9 @@ public class ConnoisseurGUI {
 		splitPane_3.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane_2.setRightComponent(splitPane_3);
 		splitPane_3.setResizeWeight(.8);
+		/*
+		 * END BLOCK
+		 */
 		
 		// file tree
 		JScrollPane folder_tree = new JScrollPane();
@@ -94,10 +112,17 @@ public class ConnoisseurGUI {
 		JLabel folder_tree_label = new JLabel("Library");
 		folder_tree.setColumnHeaderView(folder_tree_label);
 
+		/*
+		 * Code by Justin Thompson
+		 * START BLOCK
+		 */
 		JTree tree = new JTree();
-
 		tree.setModel(new FileSystemModel(new File(default_dir)));
 		folder_tree.setViewportView(tree);
+		/*
+		 * END BLOCK
+		 */
+		
 		
 		// folder contents
 		JScrollPane folder_contents = new JScrollPane();
@@ -107,6 +132,10 @@ public class ConnoisseurGUI {
 		folder_contents_label.setEnabled(false);
 		folder_contents.setColumnHeaderView(folder_contents_label);
 		
+		/*
+		 * Code by Justin Thompson
+		 * START BLOCK
+		 */
 		ViewDirectory dir = new ViewDirectory();
 		dir.Directory(default_dir);
 		
@@ -123,7 +152,10 @@ public class ConnoisseurGUI {
 		for (int i = 0; i < children.length; i++) {
 		table.setValueAt(children[i], i, 0);
 		}
-
+		/*
+		 * END BLOCK
+		 */
+		
 		folder_contents.setViewportView(table);
 		// file metadata
 		JPanel file_metadata = new JPanel();

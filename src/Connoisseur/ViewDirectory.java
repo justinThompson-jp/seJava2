@@ -1,9 +1,10 @@
 package Connoisseur;
 
 /* Source: pathnames class from 
-			https://stackabuse.com/java-list-files-in-a-directory/ 
-	Justin Thompson
-*/
+ *		   https://stackabuse.com/java-list-files-in-a-directory/ 
+ *	@author: Justin Thompson
+ *	Edited by Jacob Crawford
+ */
 
 //import java.util.Scanner;
 import java.io.*;
