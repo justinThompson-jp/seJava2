@@ -84,30 +84,34 @@ public class ConnoisseurGUI {
 		 * Rearranged/added descriptive names and comments by Jacob Crawford
 		 * START BLOCK
 		 */
-		// splits folder_tree from the rest
-		JSplitPane splitPane_1 = new JSplitPane();
-		splitPane_1.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		frame.getContentPane().add(splitPane_1, BorderLayout.CENTER);
-		splitPane_1.setResizeWeight(0.4);
+		/*
+		 * Uses JSplitPanes to divide the ConnoisseurGUI window into four subwindows
+		 * First the Left section containing the folder_tree 
+		 * Then the Upper-Right section displaying the current folder_contents
+		 * Then the Bottom-Center section displaying the current file_metadata
+		 * Finally the Bottom-Right section displaying <undecided information, probably current file's tags>
+		 */
+		JSplitPane main_hori_split = new JSplitPane();
+		main_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		frame.getContentPane().add(main_hori_split, BorderLayout.CENTER);
+		main_hori_split.setResizeWeight(0.4);
 		
-		// splits folder_contents from the rest
-		JSplitPane splitPane_2 = new JSplitPane();
-		splitPane_2.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		splitPane_1.setRightComponent(splitPane_2);
-		splitPane_2.setResizeWeight(0.7);
+		JSplitPane right_vert_split = new JSplitPane();
+		right_vert_split.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		main_hori_split.setRightComponent(right_vert_split);
+		right_vert_split.setResizeWeight(0.7);
 
-		// splits file_metadata from last section
-		JSplitPane splitPane_3 = new JSplitPane();
-		splitPane_3.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		splitPane_2.setRightComponent(splitPane_3);
-		splitPane_3.setResizeWeight(.8);
+		JSplitPane bot_right_hori_split = new JSplitPane();
+		bot_right_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		right_vert_split.setRightComponent(bot_right_hori_split);
+		bot_right_hori_split.setResizeWeight(.8);
 		/*
 		 * END BLOCK
 		 */
 		
-		// folder tree
+		// folder tree(left component of main_hori_split)
 		JScrollPane folder_tree = new JScrollPane();
-		splitPane_1.setLeftComponent(folder_tree);
+		main_hori_split.setLeftComponent(folder_tree);
 
 		
 		JLabel folder_tree_label = new JLabel("Library");
@@ -118,16 +122,16 @@ public class ConnoisseurGUI {
 		 * START BLOCK
 		 */
 		JTree tree = new JTree();
-		tree.setModel(new FileSystemModel(new File(default_dir)));
+		tree.setModel(new FileSystemModel(new File(default_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		folder_tree.setViewportView(tree);
 		/*
 		 * END BLOCK
 		 */
 		
 		
-		// folder contents
+		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
 		JScrollPane folder_contents = new JScrollPane();
-		splitPane_2.setLeftComponent(folder_contents);
+		right_vert_split.setLeftComponent(folder_contents);
 		
 		/*
 		 * Code by Justin Thompson
@@ -149,21 +153,22 @@ public class ConnoisseurGUI {
 		for (int i = 0; i < children.length; i++) {
 		table.setValueAt(children[i], i, 0);
 		}
+
+		folder_contents.setViewportView(table);
 		/*
 		 * END BLOCK
 		 */
 		
-		folder_contents.setViewportView(table);
-		// file metadata
+		// file metadata(left component of bot_right_hori_split, which is the right component of right_vert_split, which is the right component of main_hori_split)
 		JPanel file_metadata = new JPanel();
-		splitPane_3.setLeftComponent(file_metadata);
+		bot_right_hori_split.setLeftComponent(file_metadata);
 
 		JLabel file_metadata_label = new JLabel("<change this name to current file name>");
 		file_metadata_label.setEnabled(false);
 		file_metadata_label.setVerticalAlignment(SwingConstants.NORTH);
 		file_metadata.add(file_metadata_label);
 		
-		// last/undecided panel SplitPane_3.setRightComponent()
+		// last/undecided panel SplitPane_3.setRightComponent()(right component of bot_right_hori_split)
 
 	}
 }
