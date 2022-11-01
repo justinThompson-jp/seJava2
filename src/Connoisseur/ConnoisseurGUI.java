@@ -128,10 +128,6 @@ public class ConnoisseurGUI {
 		// folder contents
 		JScrollPane folder_contents = new JScrollPane();
 		splitPane_2.setLeftComponent(folder_contents);
-
-		JLabel folder_contents_label = new JLabel("<change this name to current folder name>");
-		folder_contents_label.setEnabled(false);
-		folder_contents.setColumnHeaderView(folder_contents_label);
 		
 		/*
 		 * Code by Justin Thompson
