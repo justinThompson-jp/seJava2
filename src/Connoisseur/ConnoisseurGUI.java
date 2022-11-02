@@ -119,24 +119,13 @@ public class ConnoisseurGUI {
 		JLabel folder_tree_label = new JLabel("Library");
 		folder_tree.setColumnHeaderView(folder_tree_label);
 
-		/*
-		 * Code by Justin Thompson
-		 * START BLOCK
-		 */
-		JTree tree = new JTree();
-		tree.setModel(new FileSystemModel(new File(default_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
-		folder_tree.setViewportView(tree);
-		/*
-		 * END BLOCK
-		 */
-		
-		
+		folder_tree.setViewportView(displayFolderTree(default_dir));
+				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
 		JScrollPane folder_contents = new JScrollPane();
 		right_vert_split.setLeftComponent(folder_contents);
 		
-		JTable table  = displayFolderContents(default_dir);
-		folder_contents.setViewportView(table);
+		folder_contents.setViewportView(displayDirContents(default_dir));
 
 		// file metadata(left component of bot_right_hori_split, which is the right component of right_vert_split, which is the right component of main_hori_split)
 		JPanel file_metadata = new JPanel();
@@ -165,7 +154,7 @@ public class ConnoisseurGUI {
 	  * @param String _dir - String path to target directory
 	  * @return JTable table - Formatted JTable of the contents of target directory
 	  */
-	private JTable displayFolderContents(String _dir) {
+	private JTable displayDirContents(String _dir) {
 		/*
 		 * Code by Justin Thompson
 		 * START BLOCK
@@ -191,5 +180,32 @@ public class ConnoisseurGUI {
 		 */
 		
 		return dir_contents;
+	}
+	
+	/**
+	  * Returns a JTree object of the contents of input directory
+	  * 
+	  * <p>
+	  * Lorem ispum dolor...
+	  * </p>
+	  * <p>
+	  * The bulk of the contents of this method were written by Justin Thompson
+	  * Conversion from sequential commands to method done by Jacob Crawford
+	  * </p>
+	  * 
+	  * @param String _dir - String path to target directory
+	  * @return JTree tree - Nestable JTree of the contents of target directory
+	  */
+	private JTree displayFolderTree(String _dir) {
+		/*
+		 * Code by Justin Thompson
+		 * START BLOCK
+		 */
+		JTree tree = new JTree();
+		tree.setModel(new FileSystemModel(new File(_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
+		/*
+		 * END BLOCK
+		 */
+		return tree;
 	}
 }
