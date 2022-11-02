@@ -6,4 +6,4 @@ Group Members:  Justin Thompson, Aristan Galindo, Jacob Crawford, Jonathan Valle
 
 Project: Connoisseur
 
-File management software with focus on adding/removing/searching by metadata tags
+Media management software with focus on adding/removing/searching by metadata tags
