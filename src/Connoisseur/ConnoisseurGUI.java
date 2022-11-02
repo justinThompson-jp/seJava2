@@ -28,9 +28,9 @@ public class ConnoisseurGUI {
 	 * Code by Justin Thompson
 	 * START BLOCK
 	 */
-	private JFrame frame;
-	private JTable table;
-	private DefaultTableModel model = new DefaultTableModel();
+	private JFrame gui_frame;
+	private JTable dir_contents;
+	private DefaultTableModel contents_table = new DefaultTableModel();
 	/*
 	 * Code by Justin Thompson
 	 * END BLOCK
@@ -51,7 +51,7 @@ public class ConnoisseurGUI {
 			public void run() {
 				try {
 					ConnoisseurGUI window = new ConnoisseurGUI();
-					window.frame.setVisible(true);
+					window.gui_frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -68,18 +68,18 @@ public class ConnoisseurGUI {
 
 	//Initialize the contents of the frame.
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 720, 480);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gui_frame = new JFrame();
+		gui_frame.setBounds(100, 100, 720, 480);
+		gui_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		/*
 		 * Code by Justin Thompson
 		 * END BLOCK
 		 */
 		CMenuBar menuBar = new CMenuBar();
-		frame.setJMenuBar(menuBar);
+		gui_frame.setJMenuBar(menuBar);
 
 		CToolBar toolBar = new CToolBar(0, 0, 704, 25);
-		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+		gui_frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
 		/*
 		 * Code by Justin Thompson
@@ -95,7 +95,7 @@ public class ConnoisseurGUI {
 		 */
 		JSplitPane main_hori_split = new JSplitPane();
 		main_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		frame.getContentPane().add(main_hori_split, BorderLayout.CENTER);
+		gui_frame.getContentPane().add(main_hori_split, BorderLayout.CENTER);
 		main_hori_split.setResizeWeight(0.4);
 		
 		JSplitPane right_vert_split = new JSplitPane();
@@ -159,7 +159,7 @@ public class ConnoisseurGUI {
 	  * </p>
 	  * <p>
 	  * The bulk of the contents of this method were written by Justin Thompson
-	  * Conversion from direct call to method done by Jacob Crawford
+	  * Conversion from sequential commands to method done by Jacob Crawford
 	  * </p>
 	  * 
 	  * @param String _dir - String path to target directory
@@ -177,19 +177,19 @@ public class ConnoisseurGUI {
 		Object[] children = ViewDirectory.pathnames;
 		int h = children.length; // Used to create amount of rows for table
 		int k = columns.length;// Used to create amount of columns for table
-		model = new DefaultTableModel(h,k);
-		model.setColumnIdentifiers(columns);
+		contents_table = new DefaultTableModel(h,k);
+		contents_table.setColumnIdentifiers(columns);
 		
-		table = new JTable(model);
+		dir_contents = new JTable(contents_table);
 		
 		// Fill first column with names of files pulled from ViewDirectory
 		for (int i = 0; i < children.length; i++) {
-		table.setValueAt(children[i], i, 0);
+		dir_contents.setValueAt(children[i], i, 0);
 		}
 		/*
 		 * END BLOCK
 		 */
 		
-		return table;
+		return dir_contents;
 	}
 }

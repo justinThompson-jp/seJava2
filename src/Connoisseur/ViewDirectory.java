@@ -24,10 +24,11 @@ public class ViewDirectory {
         // Populate array with names of files and directories
         pathnames = f.list();
 
+        // commented out tester output - Jacob Crawford
         // For each pathname in the pathnames array print the names of files and directories
-        for (String pathname : pathnames) {
-            System.out.println(pathname);
-        }	
+        //for (String pathname : pathnames) {
+        //    System.out.println(pathname);
+        //}	
         dirLength = pathnames.length;
 	}
 /*
