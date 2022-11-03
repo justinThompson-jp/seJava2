@@ -5,6 +5,7 @@ package Connoisseur;
 */
 
 import java.awt.EventQueue;
+import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JFrame;
@@ -14,6 +15,8 @@ import javax.swing.JTree;
 import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
 import Connoisseur.gui.FileSystemModel;
+import Connoisseur.gui.event.CMouseListener;
+
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -114,7 +117,6 @@ public class ConnoisseurGUI {
 		// folder tree(left component of main_hori_split)
 		JScrollPane folder_tree = new JScrollPane();
 		main_hori_split.setLeftComponent(folder_tree);
-
 		
 		JLabel folder_tree_label = new JLabel("Library");
 		folder_tree.setColumnHeaderView(folder_tree_label);
@@ -142,7 +144,6 @@ public class ConnoisseurGUI {
 	
 	/**
 	  * Returns a JTable object of the contents of input directory
-	  * 
 	  * <p>
 	  * Lorem ispum dolor...
 	  * </p>
@@ -184,7 +185,6 @@ public class ConnoisseurGUI {
 	
 	/**
 	  * Returns a JTree object of the contents of input directory
-	  * 
 	  * <p>
 	  * Lorem ispum dolor...
 	  * </p>
@@ -202,6 +202,7 @@ public class ConnoisseurGUI {
 		 * START BLOCK
 		 */
 		JTree tree = new JTree();
+		tree.addMouseListener(new CMouseListener(tree));
 		tree.setModel(new FileSystemModel(new File(_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		/*
 		 * END BLOCK
