@@ -39,6 +39,8 @@ public class ConnoisseurGUI {
 	 * END BLOCK
 	 */
 	
+	private JScrollPane folder_contents; 
+	
 	// Saves the path to the System.getProperty("user.home") for easy access
 	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
 	private String default_dir = System.getProperty("user.home");
@@ -47,7 +49,14 @@ public class ConnoisseurGUI {
 	 * Code by Justin Thompson
 	 * START BLOCK
 	 */
-	
+
+	//Create the application.
+	public ConnoisseurGUI() {
+		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
+		this.folder_contents = null;
+		initialize();
+	}
+
 	//Launch the application.
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -60,13 +69,6 @@ public class ConnoisseurGUI {
 				}
 			}
 		});
-	}
-
-
-	//Create the application.
-	public ConnoisseurGUI() {
-		default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
-		initialize();
 	}
 
 	//Initialize the contents of the frame.
@@ -124,7 +126,7 @@ public class ConnoisseurGUI {
 		folder_tree.setViewportView(displayFolderTree(default_dir));
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
-		JScrollPane folder_contents = new JScrollPane();
+		folder_contents = new JScrollPane();
 		right_vert_split.setLeftComponent(folder_contents);
 		
 		folder_contents.setViewportView(displayDirContents(default_dir));
@@ -155,7 +157,7 @@ public class ConnoisseurGUI {
 	  * @param String _dir - String path to target directory
 	  * @return JTable table - Formatted JTable of the contents of target directory
 	  */
-	private JTable displayDirContents(String _dir) {
+	public JTable displayDirContents(String _dir) {
 		/*
 		 * Code by Justin Thompson
 		 * START BLOCK
@@ -202,7 +204,7 @@ public class ConnoisseurGUI {
 		 * START BLOCK
 		 */
 		JTree tree = new JTree();
-		tree.addMouseListener(new CMouseListener(tree));
+		tree.addMouseListener(new CMouseListener(tree, folder_contents));
 		tree.setModel(new FileSystemModel(new File(_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		/*
 		 * END BLOCK

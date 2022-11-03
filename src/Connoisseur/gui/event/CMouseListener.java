@@ -2,26 +2,31 @@ package Connoisseur.gui.event;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
+
+import Connoisseur.*;
 
 public class CMouseListener implements MouseListener {
 
 	private JTree tree;
+	private JScrollPane viewport;
 	private Object file_clicked;
 	private Object file_dragged_to;
+	
+	// Constructor(s)
 	/**
-	  * Creates a CMouseListener object that will allow for mouse control in a JTree
+	  * Creates a CMouseListener object that will allow navigation of folders through JTree
 	  * <p>
 	  * Lorem ipsum dolor...
 	  * </p>
 	  * 
 	  */
-	public CMouseListener(JTree _tree) {
+	public CMouseListener(JTree _tree, JScrollPane _folder_contents) {
 		this.tree = _tree;
+		this.viewport = _folder_contents;
 	}
 	
 
@@ -43,12 +48,20 @@ public class CMouseListener implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// simple guard clause to only update file_clicked when a new file is clicked, prevents duplicate calls
-		Object new_clicked = tree.getSelectionPath().getLastPathComponent();
-		if (getFileClicked() != new_clicked) {
-			setFileClicked(new_clicked);
-			System.out.println(file_clicked.toString());
+		// simple guard clauses
+		if (tree.getSelectionPath() == null) {
+			return;
 		}
+		Object new_clicked = tree.getSelectionPath().getLastPathComponent();
+		if (getFileClicked() == new_clicked) {
+			return;
+		}
+		setFileClicked(new_clicked);
+		System.out.println(toAbsolute(file_clicked.toString()));
+		
+		// change the displayed directory in the folder_contents subwindow to reflect the chosen directory
+		// TODO get the selected folder to display in the main GUI
+		//viewport.setViewportView(ConnoisseurGUI.displayDirContents(new_clicked.toString()));
 	}
 
 	// these can be later used for click-and-dragged file/folder movement
@@ -64,4 +77,9 @@ public class CMouseListener implements MouseListener {
 	@Override
 	public void mouseExited(MouseEvent e) {}
 
+	
+	private static String toAbsolute(String _rel_path) {
+		String abs_path = new File(_rel_path).getAbsolutePath();
+		return abs_path;
+	}
 }
