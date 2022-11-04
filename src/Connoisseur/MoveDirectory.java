@@ -161,13 +161,13 @@ public class MoveDirectory {
 				String temp_curr = curr_dir_path.toString() + "\\" + dir_contents[i];
 				String temp_dest = target_end_path.toString();
 				
-				// check if temp_dest points to a directory
+				// check if temp_curr points to a directory
 				if (Files.isDirectory(Paths.get(temp_curr))) {
 					temp_dir.setCurrPath(temp_curr);
 					temp_dir.setTargetPath(temp_dest);
 					temp_dir.move();
 				
-				// else temp_dest must be pointing at a file
+				// else temp_curr must be pointing at a file
 				} else {
 					temp_file.setCurrPath(temp_curr);
 					temp_file.setTargetPath(temp_dest);
