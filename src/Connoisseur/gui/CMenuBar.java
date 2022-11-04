@@ -102,18 +102,17 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			String userInput = "";
 			
 			FileCreationType creationType = null;
-			
 			// user has nothing selected
 			if (pathsSelected == null || pathsSelected.length == 0) {
 				// show create file dialogue at default directory
 				targetPath = defaultPath;
 				userInput = (String) JOptionPane.showInputDialog(null, "Creating new file at: ", "New File", JOptionPane.QUESTION_MESSAGE, icon, null, defaultPath);
 				creationType = FileCreationType.DIRECT;
-			} else if (pathsSelected.length > 1) { 
+			} else if (pathsSelected.length > 1) {
 				// user has more than one thing selected
 				
 				// show create file dialogue at default directory
-				targetPath = treePathToString(pathsSelected[0].toString());
+				targetPath = defaultPath;
 				userInput = (String) JOptionPane.showInputDialog(null, "Creating new file at: ", "New File", JOptionPane.QUESTION_MESSAGE, icon, null, defaultPath);	
 				creationType = FileCreationType.DIRECT;
 			} else {

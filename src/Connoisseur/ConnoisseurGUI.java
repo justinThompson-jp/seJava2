@@ -215,7 +215,6 @@ public class ConnoisseurGUI {
 		 */
 		
 		tree = new JTree();
-		JTree tree = new JTree();
 		tree.addMouseListener(new CMouseListener(tree, instance));// added mouselistener and feeds it the tree to be interacted and a reference to the GUI itself
 		tree.setModel(new FileSystemModel(new File(_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		/*
