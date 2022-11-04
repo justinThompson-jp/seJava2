@@ -1,29 +1,29 @@
 package Connoisseur;
 
+import java.awt.BorderLayout;
+
 /*
 *	@authors: Justin Thompson, Jonathan Vallejo, Jacob Crawford
 */
 
 import java.awt.EventQueue;
-import java.awt.event.MouseEvent;
+
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
 import Connoisseur.gui.FileSystemModel;
 import Connoisseur.gui.event.CMouseListener;
-
-import javax.swing.JScrollPane;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import javax.swing.table.DefaultTableModel;
 
 public class ConnoisseurGUI {
 
@@ -41,6 +41,11 @@ public class ConnoisseurGUI {
 	
 	private JScrollPane folder_contents; 
 	
+	private JTree tree;
+	
+	private static ConnoisseurGUI instance;
+	private static FileManager fileManager;
+	
 	// Saves the path to the System.getProperty("user.home") for easy access
 	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
 	private String default_dir = System.getProperty("user.home");
@@ -52,8 +57,10 @@ public class ConnoisseurGUI {
 
 	//Create the application.
 	public ConnoisseurGUI() {
+		instance = this;
 		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
 		this.folder_contents = null;
+		fileManager = new FileManager();
 		initialize();
 	}
 
@@ -203,7 +210,7 @@ public class ConnoisseurGUI {
 		 * Code by Justin Thompson
 		 * START BLOCK
 		 */
-		JTree tree = new JTree();
+		tree = new JTree();
 		tree.addMouseListener(new CMouseListener(tree, folder_contents));
 		tree.setModel(new FileSystemModel(new File(_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		/*
@@ -211,4 +218,16 @@ public class ConnoisseurGUI {
 		 */
 		return tree;
 	}
+	
+	public JTree getJTree() {
+		return tree;
+	}
+	
+	public String getDefaultDir() {
+		return default_dir;
+	}
+	
+	public static ConnoisseurGUI getInstance() {return instance;};
+	public static FileManager getFileManager() {return fileManager;}
+	
 }

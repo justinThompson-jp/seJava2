@@ -45,6 +45,60 @@ public class FileManager {
 	}
 	
 	/**
+	 * Creates a file with the given name located at the given path, without figuring out the home directory, used by the CMenuBar
+	 * @param path - path where file will be created
+	 * @param fileName - name of file to be created
+	 * @author Jonathan Vallejo
+	 */
+	public void createFileDirectly(String path, String fileName) {
+		File f = new File(path + SP + fileName);
+		
+		// if path does not exist, create path
+		if (!Files.exists(Paths.get(path))) {
+			new File(path).mkdirs();
+		}
+		
+		// if file doesn't exist, create file
+		if (!f.exists()) {
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		// if file exists, maybe throw exception and catch it -> display file already exists warning to user?
+		} else {
+			System.out.println("File already exists, so not doing anything for now");
+		}
+	}
+	
+	/**
+	 * Creates a file at the given path, without figuring out the home directory, used by the CMenuBar
+	 * @param path - path where file will be created
+	 * @param fileName - name of file to be created
+	 * @author Jonathan Vallejo
+	 */
+	public void createFileDirectly(String path) {
+		File f = new File(path);
+		
+		// if path does not exist, create path
+		if (!Files.exists(Paths.get(path))) {
+			new File(f.getParent()).mkdirs();
+		}
+		
+		// if file doesn't exist, create file
+		if (!f.exists()) {
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		// if file exists, maybe throw exception and catch it -> display file already exists warning to user?
+		} else {
+			System.out.println("File already exists, so not doing anything for now");
+		}
+	}
+	
+	/**
 	 * Creates a file with the given name located at the given path and returns the file
 	 * @param path - path where file will be created
 	 * @param fileName - name of file to be created

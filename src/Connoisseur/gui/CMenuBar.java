@@ -3,11 +3,17 @@ package Connoisseur.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JTree;
+import javax.swing.tree.TreePath;
+
+import Connoisseur.ConnoisseurGUI;
 
 /***
  * Extension of the JMenuBar class to include the functionality of the Connoisseur MenuBar. <br>
@@ -83,14 +89,87 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// handle clicks within the "New" sub-menu
+		
+		// figure out if user currently has a folder selected
+		JTree files = ConnoisseurGUI.getInstance().getJTree();
+		TreePath[] pathsSelected = files.getSelectionPaths();
+		
 		if (e.getSource() == newFileMenuItem) {
-			System.out.println("*NEW FILE CLICKED*");
+			ImageIcon icon = new ImageIcon("resources/gui/menubar/icons8-add-file-16.png");
+			
+			String defaultPath = ConnoisseurGUI.getInstance().getDefaultDir() + File.separator;
+			String targetPath = "";
+			String userInput = "";
+			
+			FileCreationType creationType = null;
+			
+			// user has nothing selected
+			if (pathsSelected == null || pathsSelected.length == 0) {
+				// show create file dialogue at default directory
+				targetPath = defaultPath;
+				userInput = (String) JOptionPane.showInputDialog(null, "Creating new file at: ", "New File", JOptionPane.QUESTION_MESSAGE, icon, null, defaultPath);
+				creationType = FileCreationType.DIRECT;
+			} else if (pathsSelected.length > 1) { 
+				// user has more than one thing selected
+				
+				// show create file dialogue at default directory
+				targetPath = treePathToString(pathsSelected[0].toString());
+				userInput = (String) JOptionPane.showInputDialog(null, "Creating new file at: ", "New File", JOptionPane.QUESTION_MESSAGE, icon, null, defaultPath);	
+				creationType = FileCreationType.DIRECT;
+			} else {
+				// user only has one thing selected
+				targetPath = treePathToString(pathsSelected[0].toString());
+				File fileSelected = new File(targetPath);
+				
+				// file selected is a directory, proceed with prompt
+				if (fileSelected.list() != null) {
+					targetPath = treePathToString(pathsSelected[0].toString());
+					userInput = (String) JOptionPane.showInputDialog(null, "Creating new file at: " + targetPath, "New File", JOptionPane.QUESTION_MESSAGE, icon, null, null);		
+				} else {
+					// file selected is not a directory, show create file dialogue at parent directory
+					targetPath = defaultPath;
+					if (pathsSelected[0].getParentPath() != null) {
+						targetPath = treePathToString(pathsSelected[0].getParentPath().toString());	
+					}
+					userInput = (String) JOptionPane.showInputDialog(null, "Creating new file at: " + targetPath, "New File", JOptionPane.QUESTION_MESSAGE, icon, null, null);		
+				}
+				creationType = FileCreationType.FROM_PARENT;
+			}
+			
+			// user actually entered something
+			if (userInput != null && userInput != "" && userInput != " ") {
+				switch (creationType) {
+				case DIRECT:
+					ConnoisseurGUI.getFileManager().createFileDirectly(userInput);
+					System.out.println("Created file at: " + userInput);
+					break;
+				case FROM_PARENT:
+					ConnoisseurGUI.getFileManager().createFileDirectly(targetPath, userInput);
+					System.out.println("Created file at: " + targetPath + " with the name: " + userInput);
+					break;
+				default:
+					break;
+				}
+			}
 		}
+		
 		if (e.getSource() == newDirectoryMenuItem) {
 			System.out.println("*NEW DIRECTORY CLICKED*");
 		}
 		
 		
+	}
+	
+	/*
+	 * Enum class to identify which file creation method the program will use
+	 */
+	private enum FileCreationType {
+		FROM_PARENT, DIRECT;
+	}
+	
+	// takes a path in the TreePath format and converts it to a normal path format
+	private String treePathToString(String input) {
+		return input.replace("[", "").replace("]", "").replace(" ", "").replace(",", File.separator);
 	}
 
 }
