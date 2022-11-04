@@ -176,7 +176,12 @@ public class ConnoisseurGUI {
 		Object[] children = ViewDirectory.pathnames;
 		int h = children.length; // Used to create amount of rows for table
 		int k = columns.length;// Used to create amount of columns for table
-		contents_table = new DefaultTableModel(h,k);
+		contents_table = new DefaultTableModel(h,k) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		contents_table.setColumnIdentifiers(columns);
 		
 		dir_contents = new JTable(contents_table);

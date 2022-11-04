@@ -89,7 +89,15 @@ public class CMouseListener implements MouseListener {
 	@Override
 	public void mouseExited(MouseEvent e) {}
 
-	
+	/**
+	  * Converts an input TreePath object into a String
+	  * <p>
+	  * Lorem ipsum dolor...
+	  * </p>
+	  * 
+	  * @param TreePath _tree_path - The TreePath object to be converted
+	  * @return String path - The absolute path from the drive to the end of the path formatted as a String
+	  */
 	public String treePathToString(TreePath _tree_path) {
 		String path = "";
 		Object[] steps = _tree_path.getPath();
