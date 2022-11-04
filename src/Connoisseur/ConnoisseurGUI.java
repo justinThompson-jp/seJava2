@@ -38,8 +38,7 @@ public class ConnoisseurGUI {
 	 * END BLOCK
 	 */
 	
-	public JScrollPane folder_contents; 
-	
+	private JScrollPane folder_contents; 
 	private JTree tree;
 	
 	private static ConnoisseurGUI instance;
@@ -217,8 +216,10 @@ public class ConnoisseurGUI {
 		 */
 		
 		tree = new JTree();
-		tree.addMouseListener(new CMouseListener(tree, instance));// added mouselistener and feeds it the tree to be interacted and a reference to the GUI itself
-		tree.setModel(new FileSystemModel(new File(_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
+		// added mouselistener and feeds it the tree to be interacted and a reference to the GUI itself -Jacob Crawford
+		tree.addMouseListener(new CMouseListener(tree, instance));
+		// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
+		tree.setModel(new FileSystemModel(new File(_dir)));
 		/*
 		 * END BLOCK
 		 */

@@ -1,3 +1,11 @@
+/* 
+ * Fall 2022
+ * CS4800 - Software Engineering
+ * Group - Java2
+ * 
+ * Class initially created by Jacob Crawford
+ */
+
 package Connoisseur.gui.event;
 
 import java.awt.event.MouseEvent;
@@ -28,6 +36,8 @@ public class CMouseListener implements MouseListener {
 	public CMouseListener(JTree _tree, ConnoisseurGUI _instance) {
 		this.tree = _tree;
 		this.instance = _instance;
+		this.file_clicked = "";
+		this.file_dragged_to = "";
 	}
 	
 
@@ -50,18 +60,29 @@ public class CMouseListener implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// simple guard clauses
+		// checks if first selection is empty space/not a file or folder
 		if (tree.getSelectionPath() == null) {
 			return;
 		}
+		
 		String new_clicked = treePathToString(tree.getSelectionPath());
-		if (getFileClicked() == new_clicked) {
+		// checks if the selected object is even readable
+		if (!Files.isReadable(Paths.get(new_clicked))) {
+			return;
+		}
+		// checks if the selected object is even a directory
+		if (!Files.isDirectory(Paths.get(new_clicked))) {
+			return;
+		}
+		// checks if the newly select object isn't the most recently prior selected object
+		if (getFileClicked().equals(new_clicked)) {
 			return;
 		}
 		setFileClicked(new_clicked);
 		
 		// TODO for some reason this thinks everything but user.home is not a directory
 		
-		if (Files.isDirectory(Paths.get(new_clicked.toString()))) {
+		if (Files.isDirectory(Paths.get(new_clicked))) {
 			System.out.print("Directory: ");
 		} else {
 			System.out.print("File: ");
@@ -69,7 +90,7 @@ public class CMouseListener implements MouseListener {
 		
 		System.out.println(new_clicked);
 
-		instance.folder_contents.setViewportView(instance.displayDirContents(new_clicked));
+		instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 		// change the displayed directory in the folder_contents subwindow to reflect the chosen directory
 		// TODO get the selected folder to display in the main GUI
 		//JScrollPane temp = window.getFolderContents();
