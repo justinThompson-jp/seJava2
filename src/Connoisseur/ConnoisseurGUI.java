@@ -25,9 +25,6 @@ import Connoisseur.gui.FileSystemModel;
 import Connoisseur.gui.event.CMouseListener;
 
 public class ConnoisseurGUI {
-
-	// allows passing reference to itself to other classes
-	private ConnoisseurGUI window;
 	
 	/*
 	 * Code by Justin Thompson
@@ -41,7 +38,7 @@ public class ConnoisseurGUI {
 	 * END BLOCK
 	 */
 	
-	private JScrollPane folder_contents; 
+	public JScrollPane folder_contents; 
 	
 	private JTree tree;
 	
@@ -56,6 +53,7 @@ public class ConnoisseurGUI {
 	 * Code by Justin Thompson
 	 * START BLOCK
 	 */
+	
 
 	//Create the application.
 	public ConnoisseurGUI() {
@@ -73,7 +71,6 @@ public class ConnoisseurGUI {
 				try {
 					ConnoisseurGUI window = new ConnoisseurGUI();
 					window.gui_frame.setVisible(true);
-					window.setWindow(window);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -208,7 +205,7 @@ public class ConnoisseurGUI {
 	  * @param String _dir - String path to target directory
 	  * @return JTree tree - Nestable JTree of the contents of target directory
 	  */
-	private JTree displayFolderTree(String _dir) {
+	public JTree displayFolderTree(String _dir) {
 		/*
 		 * Code by Justin Thompson
 		 * START BLOCK
@@ -223,27 +220,13 @@ public class ConnoisseurGUI {
 		return tree;
 	}
 	
-	public JTree getJTree() {
-		return tree;
-	}
-	
+	public JTree getJTree() {return tree;}
 	public static ConnoisseurGUI getInstance() {return instance;}
 	public static FileManager getFileManager() {return fileManager;}
-	
-	public String getDefaultDir() {
-		return default_dir;
-	}
-	
-	public void setWindow(ConnoisseurGUI _window) {
-		this.window = _window;
-	}
-	public ConnoisseurGUI getWindow() {
-		return window;
-	}
+	public JScrollPane getFolderContents() {return folder_contents;}
+	public String getDefaultDir() {return default_dir;}
+
 	public void setFolderContents(JScrollPane _folder_contents) {
 		this.folder_contents = _folder_contents;
-	}
-	public JScrollPane getFolderContents() {
-		return folder_contents;
 	}
 }

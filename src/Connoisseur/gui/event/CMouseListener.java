@@ -2,21 +2,20 @@ package Connoisseur.gui.event;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.tree.TreePath;
 
 import Connoisseur.ConnoisseurGUI;
 
 public class CMouseListener implements MouseListener {
 
 	private JTree tree;
-	private ConnoisseurGUI window;
-	private Object file_clicked;
-	private Object file_dragged_to;
+	private ConnoisseurGUI instance;
+	private String file_clicked;
+	private String file_dragged_to;
 	
 	// Constructor(s)
 	/**
@@ -26,9 +25,9 @@ public class CMouseListener implements MouseListener {
 	  * </p>
 	  * 
 	  */
-	public CMouseListener(JTree _tree, ConnoisseurGUI _window) {
+	public CMouseListener(JTree _tree, ConnoisseurGUI _instance) {
 		this.tree = _tree;
-		this.window = _window;
+		this.instance = _instance;
 	}
 	
 
@@ -41,10 +40,10 @@ public class CMouseListener implements MouseListener {
 	}
 
 	// Setter method(s)
-	public void setFileDraggedTo(Object _file_dragged_to) {
+	public void setFileDraggedTo(String _file_dragged_to) {
 		this.file_dragged_to = _file_dragged_to;
 	}
-	public void setFileClicked(Object _file_clicked) {
+	public void setFileClicked(String _file_clicked) {
 		this.file_clicked = _file_clicked;
 	}
 
@@ -54,20 +53,23 @@ public class CMouseListener implements MouseListener {
 		if (tree.getSelectionPath() == null) {
 			return;
 		}
-		Object new_clicked = tree.getSelectionPath().getLastPathComponent();
+		String new_clicked = treePathToString(tree.getSelectionPath());
 		if (getFileClicked() == new_clicked) {
 			return;
 		}
 		setFileClicked(new_clicked);
 		
 		// TODO for some reason this thinks everything but user.home is not a directory
+		
 		if (Files.isDirectory(Paths.get(new_clicked.toString()))) {
 			System.out.print("Directory: ");
 		} else {
 			System.out.print("File: ");
 		}
-		System.out.println(toAbsolute(file_clicked.toString()));
 		
+		System.out.println(new_clicked);
+
+		instance.folder_contents.setViewportView(instance.displayDirContents(new_clicked));
 		// change the displayed directory in the folder_contents subwindow to reflect the chosen directory
 		// TODO get the selected folder to display in the main GUI
 		//JScrollPane temp = window.getFolderContents();
@@ -88,8 +90,12 @@ public class CMouseListener implements MouseListener {
 	public void mouseExited(MouseEvent e) {}
 
 	
-	private static String toAbsolute(String _rel_path) {
-		String abs_path = new File(_rel_path).getAbsolutePath();
-		return abs_path;
+	public String treePathToString(TreePath _tree_path) {
+		String path = "";
+		Object[] steps = _tree_path.getPath();
+		for (int i = 0; i < steps.length; i++) {
+			path += steps[i].toString() + "\\";
+		} 
+		return path;
 	}
 }
