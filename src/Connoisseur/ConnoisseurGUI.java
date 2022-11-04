@@ -228,7 +228,7 @@ public class ConnoisseurGUI {
 		return tree;
 	}
 	
-	public static ConnoisseurGUI getInstance() {return instance;};
+	public static ConnoisseurGUI getInstance() {return instance;}
 	public static FileManager getFileManager() {return fileManager;}
 	
 	public String getDefaultDir() {
