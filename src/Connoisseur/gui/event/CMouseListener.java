@@ -3,16 +3,18 @@ package Connoisseur.gui.event;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 
-import Connoisseur.*;
+import Connoisseur.ConnoisseurGUI;
 
 public class CMouseListener implements MouseListener {
 
 	private JTree tree;
-	private JScrollPane viewport;
+	private ConnoisseurGUI window;
 	private Object file_clicked;
 	private Object file_dragged_to;
 	
@@ -24,9 +26,9 @@ public class CMouseListener implements MouseListener {
 	  * </p>
 	  * 
 	  */
-	public CMouseListener(JTree _tree, JScrollPane _folder_contents) {
+	public CMouseListener(JTree _tree, ConnoisseurGUI _window) {
 		this.tree = _tree;
-		this.viewport = _folder_contents;
+		this.window = _window;
 	}
 	
 
@@ -57,11 +59,19 @@ public class CMouseListener implements MouseListener {
 			return;
 		}
 		setFileClicked(new_clicked);
+		
+		// TODO for some reason this thinks everything but user.home is not a directory
+		if (Files.isDirectory(Paths.get(new_clicked.toString()))) {
+			System.out.print("Directory: ");
+		} else {
+			System.out.print("File: ");
+		}
 		System.out.println(toAbsolute(file_clicked.toString()));
 		
 		// change the displayed directory in the folder_contents subwindow to reflect the chosen directory
 		// TODO get the selected folder to display in the main GUI
-		//viewport.setViewportView(ConnoisseurGUI.displayDirContents(new_clicked.toString()));
+		//JScrollPane temp = window.getFolderContents();
+		//temp.setViewportView(window.displayDirContents(new_clicked.toString()));
 	}
 
 	// these can be later used for click-and-dragged file/folder movement

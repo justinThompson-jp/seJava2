@@ -5,7 +5,6 @@ package Connoisseur;
 */
 
 import java.awt.EventQueue;
-import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JFrame;
@@ -27,6 +26,9 @@ import javax.swing.table.DefaultTableModel;
 
 public class ConnoisseurGUI {
 
+	// allows passing reference to itself to other classes
+	private ConnoisseurGUI window;
+	
 	/*
 	 * Code by Justin Thompson
 	 * START BLOCK
@@ -53,7 +55,6 @@ public class ConnoisseurGUI {
 	//Create the application.
 	public ConnoisseurGUI() {
 		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
-		this.folder_contents = null;
 		initialize();
 	}
 
@@ -64,6 +65,7 @@ public class ConnoisseurGUI {
 				try {
 					ConnoisseurGUI window = new ConnoisseurGUI();
 					window.gui_frame.setVisible(true);
+					window.setWindow(window);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -126,7 +128,7 @@ public class ConnoisseurGUI {
 		folder_tree.setViewportView(displayFolderTree(default_dir));
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
-		folder_contents = new JScrollPane();
+		this.folder_contents = new JScrollPane();
 		right_vert_split.setLeftComponent(folder_contents);
 		
 		folder_contents.setViewportView(displayDirContents(default_dir));
@@ -204,11 +206,24 @@ public class ConnoisseurGUI {
 		 * START BLOCK
 		 */
 		JTree tree = new JTree();
-		tree.addMouseListener(new CMouseListener(tree, folder_contents));
+		tree.addMouseListener(new CMouseListener(tree, window));// added mouselistener and feeds it the tree to be interacted and a reference to the GUI itself
 		tree.setModel(new FileSystemModel(new File(_dir)));// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		/*
 		 * END BLOCK
 		 */
 		return tree;
+	}
+	
+	public void setWindow(ConnoisseurGUI _window) {
+		this.window = _window;
+	}
+	public ConnoisseurGUI getWindow() {
+		return window;
+	}
+	public void setFolderContents(JScrollPane _folder_contents) {
+		this.folder_contents = _folder_contents;
+	}
+	public JScrollPane getFolderContents() {
+		return folder_contents;
 	}
 }
