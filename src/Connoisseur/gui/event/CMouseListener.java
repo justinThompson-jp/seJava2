@@ -80,21 +80,16 @@ public class CMouseListener implements MouseListener {
 		}
 		setFileClicked(new_clicked);
 		
-		// TODO for some reason this thinks everything but user.home is not a directory
-		
+		/*	tested to see if it was selecting the correct folder and if could differentiate between files and directories
 		if (Files.isDirectory(Paths.get(new_clicked))) {
 			System.out.print("Directory: ");
 		} else {
 			System.out.print("File: ");
 		}
-		
 		System.out.println(new_clicked);
-
+		 */
+		
 		instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
-		// change the displayed directory in the folder_contents subwindow to reflect the chosen directory
-		// TODO get the selected folder to display in the main GUI
-		//JScrollPane temp = window.getFolderContents();
-		//temp.setViewportView(window.displayDirContents(new_clicked.toString()));
 	}
 
 	// these can be later used for click-and-dragged file/folder movement
