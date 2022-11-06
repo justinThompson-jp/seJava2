@@ -176,6 +176,8 @@ public class ConnoisseurGUI {
 		int h = children.length; // Used to create amount of rows for table
 		int k = columns.length;// Used to create amount of columns for table
 		contents_table = new DefaultTableModel(h,k) {
+			private static final long serialVersionUID = -2825576874268568706L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;

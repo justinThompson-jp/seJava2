@@ -109,7 +109,7 @@ public class CMouseListener implements MouseListener {
 		// functionality for if this is called from a JTable
 		if (source_table != null) {
 			
-			System.out.println("Successful scrollpane check");
+			System.out.println("Successful JTable check");
 			
 			// start guard clauses
 			// checks if first selection is empty space/not a file or folder
