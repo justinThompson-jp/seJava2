@@ -132,10 +132,10 @@ public class ConnoisseurGUI {
 		folder_tree.setViewportView(displayFolderTree(default_dir));
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
-		this.folder_contents = new JScrollPane();
+		this.folder_contents = new JScrollPane(displayDirContents(default_dir));
 		right_vert_split.setLeftComponent(folder_contents);
 		
-		folder_contents.setViewportView(displayDirContents(default_dir));
+		//folder_contents.setViewportView(displayDirContents(default_dir));
 
 		// file metadata(left component of bot_right_hori_split, which is the right component of right_vert_split, which is the right component of main_hori_split)
 		JPanel file_metadata = new JPanel();
@@ -184,6 +184,7 @@ public class ConnoisseurGUI {
 		contents_table.setColumnIdentifiers(columns);
 		
 		dir_contents = new JTable(contents_table);
+		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance));
 		
 		// Fill first column with names of files pulled from ViewDirectory
 		for (int i = 0; i < children.length; i++) {

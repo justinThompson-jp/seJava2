@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
@@ -20,7 +21,8 @@ import Connoisseur.ConnoisseurGUI;
 
 public class CMouseListener implements MouseListener {
 
-	private JTree tree;
+	private JTable source_table;
+	private JTree source_tree;
 	private ConnoisseurGUI instance;
 	private String file_clicked;
 	private String file_dragged_to;
@@ -33,8 +35,18 @@ public class CMouseListener implements MouseListener {
 	  * </p>
 	  * 
 	  */
-	public CMouseListener(JTree _tree, ConnoisseurGUI _instance) {
-		this.tree = _tree;
+	public CMouseListener(Object _source, ConnoisseurGUI _instance) {
+		
+		/*
+		 * This check will typcast the _source input into the appropriate class and set all other options to null
+		 */
+		if (_source instanceof JTree) {
+			source_tree = (JTree) _source;
+			source_table = null;
+		} else if (_source instanceof JTable) {
+			source_table = (JTable) _source;
+			source_tree = null;
+		}
 		this.instance = _instance;
 		this.file_clicked = "";
 		this.file_dragged_to = "";
@@ -59,37 +71,59 @@ public class CMouseListener implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// simple guard clauses
-		// checks if first selection is empty space/not a file or folder
-		if (tree.getSelectionPath() == null) {
-			return;
-		}
+		// TODO add alternative mouseClicked functionality for JTree and JScrollPane
 		
-		String new_clicked = treePathToString(tree.getSelectionPath());
-		// checks if the selected object is even readable
-		if (!Files.isReadable(Paths.get(new_clicked))) {
-			return;
+		// functionality for when this is called in a JTree
+		if (source_tree != null) {
+			// start guard clauses
+			// checks if first selection is empty space/not a file or folder
+			// only important for the first click after launching
+			if (source_tree.getSelectionPath() == null) {
+				System.out.println("ERR: Must click a directory or file");
+				return;
+			}
+			
+			// variable that holds whatever node from the JTree was most recently selected
+			String new_clicked = treePathToString((source_tree.getSelectionPath()));
+			
+			// checks if the selected object is not readable
+			if (!Files.isReadable(Paths.get(new_clicked))) {
+				System.out.println("ERR: Unreadable file");
+				return;
+			}
+			// checks if the selected object is not a directory
+			if (!Files.isDirectory(Paths.get(new_clicked))) {
+				System.out.println("ERR: Must click a directory");
+				return;
+			}
+			// checks if the newly select object is different from the most recently selected node
+			if (getFileClicked().equals(new_clicked)) {
+				System.out.println("ERR: Same directory as previously selected");
+				return;
+			}
+			// end guard clauses
+			
+			setFileClicked(new_clicked);
+			instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 		}
-		// checks if the selected object is even a directory
-		if (!Files.isDirectory(Paths.get(new_clicked))) {
-			return;
+		// functionality for if this is called from a JTable
+		if (source_table != null) {
+			
+			System.out.println("Successful scrollpane check");
+			
+			// start guard clauses
+			// checks if first selection is empty space/not a file or folder
+			// only important for the first click after launching
+
+
+			// variable that holds whatever node from the JScrollPane was most recently selected
+			// checks if the selected object is not readable
+
+			// checks if the selected object is not a directory
+			// end guard clauses
+			
 		}
-		// checks if the newly select object isn't the most recently prior selected object
-		if (getFileClicked().equals(new_clicked)) {
-			return;
-		}
-		setFileClicked(new_clicked);
-		
-		/*	tested to see if it was selecting the correct folder and if could differentiate between files and directories
-		if (Files.isDirectory(Paths.get(new_clicked))) {
-			System.out.print("Directory: ");
-		} else {
-			System.out.print("File: ");
-		}
-		System.out.println(new_clicked);
-		 */
-		
-		instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
+
 	}
 
 	// these can be later used for click-and-dragged file/folder movement
