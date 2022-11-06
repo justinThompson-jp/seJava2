@@ -53,14 +53,18 @@ public class ConnoisseurGUI {
 	 * START BLOCK
 	 */
 	
+	public int id;
 
 	//Create the application.
 	public ConnoisseurGUI() {
 		instance = this;
+		
 		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
-		this.folder_contents = null;
-		fileManager = new FileManager();
+
 		initialize();
+		
+		fileManager = new FileManager();
+		
 	}
 
 	//Launch the application.
@@ -130,6 +134,8 @@ public class ConnoisseurGUI {
 		folder_tree.setColumnHeaderView(folder_tree_label);
 
 		folder_tree.setViewportView(displayFolderTree(default_dir));
+		tree.addMouseListener(new CMouseListener(tree, instance, id));
+		id++;
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
 		this.folder_contents = new JScrollPane(displayDirContents(default_dir));
@@ -186,7 +192,11 @@ public class ConnoisseurGUI {
 		contents_table.setColumnIdentifiers(columns);
 		
 		dir_contents = new JTable(contents_table);
-		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance));
+		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance, id));
+
+		// id variable added as a tester, seems like the system is creating new CMouseListeners every time the folder is changed
+		// when I tried to move the CMouseListener declaration somewhere else, the CMouseListener was lost when folder changed
+		id++;
 		
 		// Fill first column with names of files pulled from ViewDirectory
 		for (int i = 0; i < children.length; i++) {
@@ -219,8 +229,6 @@ public class ConnoisseurGUI {
 		 */
 		
 		tree = new JTree();
-		// added mouselistener and feeds it the tree to be interacted and a reference to the GUI itself -Jacob Crawford
-		tree.addMouseListener(new CMouseListener(tree, instance));
 		// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		tree.setModel(new FileSystemModel(new File(_dir)));
 		/*
@@ -234,6 +242,7 @@ public class ConnoisseurGUI {
 	public static FileManager getFileManager() {return fileManager;}
 	public JScrollPane getFolderContents() {return folder_contents;}
 	public String getDefaultDir() {return default_dir;}
+	public JTable getDirContents() {return dir_contents;}
 
 	public void setFolderContents(JScrollPane _folder_contents) {
 		this.folder_contents = _folder_contents;

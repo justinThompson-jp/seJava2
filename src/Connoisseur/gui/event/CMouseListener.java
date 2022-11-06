@@ -27,6 +27,9 @@ public class CMouseListener implements MouseListener {
 	private String file_clicked;
 	private String file_dragged_to;
 	
+	// tester var
+	private int id;
+	
 	// Constructor(s)
 	/**
 	  * Creates a CMouseListener object that will allow navigation of folders through JTree
@@ -35,7 +38,7 @@ public class CMouseListener implements MouseListener {
 	  * </p>
 	  * 
 	  */
-	public CMouseListener(Object _source, ConnoisseurGUI _instance) {
+	public CMouseListener(Object _source, ConnoisseurGUI _instance, int _id) {
 		
 		/*
 		 * This check will typcast the _source input into the appropriate class and set all other options to null
@@ -50,6 +53,7 @@ public class CMouseListener implements MouseListener {
 		this.instance = _instance;
 		this.file_clicked = "";
 		this.file_dragged_to = "";
+		this.id = _id;
 	}
 	
 
@@ -79,7 +83,7 @@ public class CMouseListener implements MouseListener {
 			// checks if first selection is empty space/not a file or folder
 			// only important for the first click after launching
 			if (source_tree.getSelectionPath() == null) {
-				System.out.println("ERR: Must click a directory or file");
+				System.out.println(id + " ERR: Must click a directory or file");
 				return;
 			}
 			
@@ -88,28 +92,32 @@ public class CMouseListener implements MouseListener {
 			
 			// checks if the selected object is not readable
 			if (!Files.isReadable(Paths.get(new_clicked))) {
-				System.out.println("ERR: Unreadable file");
+				System.out.println(id + " ERR: Unreadable file");
 				return;
 			}
 			// checks if the selected object is not a directory
 			if (!Files.isDirectory(Paths.get(new_clicked))) {
-				System.out.println("ERR: Must click a directory");
+				System.out.println(id + " ERR: Must click a directory");
 				return;
 			}
 			// checks if the newly select object is different from the most recently selected node
 			if (getFileClicked().equals(new_clicked)) {
-				System.out.println("ERR: Same directory as previously selected");
+				System.out.println(id + " ERR: Same directory as previously selected");
 				return;
 			}
 			// end guard clauses
 			
 			setFileClicked(new_clicked);
+
+			System.out.println(id + " Open directory " + new_clicked);
+			//instance.getDirContents().removeMouseListener(instance.getFolderContents().getMouseListeners()[0]);
+			//instance.id--;
 			instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 		}
 		// functionality for if this is called from a JTable
 		if (source_table != null) {
 			
-			System.out.println("Successful JTable check");
+			System.out.println(id + " Successful JTable check");
 			
 			// start guard clauses
 			// checks if first selection is empty space/not a file or folder
