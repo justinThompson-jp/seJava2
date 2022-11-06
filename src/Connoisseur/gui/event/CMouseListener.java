@@ -76,7 +76,6 @@ public class CMouseListener implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO add alternative mouseClicked functionality for JTree and JScrollPane
-		
 		// functionality for when this is called in a JTree
 		if (source_tree != null) {
 			// start guard clauses
@@ -116,22 +115,14 @@ public class CMouseListener implements MouseListener {
 		}
 		// functionality for if this is called from a JTable
 		if (source_table != null) {
-			
-			System.out.println(id + " Successful JTable check");
-			
-			// start guard clauses
-			// checks if first selection is empty space/not a file or folder
-			// only important for the first click after launching
-
-
-			// variable that holds whatever node from the JScrollPane was most recently selected
-			// checks if the selected object is not readable
-
-			// checks if the selected object is not a directory
-			// end guard clauses
-			
+			// double-click from folder_contents will change to directory in folder_contents JScrollPane or open file in either built in view or separate app
+			if (e.getClickCount() >= 2) {
+				System.out.println(id + " JTable: Change directory or open file");
+			// single click will bring focus on target directory or file and display info in file_metadata JPane
+			} else {
+				System.out.println(id + " JTable: Focus on file/directory");
+			}
 		}
-
 	}
 
 	// these can be later used for click-and-dragged file/folder movement
