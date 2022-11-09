@@ -142,17 +142,11 @@ public class MoveDirectory {
 		
 		if (merge) {
 			System.out.println("Merge directories " + curr_dir_path + " and " + target_end_path);
-			/*
-			 * Would prefer to do this by calling ViewDirectory class but that doesn't work currently
-			 * ideally calling it by doing
-			 * ViewDirectory dir = new ViewDirectory(String path);
-			 * then String[] dir_contents = dir.listContents();
-			 * or something equivalent
-			*/
+
 			// create a list of all the contents of the directory
-			String[] dir_contents = null;
-	        File dir = new File(_old_dir.toString());
-	        dir_contents = dir.list();
+			ViewDirectory dir = new ViewDirectory();
+			dir.Directory(_old_dir.toString());
+			String[] dir_contents = dir.pathnames;
 	        
 			// iterate through the list, creating Path objects using the target_end_path appended with the current item on the list
 	        MoveDirectory temp_dir = new MoveDirectory();

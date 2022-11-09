@@ -53,8 +53,6 @@ public class ConnoisseurGUI {
 	 * START BLOCK
 	 */
 	
-	public int id;
-
 	//Create the application.
 	public ConnoisseurGUI() {
 		instance = this;
@@ -134,8 +132,7 @@ public class ConnoisseurGUI {
 		folder_tree.setColumnHeaderView(folder_tree_label);
 
 		folder_tree.setViewportView(displayFolderTree(default_dir));
-		tree.addMouseListener(new CMouseListener(tree, instance, id));
-		id++;
+		tree.addMouseListener(new CMouseListener(tree, instance));
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
 		this.folder_contents = new JScrollPane(displayDirContents(default_dir));
@@ -192,11 +189,7 @@ public class ConnoisseurGUI {
 		contents_table.setColumnIdentifiers(columns);
 		
 		dir_contents = new JTable(contents_table);
-		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance, id));
-
-		// id variable added as a tester, seems like the system is creating new CMouseListeners every time the folder is changed
-		// when I tried to move the CMouseListener declaration somewhere else, the CMouseListener was lost when folder changed
-		id++;
+		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance));
 		
 		// Fill first column with names of files pulled from ViewDirectory
 		for (int i = 0; i < children.length; i++) {
@@ -243,8 +236,4 @@ public class ConnoisseurGUI {
 	public JScrollPane getFolderContents() {return folder_contents;}
 	public String getDefaultDir() {return default_dir;}
 	public JTable getDirContents() {return dir_contents;}
-
-	public void setFolderContents(JScrollPane _folder_contents) {
-		this.folder_contents = _folder_contents;
-	}
 }
