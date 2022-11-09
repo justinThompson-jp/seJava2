@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 
 import java.awt.EventQueue;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -177,8 +178,10 @@ public class ConnoisseurGUI {
 		ViewDirectory dir = new ViewDirectory();
 		dir.Directory(_dir);
 		
+		
 		Object[] columns = {"Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
 		Object[] children = ViewDirectory.pathnames;
+		
 		int h = children.length; // Used to create amount of rows for table
 		int k = columns.length;// Used to create amount of columns for table
 		contents_table = new DefaultTableModel(h,k) {
@@ -198,9 +201,25 @@ public class ConnoisseurGUI {
 		// when I tried to move the CMouseListener declaration somewhere else, the CMouseListener was lost when folder changed
 		id++;
 		
-		// Fill first column with names of files pulled from ViewDirectory
+		// For loop for filling out JTable
 		for (int i = 0; i < children.length; i++) {
-		dir_contents.setValueAt(children[i], i, 0);
+			// Fill first column with names of files pulled from ViewDirectory
+			dir_contents.setValueAt(children[i], i, 0);
+			
+			// Concatenates current directory and each value of the first column into 
+			// a string to form its absolute file path.
+			File f = new File((String) children[i]);
+	        String s = _dir + "\\" + f;
+	        System.out.println(s);
+	        
+	        // Runs all created strings to get metadata for every file in directory.
+			ViewFile.FileAttributes(s);
+			ArrayList<String> mdata = ViewFile.mdata;
+			
+			// Fills table with each file's corresponding metadata
+			for (int j = 0; j < columns.length - 1; j++) {
+				dir_contents.setValueAt(mdata.get(j), i, j+1);
+			}
 		}
 		/*
 		 * END BLOCK
