@@ -6,21 +6,19 @@ package Connoisseur;
 
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.*;
 
 public class ViewFile {
 	
-	private static void FileAttributes(){
-		Scanner userIn = new Scanner(System.in);
+	public static ArrayList<String> mdata = null;
+	
+	public static ArrayList<String> FileAttributes(String fName){
     	String pathname;
-    	ArrayList<String> mdata = new ArrayList<String>();
+    	mdata = new ArrayList<String>();
         BasicFileAttributes attr;
         
-        System.out.println("Insert file path: ");
-        pathname = userIn.nextLine();
-        userIn.close();
+        pathname = fName;
         
         Path path = Paths.get(pathname);
         try {
@@ -40,9 +38,14 @@ public class ViewFile {
         } catch (IOException e) {
          System.out.println("Invalid file path: " + e.getMessage());
         }
-        userIn.close();
+        
+        return mdata;
 	}
-    public static void main(String[] args) throws IOException {
+   
+	/*
+	public static void main(String[] args) throws IOException {
     	FileAttributes();
+    	System.out.println(mdata);
     }
+    */
 }
