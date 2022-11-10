@@ -1,16 +1,103 @@
 package Connoisseur;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 public class FileManager {
 
 	private static final String SP = File.separator;
+	private static final String PROGRAM_NAME = "Connoisseur";
+	
+	private String appDataDir;
+	
+	private File systemDataFile;
+	private File directoryDataFile;
+	
+	private JSONObject systemData;
+	private JSONObject directoryData;
 	
 	public FileManager() {
-		// once more stuff is done we will probably have stuff to do in the constructor
+		this.init();
+	}
+	
+	/**
+	 * Initialize the FileManager + data files
+	 */
+	@SuppressWarnings("unchecked")
+	private void init() {
+		this.appDataDir = System.getenv("APPDATA") + SP + PROGRAM_NAME;
+		
+		// create the system data file
+		String systemDataPath = appDataDir + SP + "system-data.json";
+		systemDataFile = new File(systemDataPath);
+		
+		// system is loading for the first time
+		if (!systemDataFile.exists()) {
+			this.createFileDirectly(systemDataPath);
+			systemData = new JSONObject();
+			systemData.put("booted-once", "true");
+			
+			try {
+				FileWriter file = new FileWriter(systemDataPath);
+				file.write(systemData.toJSONString());
+				file.close();
+				
+				this.log("Booted for the first time, created system data file.");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				this.log("Something went wrong while creating system data.");
+			}
+			
+		} else {
+			// load data from system data file and store in JSONObject
+			try {
+
+				this.systemData = this.parseJSON(systemDataPath);
+				this.log("Loaded system data.");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				this.log("Something went wrong while loading system data.");
+			} 
+		}
+		
+		// create the directory data file
+		String directoryDataPath = appDataDir + SP + "directory-data.json";
+		directoryDataFile = new File(directoryDataPath);
+		
+		// directory data being created for the first time
+		if (!directoryDataFile.exists()) {
+			this.createFileDirectly(directoryDataPath);
+			this.directoryData = new JSONObject();
+			directoryData.put("directories", "");
+			
+			FileWriter file;
+			try {
+				file = new FileWriter(directoryDataPath);
+				file.write(directoryData.toJSONString());
+				file.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				this.log("Something went wrong while creating directory data.");
+			}
+			
+			this.log("Created directory data file.");
+		} else {
+			// load data from directory data file and store in JSONObject
+			try {
+				this.directoryData = this.parseJSON(directoryDataPath);
+				this.log("Loaded directory data.");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				this.log("Something went wrong while loading directory data.");
+			}
+		}
 	}
 	
 	/**
@@ -72,6 +159,34 @@ public class FileManager {
 	}
 	
 	/**
+	 * Creates and returns a file with the given name located at the given path, without figuring out the home directory, used by the CMenuBar
+	 * @param path - path where file will be created
+	 * @param fileName - name of file to be created
+	 * @author Jonathan Vallejo
+	 */
+	public File newFileDirectly(String path, String fileName) {
+		File f = new File(path + SP + fileName);
+		
+		// if path does not exist, create path
+		if (!Files.exists(Paths.get(path))) {
+			new File(path).mkdirs();
+		}
+		
+		// if file doesn't exist, create file
+		if (!f.exists()) {
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		// if file exists, maybe throw exception and catch it -> display file already exists warning to user?
+		} else {
+			System.out.println("File already exists, so not doing anything for now");
+		}
+		return f;
+	}
+	
+	/**
 	 * Creates a file at the given path, without figuring out the home directory, used by the CMenuBar
 	 * @param path - path where file will be created
 	 * @param fileName - name of file to be created
@@ -96,6 +211,34 @@ public class FileManager {
 		} else {
 			System.out.println("File already exists, so not doing anything for now");
 		}
+	}
+	
+	/**
+	 * Creates and returns a file at the given path, without figuring out the home directory, used by the CMenuBar
+	 * @param path - path where file will be created
+	 * @param fileName - name of file to be created
+	 * @author Jonathan Vallejo
+	 */
+	public File newFileDirectly(String path) {
+		File f = new File(path);
+		
+		// if path does not exist, create path
+		if (!Files.exists(Paths.get(path))) {
+			new File(f.getParent()).mkdirs();
+		}
+		
+		// if file doesn't exist, create file
+		if (!f.exists()) {
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		// if file exists, maybe throw exception and catch it -> display file already exists warning to user?
+		} else {
+			System.out.println("File already exists, so not doing anything for now");
+		}
+		return f;
 	}
 	
 	/**
@@ -199,14 +342,40 @@ public class FileManager {
 		}
 	}
 	
-	
-//  Example of how to use FileManager class to create and delete files
+	/**
+	 * Logs a message to the console
+	 * @param message
+	 */
+	public void log(String message) {
+		System.out.println("[" + PROGRAM_NAME + "] " + message);
+	}
 
-//	public static void main(String[] args) { 
-//		FileManager fileManager = new FileManager();
-//		File test = fileManager.newFile("desktop" + File.separator + "test folder", "THISISATEST.txt");
-//		System.out.println("file " + test.getName() + " created at " + test.getPath());
-//		fileManager.delete(test);
-//	}
+	public JSONObject parseJSON(String path) {
+		JSONParser parser = new JSONParser();
+		Object obj = null;
+		try {
+			obj = parser.parse(new FileReader(path));
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.log("Something went wrong while parsing JSON file at: " + path);
+		}
+		return (JSONObject) obj;
+	}
+	
+	public JSONObject getSystemData() {
+		return systemData;
+	}
+	
+	public JSONObject getDirectoryData() {
+		return directoryData;
+	}
+	
+	public File getSystemDataFile() {
+		return systemDataFile;
+	}
+	
+	public File getDirectoryDataFile() {
+		return directoryDataFile;
+	}
 	
 }

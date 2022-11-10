@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -137,18 +138,26 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			
 			// user actually entered something
 			if (userInput != null && userInput != "" && userInput != " ") {
+				File fileCreated = null;
 				switch (creationType) {
 				case DIRECT:
-					ConnoisseurGUI.getFileManager().createFileDirectly(userInput);
+					fileCreated = ConnoisseurGUI.getFileManager().newFileDirectly(userInput);
 					System.out.println("Created file at: " + userInput);
 					break;
 				case FROM_PARENT:
-					ConnoisseurGUI.getFileManager().createFileDirectly(targetPath, userInput);
+					fileCreated = ConnoisseurGUI.getFileManager().newFileDirectly(targetPath, userInput);
 					System.out.println("Created file at: " + targetPath + " with the name: " + userInput);
 					break;
 				default:
 					break;
 				}
+				// reload the JTree
+				files.setModel(new FileSystemModel(new File(ConnoisseurGUI.getInstance().getDefaultDir())));
+				if (pathsSelected != null && pathsSelected[0] != null) {
+					files.setSelectionPath(pathsSelected[0].pathByAddingChild(fileCreated));
+				}
+				
+				// TODO: set selection to the file that was just created
 			}
 		}
 		
