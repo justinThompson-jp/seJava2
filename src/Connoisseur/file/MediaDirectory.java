@@ -3,6 +3,8 @@ package Connoisseur.file;
 import java.io.File;
 import java.util.ArrayList;
 
+import Connoisseur.ConnoisseurGUI;
+
 /**
  * Class used to represent a directory
  * @author Jonathan Vallejo
@@ -32,6 +34,16 @@ public class MediaDirectory {
 		//TODO: Loop through files in directory, check if our database contains
 		// If our data base contains it -> add it and its existing tags, otherwise just add it without any tags, 
 		// maybe figure out possible tags automatically 
+		if (file.listFiles() != null) {
+			for (File f : file.listFiles()) {
+				String filePath = f.getPath();
+				if (f.isDirectory()) {
+					ConnoisseurGUI.getTagManager().addDirectory(new MediaDirectory(filePath));
+				} else {
+					MediaFile mFile = new MediaFile(new File(filePath));
+				}
+			}
+		}
 		
 	}
 	

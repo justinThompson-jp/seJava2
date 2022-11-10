@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
+
+import org.json.simple.JSONObject;
 
 import Connoisseur.ConnoisseurGUI;
 
@@ -33,6 +35,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	private JMenu newFileSubMenu;
 	
 	private JMenuItem newFileMenuItem, newDirectoryMenuItem;
+	private JMenuItem editTagsMenuItem;
 	
 
 	public CMenuBar() {
@@ -75,8 +78,16 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	}
 	
 	private void initEditMenu() {
+		// initialize the "Edit" menu
 		this.editMenu = new JMenu("Edit");
-		// TODO: add edit options
+		
+		// create "Edit Tags" option within the "Edit" menu
+		editTagsMenuItem = new JMenuItem("Edit Tags");
+		editTagsMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-pencil-16.png"));
+		editTagsMenuItem.addActionListener(this);
+		
+		// add "edit tags" to "Edit" menu
+		editMenu.add(editTagsMenuItem);
 		this.add(editMenu);
 	}
 	
@@ -87,6 +98,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// handle clicks within the "New" sub-menu
@@ -165,9 +177,44 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			System.out.println("*NEW DIRECTORY CLICKED*");
 		}
 		
-		
+		if (e.getSource() == editTagsMenuItem) {
+			String userInput = "";
+			
+			// user has nothing selected
+			ImageIcon errorIcon = new ImageIcon("resources/gui/menubar/icons8-cancel-30.png");
+			ImageIcon editIcon = new ImageIcon("resources/gui/menubar/icons8-pencil-16.png");
+			
+			if (pathsSelected == null || pathsSelected.length == 0) {
+				JOptionPane.showMessageDialog(null, "You must have a file selected to edit tags!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
+			} else if (pathsSelected.length > 1) {
+				// user has more than one thing selected
+				
+				JOptionPane.showMessageDialog(null, "WIP: You can only edit 1 file's tags at a time! (for now)", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
+			} else {
+				//user only has one thing selected
+				File selected = new File(treePathToString(pathsSelected[0].toString()));
+				System.out.println(selected.getPath());
+				
+				if (selected.list() != null) {
+					JOptionPane.showMessageDialog(null, "You cannot edit tags on a directory yet!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
+					return;
+				} 
+				
+				// selected file is actually a file
+				userInput = (String) JOptionPane.showInputDialog(null, "Editing tags for: " + selected.getName().toString(), "Edit Tags", JOptionPane.QUESTION_MESSAGE, editIcon, null, "exampleTag, anotherTag");
+				
+				// user actually entered something
+				if (userInput != null && userInput != "" && userInput != " ") {
+					String tagsEntered = Arrays.toString(userInput.split(","));
+					JSONObject data = ConnoisseurGUI.getFileManager().getDirectoryData();
+					
+					data.put(selected.getPath(), tagsEntered);
+					ConnoisseurGUI.getFileManager().log("Added tags " + tagsEntered + " to file at: " + selected.getPath());
+				}
+			}
+		}
 	}
-	
+
 	/*
 	 * Enum class to identify which file creation method the program will use
 	 */

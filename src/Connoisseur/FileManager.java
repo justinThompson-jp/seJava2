@@ -75,7 +75,6 @@ public class FileManager {
 		if (!directoryDataFile.exists()) {
 			this.createFileDirectly(directoryDataPath);
 			this.directoryData = new JSONObject();
-			directoryData.put("directories", "");
 			
 			FileWriter file;
 			try {
@@ -349,7 +348,12 @@ public class FileManager {
 	public void log(String message) {
 		System.out.println("[" + PROGRAM_NAME + "] " + message);
 	}
-
+	
+	/**
+	 * Parses a JSONObject from the file at the given path
+	 * @param path path to JSON file
+	 * @return JSONObject
+	 */
 	public JSONObject parseJSON(String path) {
 		JSONParser parser = new JSONParser();
 		Object obj = null;
@@ -361,6 +365,25 @@ public class FileManager {
 		}
 		return (JSONObject) obj;
 	}
+	
+//	/**
+//	 * Convert JSON path to JSONObject
+//	 * @param initialJson
+//	 * @param path
+//	 * @return JSONObject
+//	 */
+//	public JSONObject getJSONFromPath(JSONObject initialJson, String path) {
+//		System.out.println(path);
+//		System.out.println(Arrays.toString(path.split(",")));
+//		String[] paths = path.split(",");
+//		JSONObject result = initialJson;
+//		for (int i = 0; i <= paths.length; i++) {
+//			log(paths[i]);
+//			log(result.get(paths[i]).toString());
+//			result = (JSONObject) result.get(paths[i]);
+//		}
+//		return result;
+//	}
 	
 	public JSONObject getSystemData() {
 		return systemData;

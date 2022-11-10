@@ -54,7 +54,7 @@ public class MediaFile {
 	}
 	
 	public void removeTag(MediaTag tag) {
-		if (tagsApplied.contains(tag)) tagsApplied.remove(tag);
+		if (this.hasTag(tag)) tagsApplied.remove(tag);
 	}
 	
 	public MediaFileType getFileType() {

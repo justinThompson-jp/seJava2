@@ -7,7 +7,10 @@ import java.awt.BorderLayout;
 */
 
 import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -20,6 +23,7 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import Connoisseur.file.TagManager;
 import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
 import Connoisseur.gui.FileSystemModel;
@@ -44,6 +48,7 @@ public class ConnoisseurGUI {
 	
 	private static ConnoisseurGUI instance;
 	private static FileManager fileManager;
+	private static TagManager tagManager;
 	
 	// Saves the path to the System.getProperty("user.home") for easy access
 	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
@@ -57,13 +62,43 @@ public class ConnoisseurGUI {
 	//Create the application.
 	public ConnoisseurGUI() {
 		instance = this;
-		
 		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
 
 		initialize();
-		
 		fileManager = new FileManager();
+		tagManager = new TagManager();
 		
+		// allows us to detect when our program is terminated
+        gui_frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	
+            	// store all our data to the JSON files
+            	FileWriter file;
+            	
+            	// save system data file
+            	try {
+    				file = new FileWriter(fileManager.getSystemDataFile().getPath());
+    				file.write(fileManager.getSystemData().toJSONString());
+    				file.close();
+    				fileManager.log("Saved system data file.");
+    			} catch (Exception ex) {
+    				ex.printStackTrace();
+    				fileManager.log("Something went wrong while saving system data.");
+    			}
+            	
+            	// save directory data file
+            	try {
+    				file = new FileWriter(fileManager.getDirectoryDataFile().getPath());
+    				file.write(fileManager.getDirectoryData().toJSONString());
+    				file.close();
+    				fileManager.log("Saved directory data file.");
+    			} catch (Exception ex) {
+    				ex.printStackTrace();
+    				fileManager.log("Something went wrong while saving directory data.");
+    			}
+            }
+        });
 	}
 
 	//Launch the application.
@@ -85,6 +120,7 @@ public class ConnoisseurGUI {
 		gui_frame = new JFrame();
 		gui_frame.setBounds(100, 100, 720, 480);
 		gui_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		/*
 		 * Code by Justin Thompson
 		 * END BLOCK
@@ -252,6 +288,7 @@ public class ConnoisseurGUI {
 	public JTree getJTree() {return tree;}
 	public static ConnoisseurGUI getInstance() {return instance;}
 	public static FileManager getFileManager() {return fileManager;}
+	public static TagManager getTagManager() {return tagManager;}
 	public JScrollPane getFolderContents() {return folder_contents;}
 	public String getDefaultDir() {return default_dir;}
 	public JTable getDirContents() {return dir_contents;}
