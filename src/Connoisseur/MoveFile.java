@@ -51,7 +51,7 @@ public class MoveFile {
 	}
 
 	// Getter method(s) 
-	String getCurrPath() {
+	public String getCurrPath() {
 		return this.curr_file_path.toString();
 	}
 	public String getTargetPath() {
