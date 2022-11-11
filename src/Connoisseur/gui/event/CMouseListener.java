@@ -72,6 +72,7 @@ public class CMouseListener implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		String new_clicked;
 		// TODO add alternative mouseClicked functionality for JTree and JScrollPane
 		// functionality for when this is called in a JTree
 		if (source_tree != null) {
@@ -84,7 +85,7 @@ public class CMouseListener implements MouseListener {
 			}
 			
 			// variable that holds whatever node from the JTree was most recently selected
-			String new_clicked = treePathToString((source_tree.getSelectionPath()));
+			new_clicked = treePathToString((source_tree.getSelectionPath()));
 			
 			// checks if the selected object is not readable
 			if (!Files.isReadable(Paths.get(new_clicked))) {
@@ -113,8 +114,13 @@ public class CMouseListener implements MouseListener {
 		// functionality for if this is called from a JTable
 		if (source_table != null) {
 			// double-click from folder_contents will change to directory in folder_contents JScrollPane or open file in either built in view or separate app
-			if (e.getClickCount() >= 2) {
+			if (e.getClickCount() == 2) {
 				System.out.println(" JTable: Change directory or open file");
+				
+				new_clicked = (String) source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex());
+				
+				setFileClicked(new_clicked);
+				System.out.println(new_clicked);
 			// single click will bring focus on target directory or file and display info in file_metadata JPane
 			} else {
 				System.out.println(" JTable: Focus on file/directory");
@@ -144,7 +150,7 @@ public class CMouseListener implements MouseListener {
 	  * @param TreePath _tree_path - The TreePath object to be converted
 	  * @return String path - The absolute path from the drive to the end of the path formatted as a String
 	  */
-	public String treePathToString(TreePath _tree_path) {
+	private String treePathToString(TreePath _tree_path) {
 		String path = "";
 		Object[] steps = _tree_path.getPath();
 		for (int i = 0; i < steps.length; i++) {
