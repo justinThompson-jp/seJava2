@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -17,6 +19,9 @@ import javax.swing.tree.TreePath;
 import org.json.simple.JSONObject;
 
 import Connoisseur.ConnoisseurGUI;
+import Connoisseur.file.MediaFile;
+import Connoisseur.file.MediaFileType;
+import Connoisseur.file.MediaTag;
 
 /***
  * Extension of the JMenuBar class to include the functionality of the Connoisseur MenuBar. <br>
@@ -199,16 +204,37 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 					JOptionPane.showMessageDialog(null, "You cannot edit tags on a directory yet!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
 					return;
 				} 
+				// selected file is actually a file..
+				// fetch our directory data..
+				JSONObject data = ConnoisseurGUI.getFileManager().getDirectoryData();
+				MediaFile mFile = ConnoisseurGUI.getTagManager().findFile(selected);
 				
-				// selected file is actually a file
-				userInput = (String) JOptionPane.showInputDialog(null, "Editing tags for: " + selected.getName().toString(), "Edit Tags", JOptionPane.QUESTION_MESSAGE, editIcon, null, "exampleTag, anotherTag");
+				// there is no tag data in our data base for the selected file
+				if (mFile == null) {
+					userInput = (String) JOptionPane.showInputDialog(null, "Editing tags for: " + selected.getName().toString(), "Edit Tags", JOptionPane.QUESTION_MESSAGE, editIcon, null, "exampleTag, anotherTag");
+				} else {
+					// tag data exists in our data base
+//					Map<String, Object> values = (Map<String, Object>) data.get(selected.getPath());
+//					String tags = values.get("tags").toString().replace("[", "").replace("]", "").replace(" ", "");
+					StringBuilder sb = new StringBuilder();
+					for (MediaTag tag : mFile.getTags()) {
+					    sb.append(tag.getName());
+					    sb.append(",");
+					}
+					String tags = sb.toString();
+					userInput = (String) JOptionPane.showInputDialog(null, "Editing tags for: " + selected.getName().toString(), "Edit Tags", JOptionPane.QUESTION_MESSAGE, editIcon, null, tags);
+				}
 				
 				// user actually entered something
 				if (userInput != null && userInput != "" && userInput != " ") {
 					String tagsEntered = Arrays.toString(userInput.split(","));
-					JSONObject data = ConnoisseurGUI.getFileManager().getDirectoryData();
 					
-					data.put(selected.getPath(), tagsEntered);
+					Map<String, Object> fileData = new LinkedHashMap<String, Object>();
+					fileData.put("tags", tagsEntered.replace(" ", ""));
+					fileData.put("file-type", MediaFileType.detectType(selected).getName());
+					
+					data.put(selected.getPath(), fileData);
+					
 					ConnoisseurGUI.getFileManager().log("Added tags " + tagsEntered + " to file at: " + selected.getPath());
 				}
 			}

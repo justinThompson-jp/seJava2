@@ -62,11 +62,12 @@ public class ConnoisseurGUI {
 	//Create the application.
 	public ConnoisseurGUI() {
 		instance = this;
+		fileManager = new FileManager();
+		tagManager = new TagManager();
+		
 		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
 
 		initialize();
-		fileManager = new FileManager();
-		tagManager = new TagManager();
 		
 		// allows us to detect when our program is terminated
         gui_frame.addWindowListener(new WindowAdapter() {

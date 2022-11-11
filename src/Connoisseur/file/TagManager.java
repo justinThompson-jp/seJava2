@@ -2,6 +2,7 @@ package Connoisseur.file;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.simple.JSONObject;
@@ -30,16 +31,28 @@ public class TagManager {
 		JSONObject directoryData = fileManager.getDirectoryData();
 		Set<String> keys = directoryData.keySet();
 		
-		for (String key : keys) {
-			File javaFile = new File(key);
+		for (String filePath : keys) {
+			File javaFile = new File(filePath);
+			
+			Map<String, Object> values = (Map<String, Object>) directoryData.get(filePath);
+			String fileType = (String) values.get("file-type");
+			String[] tags = values.get("tags").toString().replace("[", "").replace("]", "").split(",");
+			
+			
 			MediaDirectory mDirectory = null;
 			if (this.hasDirectory(javaFile.getParent())) {
 				mDirectory = this.getDirectory(javaFile.getParent());
-				fileManager.log("Already has directory: " + mDirectory.getPath());
 			} else {
 				mDirectory = new MediaDirectory(javaFile.getParent());
 				this.addDirectory(mDirectory);
-				fileManager.log("Added directory " + mDirectory.getPath());
+			}
+			
+			MediaFile mFile = new MediaFile(javaFile);
+			mDirectory.addFile(mFile);
+			mFile.setFileType(MediaFileType.valueOf(fileType.toUpperCase()));
+			
+			for (String tag : tags) {
+				mFile.addTag(new MediaTag(tag));
 			}
 		}
 	}
@@ -74,6 +87,17 @@ public class TagManager {
 	
 	public void addDirectory(MediaDirectory dir) {
 		directories.add(dir);
+	}
+	
+	public MediaFile findFile(File file) {
+		for (MediaDirectory dirs : directories) {
+			for (MediaFile mFile : dirs.getFiles()) {
+				if (mFile.getJavaFile().getPath().equalsIgnoreCase(file.getPath())) {
+					return mFile;
+				}
+			}
+		}
+		return null;
 	}
 	
 }
