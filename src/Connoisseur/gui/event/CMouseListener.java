@@ -10,6 +10,7 @@ package Connoisseur.gui.event;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -115,15 +116,31 @@ public class CMouseListener implements MouseListener {
 		if (source_table != null) {
 			// double-click from folder_contents will change to directory in folder_contents JScrollPane or open file in either built in view or separate app
 			if (e.getClickCount() == 2) {
-				System.out.println(" JTable: Change directory or open file");
+				//System.out.println(" JTable: Change directory or open file");
 				
+				// assigned selected row's Name column to the new_clicked variable
 				new_clicked = (String) source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex());
+				// formats the new_clicked variable to an absolute path to the file
+				new_clicked = instance.getCurrentDir() + "\\" + new_clicked;
+
+				// checks if the selected object is not readable
+				if (!Files.isReadable(Paths.get(new_clicked))) {
+					System.out.println(" ERR: Unreadable file");
+					return;
+				}
+				// checks if the selected object is not a directory
+				if (!Files.isDirectory(Paths.get(new_clicked))) {
+					System.out.println(" ERR: Must click a directory");
+					return;
+				}
+				// end guard clauses
 				
+				instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 				setFileClicked(new_clicked);
-				System.out.println(new_clicked);
+				//System.out.println(new_clicked);
 			// single click will bring focus on target directory or file and display info in file_metadata JPane
 			} else {
-				System.out.println(" JTable: Focus on file/directory");
+				//System.out.println(" JTable: Focus on file/directory");
 			}
 		}
 	}
@@ -153,8 +170,9 @@ public class CMouseListener implements MouseListener {
 	private String treePathToString(TreePath _tree_path) {
 		String path = "";
 		Object[] steps = _tree_path.getPath();
-		for (int i = 0; i < steps.length; i++) {
-			path += steps[i].toString() + "\\";
+		path = steps[0].toString();
+		for (int i = 1; i < steps.length; i++) {
+			path += "\\" + steps[i].toString();
 		} 
 		return path;
 	}

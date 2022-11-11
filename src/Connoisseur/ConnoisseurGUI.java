@@ -52,7 +52,8 @@ public class ConnoisseurGUI {
 	
 	// Saves the path to the System.getProperty("user.home") for easy access
 	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
-	private String default_dir = System.getProperty("user.home");
+	private String default_dir;
+	private String current_dir;
 	
 	/*
 	 * Code by Justin Thompson
@@ -66,6 +67,7 @@ public class ConnoisseurGUI {
 		tagManager = new TagManager();
 		
 		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
+		this.current_dir = default_dir;
 
 		initialize();
 		
@@ -209,6 +211,7 @@ public class ConnoisseurGUI {
 		 * Code by Justin Thompson
 		 * START BLOCK
 		 */
+		current_dir = _dir;
 		ViewDirectory dir = new ViewDirectory();
 		dir.Directory(_dir);
 		
@@ -240,7 +243,7 @@ public class ConnoisseurGUI {
 			// a string to form its absolute file path.
 			File f = new File((String) children[i]);
 	        String s = _dir + "\\" + f;
-	        System.out.println(s);
+	        //System.out.println(s);
 	        
 	        // Runs all created strings to get metadata for every file in directory.
 			ViewFile.FileAttributes(s);
@@ -293,4 +296,5 @@ public class ConnoisseurGUI {
 	public JScrollPane getFolderContents() {return folder_contents;}
 	public String getDefaultDir() {return default_dir;}
 	public JTable getDirContents() {return dir_contents;}
+	public String getCurrentDir() {return current_dir;}
 }

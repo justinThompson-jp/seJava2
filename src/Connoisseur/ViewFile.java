@@ -27,13 +27,13 @@ public class ViewFile {
          mdata.add(attr.lastAccessTime() + "");
          mdata.add(attr.lastModifiedTime() + "");
          mdata.add(attr.size() + " bytesT");
-         System.out.println(mdata);
+         //System.out.println(mdata);
          
          for (int i = 0; i < mdata.size(); i++) {
         	 String s = mdata.get(i);
         	 String t = s.substring(0, s.indexOf("T"));
         	 mdata.set(i, t);
-        	 System.out.println(mdata.get(i));
+        	 //System.out.println(mdata.get(i));
          }
         } catch (IOException e) {
          System.out.println("Invalid file path: " + e.getMessage());
