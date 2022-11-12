@@ -2,6 +2,10 @@ package Connoisseur.file;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import Connoisseur.ConnoisseurGUI;
 
 /**
  * Class used to represent a type of media file within Connoisseur
@@ -13,7 +17,7 @@ public class MediaFile {
 	private File file;
 	private MediaFileType fileType = MediaFileType.UNSPECIFIED; 
 	
-	private static ArrayList<MediaTag> tagsApplied = new ArrayList<MediaTag>();
+	private ArrayList<MediaTag> tagsApplied;
 	
 	/**
 	 * Constructor used to initialize a new MediaFile
@@ -21,6 +25,7 @@ public class MediaFile {
 	 */
 	public MediaFile(File file) {
 		this.file = file;
+		this.tagsApplied = new ArrayList<MediaTag>();
 		this.detectFileType();
 	}
 	
@@ -32,6 +37,8 @@ public class MediaFile {
 	public MediaFile(File file, MediaFileType fileType) {
 		this.file = file;
 		this.fileType = fileType;
+		this.setFileType(fileType);
+		this.tagsApplied = new ArrayList<MediaTag>();
 	}
 	
 	/**
@@ -41,7 +48,9 @@ public class MediaFile {
 	 */
 	public MediaFile(File file, String[] tags) {
 		this.file = file;
+		this.tagsApplied = new ArrayList<MediaTag>();
 		this.addTags(tags);
+		this.detectFileType();
 	}
 	
 	/**
@@ -56,8 +65,26 @@ public class MediaFile {
 		return file.getName();
 	}
 	
+	public String getPath() {
+		return file.getPath();
+	}
+	
 	public ArrayList<MediaTag> getTags() {
 		return tagsApplied;
+	}
+	
+	public String getTagsString() {
+		String result = "[";
+		int size = tagsApplied.size();
+		int count = 0;
+		for (MediaTag tag : tagsApplied) {
+			result = result + tag.getName();
+			if (count < (size-1)) {
+				result = result + ",";
+			}
+			count++;
+		}
+		return result + "]";
 	}
 	
 	public boolean hasTag(MediaTag tag) {
@@ -79,6 +106,15 @@ public class MediaFile {
 		}
 	}
 	
+	public void setTags(String[] tags) {
+		ArrayList<MediaTag> newTags = new ArrayList<MediaTag>();
+		for (String tag : tags) {
+			MediaTag mTag = new MediaTag(tag);
+			newTags.add(mTag);
+		}
+		this.tagsApplied = newTags;
+	}
+	
 	public void addTags(String[] tags) {
 		for (String tag : tags) {
 			if (!this.hasTag(tag)) {
@@ -95,7 +131,18 @@ public class MediaFile {
 		return fileType;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setFileType(MediaFileType fileType) {
+		Map<String, Object> fileData = (Map<String, Object>) ConnoisseurGUI.getFileManager().getDirectoryData().get(file.getPath());
+		if (fileData == null) {
+			fileData = new LinkedHashMap<String, Object>();
+		}
+		
+		// add file-type to directory-data.json
+		fileData.put("file-type", fileType.getName());
+		ConnoisseurGUI.getFileManager().getDirectoryData().put(file.getPath(), fileData);
+		
+		// update fileType locally
 		this.fileType = fileType;
 	}
 	

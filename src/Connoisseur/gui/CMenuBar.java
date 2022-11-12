@@ -4,9 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -16,12 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import org.json.simple.JSONObject;
-
 import Connoisseur.ConnoisseurGUI;
 import Connoisseur.file.MediaFile;
-import Connoisseur.file.MediaFileType;
-import Connoisseur.file.MediaTag;
 
 /***
  * Extension of the JMenuBar class to include the functionality of the Connoisseur MenuBar. <br>
@@ -102,8 +95,6 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		this.add(helpMenu);
 	}
 	
-	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// handle clicks within the "New" sub-menu
@@ -204,38 +195,26 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 					JOptionPane.showMessageDialog(null, "You cannot edit tags on a directory yet!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
 					return;
 				} 
-				// selected file is actually a file..
-				// fetch our directory data..
-				JSONObject data = ConnoisseurGUI.getFileManager().getDirectoryData();
+				// fetch data within our system for the selected file
 				MediaFile mFile = ConnoisseurGUI.getTagManager().findFile(selected);
 				
-				// there is no tag data in our data base for the selected file
+				// there is no data in our data base for the selected file
 				if (mFile == null) {
 					userInput = (String) JOptionPane.showInputDialog(null, "Editing tags for: " + selected.getName().toString(), "Edit Tags", JOptionPane.QUESTION_MESSAGE, editIcon, null, "exampleTag, anotherTag");
 				} else {
 					// tag data exists in our data base
-//					Map<String, Object> values = (Map<String, Object>) data.get(selected.getPath());
-//					String tags = values.get("tags").toString().replace("[", "").replace("]", "").replace(" ", "");
-					StringBuilder sb = new StringBuilder();
-					for (MediaTag tag : mFile.getTags()) {
-					    sb.append(tag.getName());
-					    sb.append(",");
-					}
-					String tags = sb.toString();
+					String tags = mFile.getTagsString().replace("[", "").replace("]", "");
 					userInput = (String) JOptionPane.showInputDialog(null, "Editing tags for: " + selected.getName().toString(), "Edit Tags", JOptionPane.QUESTION_MESSAGE, editIcon, null, tags);
 				}
 				
 				// user actually entered something
 				if (userInput != null && userInput != "" && userInput != " ") {
-					String tagsEntered = Arrays.toString(userInput.split(","));
+					String[] tagsEntered = userInput.replace(" ", "").split(",");
 					
-					Map<String, Object> fileData = new LinkedHashMap<String, Object>();
-					fileData.put("tags", tagsEntered.replace(" ", ""));
-					fileData.put("file-type", MediaFileType.detectType(selected).getName());
-					
-					data.put(selected.getPath(), fileData);
-					
-					ConnoisseurGUI.getFileManager().log("Added tags " + tagsEntered + " to file at: " + selected.getPath());
+					ConnoisseurGUI.getTagManager().setTags(selected, tagsEntered);
+					// updating mFile object
+					mFile = ConnoisseurGUI.getTagManager().findFile(selected);
+					ConnoisseurGUI.getFileManager().log("Set tags of: " + selected.getName() + " to: " + mFile.getTagsString());
 				}
 			}
 		}
