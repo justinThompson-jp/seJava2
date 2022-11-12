@@ -366,37 +366,34 @@ public class FileManager {
 		return (JSONObject) obj;
 	}
 	
-//	/**
-//	 * Convert JSON path to JSONObject
-//	 * @param initialJson
-//	 * @param path
-//	 * @return JSONObject
-//	 */
-//	public JSONObject getJSONFromPath(JSONObject initialJson, String path) {
-//		System.out.println(path);
-//		System.out.println(Arrays.toString(path.split(",")));
-//		String[] paths = path.split(",");
-//		JSONObject result = initialJson;
-//		for (int i = 0; i <= paths.length; i++) {
-//			log(paths[i]);
-//			log(result.get(paths[i]).toString());
-//			result = (JSONObject) result.get(paths[i]);
-//		}
-//		return result;
-//	}
-	
+	/**
+	 * Return's the object representation of the system-data.json 
+	 * @return JSONObject
+	 */
 	public JSONObject getSystemData() {
 		return systemData;
 	}
 	
+	/**
+	 * Return's the object representation of the directory-data.json
+	 * @return
+	 */
 	public JSONObject getDirectoryData() {
 		return directoryData;
 	}
 	
+	/**
+	 * Returns the Java file for the system-data.json
+	 * @return
+	 */
 	public File getSystemDataFile() {
 		return systemDataFile;
 	}
 	
+	/**
+	 * Return's the Java file for the directory-data.json
+	 * @return
+	 */
 	public File getDirectoryDataFile() {
 		return directoryDataFile;
 	}

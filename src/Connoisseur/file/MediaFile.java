@@ -146,6 +146,9 @@ public class MediaFile {
 		this.fileType = fileType;
 	}
 	
+	/**
+	 * Try to automatically detect what type of file this is based on the file extension
+	 */
 	private void detectFileType() {
 		int index = file.getName().lastIndexOf('.');
 		String ext = "";

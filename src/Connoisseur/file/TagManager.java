@@ -22,10 +22,16 @@ public class TagManager {
 	private ArrayList<MediaDirectory> directories = new ArrayList<MediaDirectory>();
 	private FileManager fileManager = ConnoisseurGUI.getFileManager();
 	
+	/**
+	 * TagManager constructor
+	 */
 	public TagManager() {
 		this.init();
 	}
 	
+	/**
+	 * This function loads all the data from the directory-data.json and puts it into objects
+	 */
 	@SuppressWarnings({ "unchecked" })
 	private void init() {
 		//TODO: Identify which directories are managed by Connoisseur, load data for directories
@@ -57,10 +63,19 @@ public class TagManager {
 		}
 	}
 	
+	/**
+	 * Get all the directories that our program has data on in the form of an ArrayList
+	 * @return ArrayList<MediaDirectory>
+	 */
 	public ArrayList<MediaDirectory> getDirectories() {
 		return directories;
 	}
 	
+	/**
+	 * Searches our data for the directory that matches the given path. Returns true if it exists in our data, false otherwise.
+	 * @param path
+	 * @return boolean
+	 */
 	public boolean hasDirectory(String path) {
 		for (MediaDirectory dir : directories) {
 			if (dir.getPath().equalsIgnoreCase(path)) {
@@ -70,6 +85,11 @@ public class TagManager {
 		return false;
 	}
 	
+	/**
+	 * Searches our data for the directory that matches the given path and returns a MediaDirectory object.
+	 * @param path
+	 * @return MediaDirectory
+	 */
 	public MediaDirectory getDirectory(String path) {
 		for (MediaDirectory dir : directories) {
 			if (dir.getPath().equalsIgnoreCase(path)) {
@@ -79,16 +99,29 @@ public class TagManager {
 		return null;
 	}
 	
+	/**
+	 * Add's a Mediadirectory to the TagManager using the String path specified. 
+	 * @param path
+	 */
 	public void addDirectory(String path) {
 		if (!this.hasDirectory(path)) {
 			directories.add(new MediaDirectory(path));
 		}
 	}
 	
+	/**
+	 * Add's a MediaDirectory to the TagManager
+	 * @param dir
+	 */
 	public void addDirectory(MediaDirectory dir) {
 		directories.add(dir);
 	}
 	
+	/**
+	 * Searches our data for the given file and returns a MediaFile object of that file. Return's null if there is no data for the given file in our system.  
+	 * @param file File to retrieve data on
+	 * @return MediaFile
+	 */
 	public MediaFile findFile(File file) {
 		for (MediaDirectory dirs : directories) {
 			for (MediaFile mFile : dirs.getFiles()) {
@@ -102,8 +135,8 @@ public class TagManager {
 	
 	/**
 	 * Adds the given MediaTag to the given file
-	 * @param file 
-	 * @param tag
+	 * @param file File to add the tag to
+	 * @param tag MediaTag to be added to the given file
 	 */
 	@SuppressWarnings("unchecked")
 	public void addTag(File file, MediaTag tag) {
@@ -132,6 +165,11 @@ public class TagManager {
 		mDirectory.addFile(mFile);
 	}
 	
+	/**
+	 * Sets the tags of the given file to the tags specified
+	 * @param file File to add tags to
+	 * @param tags Set of tags to apply to the given file
+	 */
 	@SuppressWarnings("unchecked")
 	public void setTags(File file, String[] tags) {
 		MediaFile mFile = this.findFile(file);

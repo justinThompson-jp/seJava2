@@ -212,7 +212,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 					String[] tagsEntered = userInput.replace(" ", "").split(",");
 					
 					ConnoisseurGUI.getTagManager().setTags(selected, tagsEntered);
-					// updating mFile object
+					// updating MediaFile object
 					mFile = ConnoisseurGUI.getTagManager().findFile(selected);
 					ConnoisseurGUI.getFileManager().log("Set tags of: " + selected.getName() + " to: " + mFile.getTagsString());
 				}

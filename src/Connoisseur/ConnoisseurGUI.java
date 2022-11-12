@@ -65,7 +65,6 @@ public class ConnoisseurGUI {
 		instance = this;
 		fileManager = new FileManager();
 		tagManager = new TagManager();
-		
 		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
 		this.current_dir = default_dir;
 
