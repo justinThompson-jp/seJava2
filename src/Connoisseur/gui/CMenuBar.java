@@ -189,8 +189,8 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			ImageIcon errorIcon = new ImageIcon("resources/gui/menubar/icons8-cancel-30.png");
 			JSONObject systemData = ConnoisseurGUI.getFileManager().getSystemData();
 			
-			String defaultDir = (String) systemData.get("default-dir");
-			if (defaultDir == null) defaultDir = System.getProperty("user.home") + File.separator;
+			String defaultDir = (String) systemData.get("default-directory");
+			if (defaultDir == null || defaultDir.isEmpty()) defaultDir = System.getProperty("user.home") + File.separator;
 			String userInput = (String) JOptionPane.showInputDialog(null, "Setting the default directory to: ", "Configure Default Directory", JOptionPane.QUESTION_MESSAGE, icon, null, defaultDir);
 			
 			if (userInput == null) {
