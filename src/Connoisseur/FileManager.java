@@ -43,6 +43,7 @@ public class FileManager {
 			this.createFileDirectly(systemDataPath);
 			systemData = new JSONObject();
 			systemData.put("booted-once", "true");
+			systemData.put("default-directory", "");
 			
 			try {
 				FileWriter file = new FileWriter(systemDataPath);
