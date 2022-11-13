@@ -1,5 +1,10 @@
 package Connoisseur;
 
+/*
+ * @author: Jonathan Vallejo
+ * Edited by: Justin Thompson
+ */
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -43,7 +48,7 @@ public class FileManager {
 			this.createFileDirectly(systemDataPath);
 			systemData = new JSONObject();
 			systemData.put("booted-once", "true");
-			systemData.put("default-directory", "");
+			systemData.put("default-directory", ""); //Added for user-specified directory - Justin Thompson
 			
 			try {
 				FileWriter file = new FileWriter(systemDataPath);
