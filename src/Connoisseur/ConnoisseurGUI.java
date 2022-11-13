@@ -10,7 +10,9 @@ import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -22,6 +24,8 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+
+import org.json.simple.parser.ParseException;
 
 import Connoisseur.file.TagManager;
 import Connoisseur.gui.CMenuBar;
@@ -61,13 +65,14 @@ public class ConnoisseurGUI {
 	 */
 	
 	//Create the application.
-	public ConnoisseurGUI() {
+	public ConnoisseurGUI() throws FileNotFoundException, IOException, ParseException {
 		instance = this;
 		fileManager = new FileManager();
 		tagManager = new TagManager();
-		this.default_dir = System.getProperty("user.home"); //Added by Jacob Crawford
+		ViewDirectory x = new ViewDirectory();
+		this.default_dir = x.getDefaultDir(); //Added by Jacob Crawford
 		this.current_dir = default_dir;
-
+		
 		initialize();
 		
 		// allows us to detect when our program is terminated
@@ -218,6 +223,13 @@ public class ConnoisseurGUI {
 		Object[] columns = {"Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
 		Object[] children = ViewDirectory.pathnames;
 		
+		//If given null or invalid path name, default to user.home as initial directory
+		if (children == null) {
+			_dir = System.getProperty("user.home");
+			dir.Directory(_dir);
+			children = ViewDirectory.pathnames;
+		}
+		
 		int h = children.length; // Used to create amount of rows for table
 		int k = columns.length;// Used to create amount of columns for table
 		contents_table = new DefaultTableModel(h,k) {
@@ -280,6 +292,11 @@ public class ConnoisseurGUI {
 		 */
 		
 		tree = new JTree();
+		File f = new File(_dir);
+		//If given null or invalid path name, default to user.home as initial directory
+		if (_dir == null || _dir.isEmpty() || f.isDirectory() == false) {
+			_dir = System.getProperty("user.home");
+		}
 		// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		tree.setModel(new FileSystemModel(new File(_dir)));
 		/*
