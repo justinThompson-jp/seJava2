@@ -40,15 +40,14 @@ public class TagManager {
 		
 		for (String filePath : keys) {
 			File javaFile = new File(filePath);
+			// TODO: If we have data on a file that no longer exists -> delete the data from our database.
 			Map<String, Object> values = (Map<String, Object>) directoryData.get(filePath);
 			String fileType = (String) values.get("file-type");
 			String[] tags = values.get("tags").toString().replace("[", "").replace("]", "").split(",");
 			
 			
-			MediaDirectory mDirectory = null;
-			if (this.hasDirectory(javaFile.getParent())) {
-				mDirectory = this.getDirectory(javaFile.getParent());
-			} else {
+			MediaDirectory mDirectory = this.getDirectory(javaFile.getParent());
+			if (mDirectory == null) {
 				mDirectory = new MediaDirectory(javaFile.getParent());
 				this.addDirectory(mDirectory);
 			}
@@ -193,6 +192,42 @@ public class TagManager {
 		}
 		
 		mDirectory.addFile(mFile);
+	}
+	
+	/**
+	 * Searches the data in our data base and returns an ArrayList with MediaFiles that contain the specified tag
+	 * @param tag
+	 * @return ArrayList<MediaFile>
+	 */
+	public ArrayList<MediaFile> searchByTag(String tag) {
+		ArrayList<MediaFile> results = new ArrayList<MediaFile>();
+		for (MediaDirectory dir : directories) {
+			for (MediaFile mFile : dir.getFiles()) {
+				if (mFile.hasTag(tag.replace(" ", ""))) {
+					results.add(mFile);
+				}
+			}
+		}
+		return results;
+	}
+	
+	/**
+	 * Searches the data in our data base and returns an ArrayList with MediaFiles that contain the specified tags
+	 * @param tags
+	 * @return ArrayList<MediaFile>
+	 */
+	public ArrayList<MediaFile> searchByTags(String[] tags) {
+		ArrayList<MediaFile> results = new ArrayList<MediaFile>();
+		for (MediaDirectory dir : directories) {
+			for (MediaFile mFile : dir.getFiles()) {
+				for (String tag : tags) {
+					if (mFile.hasTag(tag.replace(" ", "")) && !results.contains(mFile)) {
+						results.add(mFile);
+					}
+				}
+			}
+		}
+		return results;
 	}
 	
 }
