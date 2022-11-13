@@ -48,6 +48,7 @@ public class ConnoisseurGUI {
 	 */
 	
 	private JScrollPane folder_contents; 
+	private JScrollPane folder_tree;
 	private JTree tree;
 	
 	private static ConnoisseurGUI instance;
@@ -169,7 +170,7 @@ public class ConnoisseurGUI {
 		 */
 		
 		// folder tree(left component of main_hori_split)
-		JScrollPane folder_tree = new JScrollPane();
+		folder_tree = new JScrollPane();
 		main_hori_split.setLeftComponent(folder_tree);
 		
 		JLabel folder_tree_label = new JLabel("Library");
@@ -306,6 +307,7 @@ public class ConnoisseurGUI {
 	}
 	
 	public JTree getJTree() {return tree;}
+	public JScrollPane getFolderTree() {return folder_tree;}
 	public static ConnoisseurGUI getInstance() {return instance;}
 	public static FileManager getFileManager() {return fileManager;}
 	public static TagManager getTagManager() {return tagManager;}

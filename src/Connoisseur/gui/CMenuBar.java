@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -207,6 +208,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			ConnoisseurGUI.getFileManager().log("Set default dir to " + userInput);
 			ConnoisseurGUI.getFileManager().saveSystemData();
 			ConnoisseurGUI.getInstance().displayFolderTree(userInput);
+			ConnoisseurGUI.getInstance().getFolderTree().setViewportView(ConnoisseurGUI.getInstance().displayFolderTree(targetDir.getPath()));
 		}
 		
 		if (e.getSource() == editTagsMenuItem) {
