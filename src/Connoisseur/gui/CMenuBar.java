@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -12,6 +14,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
+
+import org.json.simple.JSONObject;
 
 import Connoisseur.ConnoisseurGUI;
 import Connoisseur.file.MediaFile;
@@ -32,7 +36,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	private JMenu fileMenu, editMenu, helpMenu;
 	private JMenu newFileSubMenu;
 	
-	private JMenuItem newFileMenuItem, newDirectoryMenuItem;
+	private JMenuItem newFileMenuItem, newDirectoryMenuItem, setDefaultDirMenuItem;
 	private JMenuItem editTagsMenuItem;
 	
 
@@ -64,6 +68,10 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		newDirectoryMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-add-folder-16.png"));
 		newDirectoryMenuItem.addActionListener(this);
 		
+		setDefaultDirMenuItem = new JMenuItem("Set Default Directory");
+//		setDefaultDirMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-folder-16.png"));
+		setDefaultDirMenuItem.addActionListener(this);
+		
 		// add sub-menu items to "New" menu
 		newFileSubMenu.add(newFileMenuItem);
 		newFileSubMenu.addSeparator();
@@ -71,6 +79,8 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		
 		// add sub-menu to "New" menu
 		fileMenu.add(newFileSubMenu);
+		fileMenu.addSeparator();
+		fileMenu.add(setDefaultDirMenuItem);
 		
 		this.add(fileMenu);
 	}
@@ -95,6 +105,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		this.add(helpMenu);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// handle clicks within the "New" sub-menu
@@ -171,6 +182,31 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		
 		if (e.getSource() == newDirectoryMenuItem) {
 			System.out.println("*NEW DIRECTORY CLICKED*");
+		}
+		
+		if (e.getSource() == setDefaultDirMenuItem) {
+			ImageIcon icon = new ImageIcon("resources/gui/menubar/icons8-folder-16.png");
+			ImageIcon errorIcon = new ImageIcon("resources/gui/menubar/icons8-cancel-30.png");
+			JSONObject systemData = ConnoisseurGUI.getFileManager().getSystemData();
+			
+			String defaultDir = (String) systemData.get("default-dir");
+			if (defaultDir == null) defaultDir = System.getProperty("user.home") + File.separator;
+			String userInput = (String) JOptionPane.showInputDialog(null, "Setting the default directory to: ", "Configure Default Directory", JOptionPane.QUESTION_MESSAGE, icon, null, defaultDir);
+			
+			if (userInput == null) {
+				return;
+			}
+			
+			File targetDir = new File(userInput);
+			if (targetDir == null || !Files.isDirectory(Paths.get(userInput))) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid directory!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
+				return;
+			}
+			
+			systemData.put("default-directory", userInput);
+			ConnoisseurGUI.getFileManager().log("Set default dir to " + userInput);
+			ConnoisseurGUI.getFileManager().saveSystemData();
+			ConnoisseurGUI.getInstance().displayFolderTree(userInput);
 		}
 		
 		if (e.getSource() == editTagsMenuItem) {

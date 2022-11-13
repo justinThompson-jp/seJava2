@@ -348,6 +348,46 @@ public class FileManager {
 	}
 	
 	/**
+	 * Saves all the data files
+	 */
+	public void saveData() {
+    	this.saveSystemData();
+    	this.saveDirectoryData();
+	}
+	
+	/**
+	 * Save data to the system-data.json
+	 */
+	public void saveSystemData() {
+		// save system data file
+    	try {
+    		FileWriter file = new FileWriter(this.getSystemDataFile().getPath());
+			file.write(this.getSystemData().toJSONString());
+			file.close();
+			this.log("Saved system data file.");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			this.log("Something went wrong while saving system data.");
+		}
+	}
+	
+	/**
+	 * Save data to the directory-data.json
+	 */
+	public void saveDirectoryData() {
+    	// save directory data file
+		try {
+			FileWriter file = new FileWriter(this.getDirectoryDataFile().getPath());
+			file.write(this.getDirectoryData().toJSONString());
+			file.close();
+			this.log("Saved directory data file.");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			this.log("Something went wrong while saving directory data.");
+		}
+	}
+	
+	/**
 	 * Logs a message to the console
 	 * @param message
 	 */
