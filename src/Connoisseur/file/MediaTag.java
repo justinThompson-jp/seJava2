@@ -10,7 +10,7 @@ public class MediaTag {
 	private String name;
 	
 	public MediaTag(String name) {
-		this.name = name.toUpperCase();
+		this.name = name.toUpperCase().replace(" ", "");
 	}
 	
 	public String getName() {
@@ -18,7 +18,7 @@ public class MediaTag {
 	}
 	
 	public void setName(String name) {
-		this.name = name.toUpperCase();
+		this.name = name.toUpperCase().replace(" ", "");
 	}
 
 }
