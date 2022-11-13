@@ -300,6 +300,7 @@ public class ConnoisseurGUI {
 		}
 		// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		tree.setModel(new FileSystemModel(new File(_dir)));
+		tree.addMouseListener(new CMouseListener(tree, instance));
 		/*
 		 * END BLOCK
 		 */

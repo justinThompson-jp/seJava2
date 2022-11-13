@@ -204,11 +204,15 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 				return;
 			}
 			
+			// save new default dir to system-data.json
 			systemData.put("default-directory", userInput);
 			ConnoisseurGUI.getFileManager().log("Set default dir to " + userInput);
 			ConnoisseurGUI.getFileManager().saveSystemData();
+			
+			// update the GUI
 			ConnoisseurGUI.getInstance().displayFolderTree(userInput);
 			ConnoisseurGUI.getInstance().getFolderTree().setViewportView(ConnoisseurGUI.getInstance().displayFolderTree(targetDir.getPath()));
+			ConnoisseurGUI.getInstance().getFolderContents().setViewportView(ConnoisseurGUI.getInstance().displayDirContents(targetDir.getPath()));
 		}
 		
 		if (e.getSource() == editTagsMenuItem) {
