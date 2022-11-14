@@ -112,12 +112,22 @@ public class CMouseListener implements MouseListener {
 		if (source_table != null) {
 			// double-click from folder_contents will change to directory in folder_contents JScrollPane or open file in either built in view or separate app
 			if (e.getClickCount() == 2) {
-				//System.out.println(" JTable: Change directory or open file");
+				if (source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex()) == null) {
+					System.out.println(" ERR: Must click a directory or file");
+					return;
+				}
 				
 				// assigned selected row's Name column to the new_clicked variable
-				new_clicked = source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex()).toString();
+				new_clicked = (String) source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex());
+				String temp = new_clicked;
 				// formats the new_clicked variable to an absolute path to the file
 				new_clicked = instance.getCurrentDir() + "\\" + new_clicked;
+				if (temp == "..") {
+					new_clicked = new File(new_clicked).getParent();
+					new_clicked = new File(new_clicked).getParent();
+					
+				}
+				
 
 				// checks if the selected object is not readable
 				if (!Files.isReadable(Paths.get(new_clicked))) {

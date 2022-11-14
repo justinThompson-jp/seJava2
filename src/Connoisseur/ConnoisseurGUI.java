@@ -28,6 +28,7 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import Connoisseur.file.TagManager;
@@ -235,7 +236,17 @@ public class ConnoisseurGUI {
 		
 		int table_rows = children.length; // Used to create amount of rows for table
 		int table_columns = columns.length;// Used to create amount of columns for table
-		contents_table = new DefaultTableModel(table_rows,table_columns) {
+		
+		// adds an additional row to the JTable IFF we aren't at our current main directory
+		// TODO access JSON to see what we have the directory set as
+		JSONObject systemData = ConnoisseurGUI.getFileManager().getSystemData();
+		
+		String defaultDir = (String) systemData.get("default-directory");
+		int move_down = 0;
+		if (!_dir.equals(defaultDir)) {
+			move_down = 1;
+		}
+		contents_table = new DefaultTableModel(table_rows + move_down, table_columns) {
 			private static final long serialVersionUID = -2825576874268568706L;
 
 			@Override
@@ -249,13 +260,20 @@ public class ConnoisseurGUI {
 			private static final long serialVersionUID = -7048758524571061712L;
 
 			public Class getColumnClass(int column) {
-	         	return getValueAt(0, column).getClass();
+	         	return getValueAt(1, column).getClass();
 			}
 		};
 		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance));
 		dir_contents.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		dir_contents.getColumn("").setMinWidth(20);
 		dir_contents.getColumn("").setMaxWidth(20);
+		
+		// condition check so that it doesn't show back arrow if in current default directory
+		if (move_down == 1) {
+			// setting up return to previous directory
+			dir_contents.setValueAt("..", 0, 1);
+			dir_contents.setValueAt(new ImageIcon("resources/gui/view/back.png"), 0, 0);
+		}
 		
 		// For loop for filling out JTable
 		for (int i = 0; i < table_rows; i++) {
@@ -265,13 +283,13 @@ public class ConnoisseurGUI {
 	        
 			// Fill first column with icon differentiating files and folders
 	        if (Files.isDirectory(Paths.get(i_file_path))) {
-	        	dir_contents.setValueAt(new ImageIcon("resources/gui/view/folder.png"), i, 0);
+	        	dir_contents.setValueAt(new ImageIcon("resources/gui/view/folder.png"), i + move_down, 0);
 	        } else {
-	        	dir_contents.setValueAt(new ImageIcon("resources/gui/view/file.png"), i, 0);
+	        	dir_contents.setValueAt(new ImageIcon("resources/gui/view/file.png"), i + move_down, 0);
 	        }
 
 	        // Fill second column with names of files pulled from ViewDirectory
-			dir_contents.setValueAt(children[i], i, 1);
+			dir_contents.setValueAt(children[i], i + move_down, 1);
      
 	        // Runs all created strings to get metadata for every file in directory.
 			ViewFile.FileAttributes(i_file_path);
@@ -279,7 +297,7 @@ public class ConnoisseurGUI {
 			
 			// Fills table with each file's corresponding metadata
 			for (int j = 0; j < columns.length - 2; j++) {
-				dir_contents.setValueAt(mdata.get(j), i, j+2);
+				dir_contents.setValueAt(mdata.get(j), i + move_down, j+2);
 			}
 		}
 		/*
