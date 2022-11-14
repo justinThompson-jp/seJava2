@@ -24,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import org.json.simple.parser.ParseException;
 
@@ -177,7 +178,6 @@ public class ConnoisseurGUI {
 		folder_tree.setColumnHeaderView(folder_tree_label);
 
 		folder_tree.setViewportView(displayFolderTree(default_dir));
-		tree.addMouseListener(new CMouseListener(tree, instance));
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
 		this.folder_contents = new JScrollPane(displayDirContents(default_dir));
@@ -269,6 +269,11 @@ public class ConnoisseurGUI {
 		/*
 		 * END BLOCK
 		 */
+		
+		// Adding a column at the beginning of the JTable with an icon differentiating folders and files
+		//TableColumn is_dir = new TableColumn();
+		// TODO fill the tablecolumn with icons depending on if the Name column in the existing JTable is a directory or not
+		// then add the new tablecolumn to before the first column of the existing JTable
 		
 		return dir_contents;
 	}
