@@ -98,16 +98,12 @@ public class CMouseListener implements MouseListener {
 				System.out.println(" ERR: Must click a directory");
 				return;
 			}
-			// checks if the newly select object is different from the most recently selected node
-			if (getFileClicked().equals(new_clicked)) {
-				System.out.println(" ERR: Same directory as previously selected");
-				return;
-			}
+
 			// end guard clauses
 			
 			setFileClicked(new_clicked);
 
-			System.out.println(" Open directory " + new_clicked);
+			System.out.println("Open directory " + new_clicked);
 			//instance.getDirContents().removeMouseListener(instance.getFolderContents().getMouseListeners()[0]);
 			//instance.id--;
 			instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
@@ -119,7 +115,7 @@ public class CMouseListener implements MouseListener {
 				//System.out.println(" JTable: Change directory or open file");
 				
 				// assigned selected row's Name column to the new_clicked variable
-				new_clicked = (String) source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex());
+				new_clicked = source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex()).toString();
 				// formats the new_clicked variable to an absolute path to the file
 				new_clicked = instance.getCurrentDir() + "\\" + new_clicked;
 
@@ -135,8 +131,12 @@ public class CMouseListener implements MouseListener {
 				}
 				// end guard clauses
 				
-				instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
+
 				setFileClicked(new_clicked);
+
+				System.out.println("Open directory " + new_clicked);
+
+				instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 				//System.out.println(new_clicked);
 			// single click will bring focus on target directory or file and display info in file_metadata JPane
 			} else {

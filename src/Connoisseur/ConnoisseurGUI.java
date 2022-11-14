@@ -13,8 +13,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -221,7 +225,7 @@ public class ConnoisseurGUI {
 		dir.Directory(_dir);
 		
 		
-		Object[] columns = {"Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
+		Object[] columns = {"", "Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
 		Object[] children = ViewDirectory.pathnames;
 		
 		//If given null or invalid path name, default to user.home as initial directory
@@ -231,9 +235,9 @@ public class ConnoisseurGUI {
 			children = ViewDirectory.pathnames;
 		}
 		
-		int h = children.length; // Used to create amount of rows for table
-		int k = columns.length;// Used to create amount of columns for table
-		contents_table = new DefaultTableModel(h,k) {
+		int table_rows = children.length; // Used to create amount of rows for table
+		int table_columns = columns.length;// Used to create amount of columns for table
+		contents_table = new DefaultTableModel(table_rows,table_columns) {
 			private static final long serialVersionUID = -2825576874268568706L;
 
 			@Override
@@ -243,37 +247,46 @@ public class ConnoisseurGUI {
 		};
 		contents_table.setColumnIdentifiers(columns);
 		
-		dir_contents = new JTable(contents_table);
+		dir_contents = new JTable(contents_table) {
+			private static final long serialVersionUID = -7048758524571061712L;
+
+			public Class getColumnClass(int column) {
+	         	return getValueAt(0, column).getClass();
+			}
+		};
 		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance));
+		dir_contents.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		dir_contents.getColumn("").setMinWidth(20);
+		dir_contents.getColumn("").setMaxWidth(20);
 		
 		// For loop for filling out JTable
-		for (int i = 0; i < children.length; i++) {
-			// Fill first column with names of files pulled from ViewDirectory
-			dir_contents.setValueAt(children[i], i, 0);
-			
+		for (int i = 0; i < table_rows; i++) {
 			// Concatenates current directory and each value of the first column into 
 			// a string to form its absolute file path.
-			File f = new File((String) children[i]);
-	        String s = _dir + "\\" + f;
-	        //System.out.println(s);
+	        String i_file_path = _dir + "\\" + children[i].toString();
 	        
+			// Fill first column with icon differentiating files and folders
+	        if (Files.isDirectory(Paths.get(i_file_path))) {
+	        	dir_contents.setValueAt(new ImageIcon("resources/gui/view/folder.png"), i, 0);
+	        } else {
+	        	dir_contents.setValueAt(new ImageIcon("resources/gui/view/file.png"), i, 0);
+	        }
+
+	        // Fill second column with names of files pulled from ViewDirectory
+			dir_contents.setValueAt(children[i], i, 1);
+     
 	        // Runs all created strings to get metadata for every file in directory.
-			ViewFile.FileAttributes(s);
+			ViewFile.FileAttributes(i_file_path);
 			ArrayList<String> mdata = ViewFile.mdata;
 			
 			// Fills table with each file's corresponding metadata
-			for (int j = 0; j < columns.length - 1; j++) {
-				dir_contents.setValueAt(mdata.get(j), i, j+1);
+			for (int j = 0; j < columns.length - 2; j++) {
+				dir_contents.setValueAt(mdata.get(j), i, j+2);
 			}
 		}
 		/*
 		 * END BLOCK
 		 */
-		
-		// Adding a column at the beginning of the JTable with an icon differentiating folders and files
-		//TableColumn is_dir = new TableColumn();
-		// TODO fill the tablecolumn with icons depending on if the Name column in the existing JTable is a directory or not
-		// then add the new tablecolumn to before the first column of the existing JTable
 		
 		return dir_contents;
 	}
