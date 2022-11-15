@@ -256,13 +256,23 @@ public class ConnoisseurGUI {
 		};
 		contents_table.setColumnIdentifiers(columns);
 		
-		dir_contents = new JTable(contents_table) {
-			private static final long serialVersionUID = -7048758524571061712L;
-
-			public Class getColumnClass(int column) {
-	         	return getValueAt(1, column).getClass();
-			}
-		};
+		if (table_rows == 0) {
+			dir_contents = new JTable(contents_table) {
+				private static final long serialVersionUID = -7048758524571061712L;
+	
+				public Class getColumnClass(int column) {
+		         	return ImageIcon.class;
+				}
+			};
+		} else {
+			dir_contents = new JTable(contents_table) {
+				private static final long serialVersionUID = -7048758524571061712L;
+	
+				public Class getColumnClass(int column) {
+		         	return getValueAt(1, column).getClass();
+				}
+			};
+		}
 		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance));
 		dir_contents.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		dir_contents.getColumn("").setMinWidth(20);
