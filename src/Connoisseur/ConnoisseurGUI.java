@@ -155,6 +155,7 @@ public class ConnoisseurGUI {
 		 * Then the Bottom-Center section displaying the current file_metadata
 		 * Finally the Bottom-Right section displaying <undecided information, probably current file's tags>
 		 */
+		// TODO set minimum/maximum sizes for elements for better scalability
 		JSplitPane main_hori_split = new JSplitPane();
 		main_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		gui_frame.getContentPane().add(main_hori_split, BorderLayout.CENTER);
