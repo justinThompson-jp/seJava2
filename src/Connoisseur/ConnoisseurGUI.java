@@ -180,7 +180,10 @@ public class ConnoisseurGUI {
 		
 		JLabel folder_tree_label = new JLabel("Library");
 		folder_tree.setColumnHeaderView(folder_tree_label);
-
+		
+		tree = new JTree();
+		tree.addMouseListener(new CMouseListener(tree, instance));
+		
 		folder_tree.setViewportView(displayFolderTree(default_dir));
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
@@ -336,8 +339,6 @@ public class ConnoisseurGUI {
 		 * Code by Justin Thompson
 		 * START BLOCK
 		 */
-		
-		tree = new JTree();
 		File f = new File(_dir);
 		//If given null or invalid path name, default to user.home as initial directory
 		if (_dir == null || _dir.isEmpty() || f.isDirectory() == false) {
@@ -345,7 +346,6 @@ public class ConnoisseurGUI {
 		}
 		// changed hard referenced "C:\\" to call to private variable by Jacob Crawford
 		tree.setModel(new FileSystemModel(new File(_dir)));
-		tree.addMouseListener(new CMouseListener(tree, instance));
 		/*
 		 * END BLOCK
 		 */
