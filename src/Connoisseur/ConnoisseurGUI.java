@@ -63,6 +63,7 @@ public class ConnoisseurGUI {
 	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
 	private String default_dir;
 	private String current_dir;
+	private String current_file;
 	
 	/*
 	 * Code by Justin Thompson
@@ -361,4 +362,7 @@ public class ConnoisseurGUI {
 	public String getDefaultDir() {return default_dir;}
 	public JTable getDirContents() {return dir_contents;}
 	public String getCurrentDir() {return current_dir;}
+
+	public String getCurrentFile() {return current_file;}
+	public void setCurrentFile(String current_file) {this.current_file = current_file;}
 }

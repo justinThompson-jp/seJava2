@@ -69,6 +69,7 @@ public class CMouseListener implements MouseListener {
 	}
 	public void setFileClicked(String _file_clicked) {
 		this.file_clicked = _file_clicked;
+		instance.setCurrentFile(_file_clicked);
 	}
 
 	@Override
