@@ -1,6 +1,7 @@
 package Connoisseur;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 /*
 *	@authors: Justin Thompson, Jonathan Vallejo, Jacob Crawford
@@ -63,7 +64,7 @@ public class ConnoisseurGUI {
 	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
 	private String default_dir;
 	private String current_dir;
-	private String current_file;
+	private String selected_file;
 	
 	/*
 	 * Code by Justin Thompson
@@ -132,6 +133,7 @@ public class ConnoisseurGUI {
 	private void initialize() {
 		gui_frame = new JFrame();
 		gui_frame.setBounds(100, 100, 720, 480);
+		gui_frame.setMinimumSize(new Dimension(720, 480));
 		gui_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		/*
@@ -159,21 +161,30 @@ public class ConnoisseurGUI {
 		// TODO set minimum/maximum sizes for elements for better scalability
 		JSplitPane main_hori_split = new JSplitPane();
 		main_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		main_hori_split.setDividerSize(5);
 		gui_frame.getContentPane().add(main_hori_split, BorderLayout.CENTER);
-		main_hori_split.setResizeWeight(0.4);
+		main_hori_split.setDividerLocation((int) (gui_frame.getWidth() * (0.3)));
 		
 		JSplitPane right_vert_split = new JSplitPane();
 		right_vert_split.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		right_vert_split.setDividerSize(5);
 		main_hori_split.setRightComponent(right_vert_split);
-		right_vert_split.setResizeWeight(0.7);
-
+		right_vert_split.setDividerLocation((int) (gui_frame.getHeight() * (0.5)));
+		right_vert_split.setResizeWeight(1); // only resize folder_contents panel automatically
+		
 		JSplitPane bot_right_hori_split = new JSplitPane();
 		bot_right_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		bot_right_hori_split.setDividerSize(0);
 		right_vert_split.setRightComponent(bot_right_hori_split);
 		bot_right_hori_split.setResizeWeight(.8);
-		/*
-		 * END BLOCK
-		 */
+		
+		// testing adding label with folder name above folder_contents
+		JSplitPane folder_contents_pane = new JSplitPane();
+		folder_contents_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		folder_contents_pane.setEnabled(false); // prevents resizing
+		folder_contents_pane.setDividerSize(1);
+		right_vert_split.setLeftComponent(folder_contents_pane);
+		
 		
 		// folder tree(left component of main_hori_split)
 		folder_tree = new JScrollPane();
@@ -189,7 +200,10 @@ public class ConnoisseurGUI {
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
 		this.folder_contents = new JScrollPane(displayDirContents(default_dir));
-		right_vert_split.setLeftComponent(folder_contents);
+		folder_contents_pane.setRightComponent(folder_contents);
+		
+		JLabel folder_contents_label = new JLabel(getCurrentDir());
+		folder_contents_pane.setLeftComponent(folder_contents_label);
 		
 		//folder_contents.setViewportView(displayDirContents(default_dir));
 
@@ -362,7 +376,7 @@ public class ConnoisseurGUI {
 	public String getDefaultDir() {return default_dir;}
 	public JTable getDirContents() {return dir_contents;}
 	public String getCurrentDir() {return current_dir;}
+	public String getSelectedFile() {return selected_file;}
 
-	public String getCurrentFile() {return current_file;}
-	public void setCurrentFile(String current_file) {this.current_file = current_file;}
+	public void setSelectedFile(String _file) {this.selected_file = _file;}
 }
