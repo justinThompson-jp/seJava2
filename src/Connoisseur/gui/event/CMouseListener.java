@@ -69,13 +69,13 @@ public class CMouseListener implements MouseListener {
 	}
 	public void setFileClicked(String _file_clicked) {
 		this.file_clicked = _file_clicked;
+		System.out.println("file clicked " + _file_clicked);
 		instance.setCurrentFile(_file_clicked);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		String new_clicked;
-		// TODO add alternative mouseClicked functionality for JTree and JScrollPane
 		// functionality for when this is called in a JTree
 		if (source_tree != null) {
 			// start guard clauses
@@ -112,23 +112,24 @@ public class CMouseListener implements MouseListener {
 		// functionality for if this is called from a JTable
 		if (source_table != null) {
 			// double-click from folder_contents will change to directory in folder_contents JScrollPane or open file in either built in view or separate app
+			if (source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex()) == null) {
+				System.out.println(" ERR: Must click a directory or file");
+				return;
+			}
+			
+			// assigned selected row's Name column to the new_clicked variable
+			new_clicked = (String) source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex());
+			
+			String temp = new_clicked;
+			// formats the new_clicked variable to an absolute path to the file
+			new_clicked = instance.getCurrentDir() + "\\" + new_clicked;
+			if (temp == "..") {
+				new_clicked = new File(new_clicked).getParent();
+				new_clicked = new File(new_clicked).getParent();
+				
+			}
+			
 			if (e.getClickCount() == 2) {
-				if (source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex()) == null) {
-					System.out.println(" ERR: Must click a directory or file");
-					return;
-				}
-				
-				// assigned selected row's Name column to the new_clicked variable
-				new_clicked = (String) source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex());
-				String temp = new_clicked;
-				// formats the new_clicked variable to an absolute path to the file
-				new_clicked = instance.getCurrentDir() + "\\" + new_clicked;
-				if (temp == "..") {
-					new_clicked = new File(new_clicked).getParent();
-					new_clicked = new File(new_clicked).getParent();
-					
-				}
-				
 
 				// checks if the selected object is not readable
 				if (!Files.isReadable(Paths.get(new_clicked))) {
@@ -145,13 +146,13 @@ public class CMouseListener implements MouseListener {
 
 				setFileClicked(new_clicked);
 
-				System.out.println("Open directory " + new_clicked);
+				//System.out.println("Open directory " + new_clicked);
 
 				instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 				//System.out.println(new_clicked);
 			// single click will bring focus on target directory or file and display info in file_metadata JPane
 			} else {
-				//System.out.println(" JTable: Focus on file/directory");
+				//setFileClicked(new_clicked);
 			}
 		}
 	}
