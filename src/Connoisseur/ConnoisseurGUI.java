@@ -53,6 +53,7 @@ public class ConnoisseurGUI {
 	 */
 	
 	private JScrollPane folder_contents; 
+	private JLabel folder_contents_label;
 	private JScrollPane folder_tree;
 	private JTree tree;
 	
@@ -202,7 +203,7 @@ public class ConnoisseurGUI {
 		this.folder_contents = new JScrollPane(displayDirContents(default_dir));
 		folder_contents_pane.setRightComponent(folder_contents);
 		
-		JLabel folder_contents_label = new JLabel(getCurrentDir());
+		folder_contents_label = new JLabel(getCurrentDir());
 		folder_contents_pane.setLeftComponent(folder_contents_label);
 		
 		//folder_contents.setViewportView(displayDirContents(default_dir));
@@ -377,6 +378,7 @@ public class ConnoisseurGUI {
 	public JTable getDirContents() {return dir_contents;}
 	public String getCurrentDir() {return current_dir;}
 	public String getSelectedFile() {return selected_file;}
+	public JLabel getFolderContentsLabel() {return folder_contents_label;}
 
 	public void setSelectedFile(String _file) {this.selected_file = _file;}
 }
