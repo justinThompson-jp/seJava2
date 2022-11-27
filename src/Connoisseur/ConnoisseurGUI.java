@@ -1,6 +1,7 @@
 package Connoisseur;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 
 /*
@@ -132,7 +133,7 @@ public class ConnoisseurGUI {
 
 	//Initialize the contents of the frame.
 	private void initialize() {
-		gui_frame = new JFrame();
+		gui_frame = new JFrame("Connoisseur");
 		gui_frame.setBounds(100, 100, 720, 480);
 		gui_frame.setMinimumSize(new Dimension(720, 480));
 		gui_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -159,7 +160,6 @@ public class ConnoisseurGUI {
 		 * Then the Bottom-Center section displaying the current file_metadata
 		 * Finally the Bottom-Right section displaying <undecided information, probably current file's tags>
 		 */
-		// TODO set minimum/maximum sizes for elements for better scalability
 		JSplitPane main_hori_split = new JSplitPane();
 		main_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		main_hori_split.setDividerSize(5);
@@ -175,15 +175,14 @@ public class ConnoisseurGUI {
 		
 		JSplitPane bot_right_hori_split = new JSplitPane();
 		bot_right_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		bot_right_hori_split.setDividerSize(0);
+		bot_right_hori_split.setDividerSize(1);
 		right_vert_split.setRightComponent(bot_right_hori_split);
 		bot_right_hori_split.setResizeWeight(.8);
 		
-		// testing adding label with folder name above folder_contents
 		JSplitPane folder_contents_pane = new JSplitPane();
 		folder_contents_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		folder_contents_pane.setEnabled(false); // prevents resizing
-		folder_contents_pane.setDividerSize(1);
+		folder_contents_pane.setDividerSize(0);
 		right_vert_split.setLeftComponent(folder_contents_pane);
 		
 		
@@ -218,6 +217,9 @@ public class ConnoisseurGUI {
 		file_metadata.add(file_metadata_label);
 		
 		// last/undecided panel SplitPane_3.setRightComponent()(right component of bot_right_hori_split)
+		JPanel file_preview = new JPanel();
+		bot_right_hori_split.setRightComponent(file_preview);
+		file_preview.setMinimumSize(new Dimension(200,200));
 
 	}
 	
