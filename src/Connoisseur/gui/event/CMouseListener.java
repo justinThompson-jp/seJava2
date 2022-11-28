@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
@@ -30,6 +31,7 @@ public class CMouseListener implements MouseListener {
 	private String file_clicked;
 	private String file_dragged_to;
 	
+	private static JComponent lastClicked;
 	
 	// Constructor(s)
 	/**
@@ -77,6 +79,10 @@ public class CMouseListener implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() instanceof JComponent) {
+			lastClicked = (JComponent)e.getSource();
+		}
+		
 		String new_clicked;
 		// functionality for when this is called in a JTree
 		if (source_tree != null) {
@@ -211,4 +217,9 @@ public class CMouseListener implements MouseListener {
 		} 
 		return path;
 	}
+	
+	public static JComponent getLastClicked() {
+		return lastClicked;
+	}
+	
 }
