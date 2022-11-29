@@ -136,7 +136,6 @@ public class ConnoisseurGUI {
 	private void initialize() {
 		gui_frame = new JFrame("Connoisseur");
 		gui_frame.setBounds(100, 100, 720, 480);
-		gui_frame.setMinimumSize(new Dimension(720, 480));
 		gui_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		/*
@@ -176,9 +175,9 @@ public class ConnoisseurGUI {
 		
 		JSplitPane bot_right_hori_split = new JSplitPane();
 		bot_right_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		bot_right_hori_split.setDividerSize(1);
+		bot_right_hori_split.setDividerSize(5);
 		right_vert_split.setRightComponent(bot_right_hori_split);
-		bot_right_hori_split.setResizeWeight(.8);
+		bot_right_hori_split.setResizeWeight(1);
 		
 		JSplitPane folder_contents_pane = new JSplitPane();
 		folder_contents_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -206,8 +205,6 @@ public class ConnoisseurGUI {
 		folder_contents_label = new JLabel(getCurrentDir());
 		folder_contents_pane.setLeftComponent(folder_contents_label);
 		
-		//folder_contents.setViewportView(displayDirContents(default_dir));
-
 		// file metadata(left component of bot_right_hori_split, which is the right component of right_vert_split, which is the right component of main_hori_split)
 		JPanel file_metadata = new JPanel();
 		bot_right_hori_split.setLeftComponent(file_metadata);
@@ -218,10 +215,15 @@ public class ConnoisseurGUI {
 		file_metadata.add(file_metadata_label);
 		
 		// last/undecided panel SplitPane_3.setRightComponent()(right component of bot_right_hori_split)
-		JPanel file_preview = new JPanel();
-		bot_right_hori_split.setRightComponent(file_preview);
-		file_preview.setMinimumSize(new Dimension(200,200));
+		JPanel file_thumbnail = new JPanel();
+		bot_right_hori_split.setRightComponent(file_thumbnail);
 
+		// size constraints for swing objects
+		gui_frame.setMinimumSize(new Dimension(720, 480));
+		folder_tree.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight())));
+		folder_contents_pane.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.4))));
+		bot_right_hori_split.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.2))));
+		file_thumbnail.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight() * (0.2))));
 	}
 	
 	/**
