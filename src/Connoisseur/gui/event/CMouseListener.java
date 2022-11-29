@@ -107,11 +107,10 @@ public class CMouseListener implements MouseListener {
 				setFileClicked(new_clicked);
 				// double-clicked file from JTree
 				if (e.getClickCount() == 2) {
-					System.out.println("Launch/Open file from JTree");
+					System.out.println("Launch/Open " + new_clicked + " from JTree");
 					try {
 						Desktop.getDesktop().open(new File(new_clicked));
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				// single-click file from JTree
@@ -120,13 +119,8 @@ public class CMouseListener implements MouseListener {
 				}
 				return;
 			}
-
 			// end guard clauses
 			
-
-			System.out.println("Open directory " + new_clicked);
-			//instance.getDirContents().removeMouseListener(instance.getFolderContents().getMouseListeners()[0]);
-			//instance.id--;
 			instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 			instance.getFolderContentsLabel().setText(new_clicked);
 		}
@@ -161,27 +155,18 @@ public class CMouseListener implements MouseListener {
 				// aka a file is double-clicked
 				if (!Files.isDirectory(Paths.get(new_clicked))) {
 					setFileClicked(new_clicked);
-					System.out.println("Launch/Open file from JTable");
+					System.out.println("Launch/Open " + new_clicked + " from JTable");
 					try {
 						Desktop.getDesktop().open(new File(new_clicked));
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					return;
 				}
 				// end guard clauses
-				
-
-
-				//System.out.println("Open directory " + new_clicked);
 
 				instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 				instance.getFolderContentsLabel().setText(new_clicked);
-				//System.out.println(new_clicked);
-			// single click will bring focus on target directory or file and display info in file_metadata JPane
-			} else {
-				//setFileClicked(new_clicked);
 			}
 		}
 	}

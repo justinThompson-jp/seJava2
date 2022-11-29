@@ -60,6 +60,7 @@ public class ConnoisseurGUI {
 	private static ConnoisseurGUI instance;
 	private static FileManager fileManager;
 	private static TagManager tagManager;
+	private PlaylistManager playlist_manager;
 	
 	// Saves the path to the System.getProperty("user.home") for easy access
 	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
@@ -77,6 +78,7 @@ public class ConnoisseurGUI {
 		instance = this;
 		fileManager = new FileManager();
 		tagManager = new TagManager();
+		playlist_manager = new PlaylistManager();
 		ViewDirectory x = new ViewDirectory();
 		this.default_dir = x.getDefaultDir(); //Added by Jacob Crawford
 		this.current_dir = default_dir;
@@ -259,7 +261,6 @@ public class ConnoisseurGUI {
 		int table_columns = columns.length;// Used to create amount of columns for table
 		
 		// adds an additional row to the JTable IFF we aren't at our current main directory
-		// TODO access JSON to see what we have the directory set as
 		JSONObject systemData = ConnoisseurGUI.getFileManager().getSystemData();
 		
 		String defaultDir = (String) systemData.get("default-directory");
