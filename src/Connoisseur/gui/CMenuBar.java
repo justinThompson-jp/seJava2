@@ -239,11 +239,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 				}
 			}
 
-			File selected = null;
-			
-			if (selectionPath != null) {
-				selected = new File(selectionPath);
-			}
+			File selected = new File(selectionPath);
 						
 			if (selected == null || !selected.exists()) {
 				JOptionPane.showMessageDialog(null, "You must have a file selected to edit tags!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
