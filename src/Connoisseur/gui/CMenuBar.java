@@ -8,11 +8,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
@@ -20,6 +21,7 @@ import org.json.simple.JSONObject;
 
 import Connoisseur.ConnoisseurGUI;
 import Connoisseur.file.MediaFile;
+import Connoisseur.gui.event.CMouseListener;
 
 /***
  * Extension of the JMenuBar class to include the functionality of the Connoisseur MenuBar. <br>
@@ -138,18 +140,18 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 				creationType = FileCreationType.DIRECT;
 			} else {
 				// user only has one thing selected
-				targetPath = treePathToString(pathsSelected[0].toString());
+				targetPath = treePathToString(pathsSelected[0]);
 				File fileSelected = new File(targetPath);
 				
 				// file selected is a directory, proceed with prompt
 				if (fileSelected.list() != null) {
-					targetPath = treePathToString(pathsSelected[0].toString());
+					targetPath = treePathToString(pathsSelected[0]);
 					userInput = (String) JOptionPane.showInputDialog(null, "Creating new file at: " + targetPath, "New File", JOptionPane.QUESTION_MESSAGE, icon, null, null);		
 				} else {
 					// file selected is not a directory, show create file dialogue at parent directory
 					targetPath = defaultPath;
 					if (pathsSelected[0].getParentPath() != null) {
-						targetPath = treePathToString(pathsSelected[0].getParentPath().toString());	
+						targetPath = treePathToString(pathsSelected[0].getParentPath());	
 					}
 					userInput = (String) JOptionPane.showInputDialog(null, "Creating new file at: " + targetPath, "New File", JOptionPane.QUESTION_MESSAGE, icon, null, null);		
 				}
@@ -210,7 +212,6 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			ConnoisseurGUI.getFileManager().saveSystemData();
 			
 			// update the GUI
-			ConnoisseurGUI.getInstance().displayFolderTree(userInput);
 			ConnoisseurGUI.getInstance().getFolderTree().setViewportView(ConnoisseurGUI.getInstance().displayFolderTree(targetDir.getPath()));
 			ConnoisseurGUI.getInstance().getFolderContents().setViewportView(ConnoisseurGUI.getInstance().displayDirContents(targetDir.getPath()));
 		}
@@ -218,20 +219,35 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		if (e.getSource() == editTagsMenuItem) {
 			String userInput = "";
 			
-			// user has nothing selected
 			ImageIcon errorIcon = new ImageIcon("resources/gui/menubar/icons8-cancel-30.png");
 			ImageIcon editIcon = new ImageIcon("resources/gui/menubar/icons8-pencil-16.png");
 			
-			if (pathsSelected == null || pathsSelected.length == 0) {
+			JComponent lastClicked = CMouseListener.getLastClicked();
+			String selectionPath = "";
+			if (lastClicked instanceof JTree) {
+				selectionPath = treePathToString(((JTree)lastClicked).getSelectionPaths()[0]);
+			} else if (lastClicked instanceof JTable) {
+				JTable clicked = (JTable)lastClicked;
+				int row = clicked.getSelectedRow();
+				int column = 1; // "Name" column
+				try {
+					String string = (String)clicked.getValueAt(row, column);
+					String currentDir = ConnoisseurGUI.getInstance().getCurrentDir();
+					selectionPath = currentDir + File.separator + string;
+				} catch (Exception ex) {
+					selectionPath = ""; 
+				}
+			}
+
+			File selected = null;
+			
+			if (selectionPath != null) {
+				selected = new File(selectionPath);
+			}
+						
+			if (selected == null || !selected.exists()) {
 				JOptionPane.showMessageDialog(null, "You must have a file selected to edit tags!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
-			} else if (pathsSelected.length > 1) {
-				// user has more than one thing selected
-				
-				JOptionPane.showMessageDialog(null, "WIP: You can only edit 1 file's tags at a time! (for now)", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
 			} else {
-				//user only has one thing selected
-				File selected = new File(treePathToString(pathsSelected[0].toString()));
-				System.out.println(selected.getPath());
 				
 				if (selected.list() != null) {
 					JOptionPane.showMessageDialog(null, "You cannot edit tags on a directory yet!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
@@ -269,9 +285,26 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		FROM_PARENT, DIRECT;
 	}
 	
-	// takes a path in the TreePath format and converts it to a normal path format
-	private String treePathToString(String input) {
-		return input.replace("[", "").replace("]", "").replace(" ", "").replace(",", File.separator);
+//	// takes a path in the TreePath format and converts it to a normal path format
+//	private String treePathToString(String input) {
+//		return input.replace("[", "").replace("]", "").replace(",", File.separator);
+//	}
+//	
+	
+	/**
+	 * Taken from the CMouseListener class, the method I initially created for TreePath conversion stopped working for some reason.
+	 * @author Jacob Crawford
+	 * @param _tree_path
+	 * @return
+	 */
+	private String treePathToString(TreePath _tree_path) {
+		String path = "";
+		Object[] steps = _tree_path.getPath();
+		path = steps[0].toString();
+		for (int i = 1; i < steps.length; i++) {
+			path += "\\" + steps[i].toString();
+		} 
+		return path;
 	}
 
 }
