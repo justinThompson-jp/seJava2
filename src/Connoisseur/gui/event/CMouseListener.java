@@ -74,7 +74,7 @@ public class CMouseListener implements MouseListener {
 	public void setFileClicked(String _file_clicked) {
 		this.file_clicked = _file_clicked;
 		System.out.println("file clicked " + _file_clicked);
-		instance.setSelectedFile(_file_clicked);
+		ConnoisseurGUI.getInstance().setSelectedFile(_file_clicked);
 	}
 
 	@Override
@@ -143,7 +143,6 @@ public class CMouseListener implements MouseListener {
 				new_clicked = new File(new_clicked).getParent();
 				
 			}
-			
 			if (e.getClickCount() == 2) {
 
 				// checks if the selected object is not readable
@@ -168,6 +167,7 @@ public class CMouseListener implements MouseListener {
 				instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
 				instance.getFolderContentsLabel().setText(new_clicked);
 			}
+			setFileClicked(new_clicked);
 		}
 	}
 

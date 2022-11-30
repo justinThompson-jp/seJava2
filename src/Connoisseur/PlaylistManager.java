@@ -10,6 +10,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import Connoisseur.file.MediaFile;
+
 public class PlaylistManager {
 
 	private String appdata_dir = System.getenv("APPDATA") + "\\Connoisseur";
@@ -76,14 +78,12 @@ public class PlaylistManager {
 	@SuppressWarnings("unchecked")
 	public void buildPlaylist(String _tag) {
 		JSONArray playlist_contents = new JSONArray();
-		ArrayList<String> file_paths = new ArrayList<String>();
-		// TODO search directory by tag to fill out file_paths arraylist
-		
+		ArrayList<MediaFile> file_paths = ConnoisseurGUI.getTagManager().searchByTag(_tag);
 		// loops through adding each found path to the playlist_contents JSONArray
 		for (int i = 0; i < file_paths.size(); i++) {
-			playlist_contents.add(file_paths.get(i));
+			playlist_contents.add(file_paths.get(i).getPath());
 		}
-		
+		// TODO have it 
 		playlist_data.put(_tag, playlist_contents);
 		savePlaylist(playlist_data);
 	}
