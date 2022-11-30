@@ -99,7 +99,4 @@ public class PlaylistManager {
 			System.out.println("[Connoisseur] Something went wront while saving playlist data.");
 		}
 	}
-	// dummy main for testing
-	public static void main(String[] args) {
-	}
 }
