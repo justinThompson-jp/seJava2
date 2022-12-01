@@ -39,7 +39,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	private JMenu fileMenu, editMenu, helpMenu;
 	private JMenu newFileSubMenu;
 	
-	private JMenuItem newFileMenuItem, newDirectoryMenuItem, setDefaultDirMenuItem;
+	private JMenuItem newFileMenuItem, newDirectoryMenuItem, setDefaultDirMenuItem, new_playlist_MenuItem;
 	private JMenuItem editTagsMenuItem;
 	
 
@@ -71,6 +71,10 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		newDirectoryMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-add-folder-16.png"));
 		newDirectoryMenuItem.addActionListener(this);
 		
+		new_playlist_MenuItem = new JMenuItem("New Playlist");
+		new_playlist_MenuItem.setIcon(new ImageIcon("resources/gui/menubar/icon-playlist"));
+		new_playlist_MenuItem.addActionListener(this);
+		
 		setDefaultDirMenuItem = new JMenuItem("Set Default Directory");
 //		setDefaultDirMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-folder-16.png"));
 		setDefaultDirMenuItem.addActionListener(this);
@@ -79,6 +83,8 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		newFileSubMenu.add(newFileMenuItem);
 		newFileSubMenu.addSeparator();
 		newFileSubMenu.add(newDirectoryMenuItem);
+		newFileSubMenu.addSeparator();
+		newFileSubMenu.add(new_playlist_MenuItem);
 		
 		// add sub-menu to "New" menu
 		fileMenu.add(newFileSubMenu);
@@ -178,7 +184,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 				if (pathsSelected != null && pathsSelected[0] != null) {
 					files.setSelectionPath(pathsSelected[0].pathByAddingChild(fileCreated));
 				}
-				
+				// TODO: reload the JTable
 				// TODO: set selection to the file that was just created
 			}
 		}
