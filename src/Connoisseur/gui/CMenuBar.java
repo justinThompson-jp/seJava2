@@ -6,14 +6,14 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
@@ -21,7 +21,6 @@ import org.json.simple.JSONObject;
 
 import Connoisseur.ConnoisseurGUI;
 import Connoisseur.file.MediaFile;
-import Connoisseur.gui.event.CMouseListener;
 
 /***
  * Extension of the JMenuBar class to include the functionality of the Connoisseur MenuBar. <br>
@@ -36,10 +35,11 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	 */
 	private static final long serialVersionUID = -350515317725327497L;
 	
-	private JMenu fileMenu, editMenu, helpMenu;
-	private JMenu newFileSubMenu;
+	private JMenu fileMenu, editMenu, helpMenu, playlist_menu;
+	private JMenu newFileSubMenu, view_playlists_submenu, delete_playlist_submenu;
 	
-	private JMenuItem newFileMenuItem, newDirectoryMenuItem, setDefaultDirMenuItem, new_playlist_MenuItem;
+	private JMenuItem newFileMenuItem, newDirectoryMenuItem, setDefaultDirMenuItem;
+	private JMenuItem new_playlist_menu_item;
 	private JMenuItem editTagsMenuItem;
 	
 
@@ -51,6 +51,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		this.initFileMenu();
 		this.initEditMenu();
 		this.initHelpMenu();
+		this.initPlaylistMenu();
 	}
 	
 	private void initFileMenu() {
@@ -70,11 +71,6 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		newDirectoryMenuItem = new JMenuItem("New Directory");
 		newDirectoryMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-add-folder-16.png"));
 		newDirectoryMenuItem.addActionListener(this);
-		
-		new_playlist_MenuItem = new JMenuItem("New Playlist");
-		new_playlist_MenuItem.setIcon(new ImageIcon("resources/gui/menubar/icon-playlist"));
-		new_playlist_MenuItem.addActionListener(this);
-		
 		setDefaultDirMenuItem = new JMenuItem("Set Default Directory");
 //		setDefaultDirMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-folder-16.png"));
 		setDefaultDirMenuItem.addActionListener(this);
@@ -83,8 +79,6 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		newFileSubMenu.add(newFileMenuItem);
 		newFileSubMenu.addSeparator();
 		newFileSubMenu.add(newDirectoryMenuItem);
-		newFileSubMenu.addSeparator();
-		newFileSubMenu.add(new_playlist_MenuItem);
 		
 		// add sub-menu to "New" menu
 		fileMenu.add(newFileSubMenu);
@@ -112,6 +106,66 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		this.helpMenu = new JMenu("Help");
 		// TODO: add help options
 		this.add(helpMenu);
+	}
+
+	private void initPlaylistMenu() {
+		// if the playlist_menu is already attached to the CMenuBar, remove it before letting initPlaylistMenu run
+		// this should let the code update the playlist_menu on the fly by calling initPlaylistMenu
+		// useful after creating a new playlist so it will show up in the "View Playlists" submenu
+		if (this.playlist_menu != null) {
+			this.remove(playlist_menu);
+		}
+		// create "Playlist" menu
+		playlist_menu = new JMenu("Playlist");
+
+		// initialize the playlist menu items
+		new_playlist_menu_item = new JMenuItem("New Playlist");
+		new_playlist_menu_item.setIcon(new ImageIcon("resources/gui/menubar/icon-playlist"));
+		new_playlist_menu_item.addActionListener(this);
+		
+		delete_playlist_submenu = new JMenu("Delete Playlist");
+		// TODO add delete playlist icon
+		delete_playlist_submenu.addActionListener(this);
+		
+		view_playlists_submenu = new JMenu("View Playlists");
+		// TODO add view playlists icon
+		view_playlists_submenu.addActionListener(this);
+		
+		// TODO create a list of all playlists then iterate through that list, adding each as a submenu with the name being the tag(s) of the playlist
+		ArrayList<String> playlist_list = new ArrayList<String>();
+		// iterates through arraylist creating a menuitem for each playlist
+		JMenuItem temp_del, temp_view;
+		if (playlist_list.size() > 0) {
+			for (int i = 0; i < playlist_list.size() - 1; i++) {
+				temp_del = new JMenuItem(playlist_list.get(i));
+				temp_del.addActionListener(this);
+				temp_view = new JMenuItem(playlist_list.get(i));
+				temp_view.addActionListener(this);
+				view_playlists_submenu.add(temp_view);
+				delete_playlist_submenu.add(temp_del);
+				view_playlists_submenu.addSeparator();
+				delete_playlist_submenu.addSeparator();
+			}
+			// last item in playlist_list is added outside of loop so there isn't an extra separator at the bottom of the list
+			temp_del = new JMenuItem("Delete " + playlist_list.get(playlist_list.size() - 1));
+			temp_view = new JMenuItem(playlist_list.get(playlist_list.size() - 1));
+			temp_del.addActionListener(this);
+			temp_view.addActionListener(this);
+			delete_playlist_submenu.add(temp_del);
+			view_playlists_submenu.add(temp_view);
+		// if there are no playlists created yet, both the view playlists and delete playlist submenus will be empty
+		} else {
+			delete_playlist_submenu.add(new JLabel("  Empty  "));
+			view_playlists_submenu.add( new JLabel("  Empty  "));
+		}
+		
+		// add playlist options to playlist menu
+		playlist_menu.add(new_playlist_menu_item);
+		playlist_menu.addSeparator();
+		playlist_menu.add(delete_playlist_submenu);
+		playlist_menu.addSeparator();
+		playlist_menu.add(view_playlists_submenu);
+		this.add(playlist_menu);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -222,7 +276,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			ConnoisseurGUI.getInstance().getFolderContents().setViewportView(ConnoisseurGUI.getInstance().displayDirContents(targetDir.getPath()));
 		}
 		
-		if (e.getSource() == editTagsMenuItem) {
+		if (e.getSource() == editTagsMenuItem && ConnoisseurGUI.getInstance().getSelectedFile() != null) {
 			String userInput = "";
 			
 			ImageIcon errorIcon = new ImageIcon("resources/gui/menubar/icons8-cancel-30.png");
@@ -260,6 +314,23 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 					// updating MediaFile object
 					mFile = ConnoisseurGUI.getTagManager().findFile(selected);
 					ConnoisseurGUI.getFileManager().log("Set tags of: " + selected.getName() + " to: " + mFile.getTagsString());
+				}
+			}
+		}
+		// playlist controls
+		if (e.getSource() == new_playlist_menu_item) {
+			System.out.println("NEW PLAYLIST CLICKED");
+			// TODO needs to ask for user to input/select from list a tag then generate a playlist with that tag
+		}
+		// TODO the delete and view playlists submenus items are generated procedurally, figure out how to access them once created
+		if (delete_playlist_submenu.getItemCount() > 1) {
+			for (int i = 0; i < delete_playlist_submenu.getItemCount(); i += 2) {
+				// e.getActionCommand returns the name of the element clicked, this should work for procedurally generated JMenuItems
+				if (e.getActionCommand() == delete_playlist_submenu.getItem(0).getLabel()) {
+					System.out.println(e.getActionCommand() + "DELETE CLICKED");
+				}
+				if (e.getActionCommand() == view_playlists_submenu.getItem(0).getLabel()) {
+					System.out.println(e.getActionCommand() + "VIEW CLICKED");
 				}
 			}
 		}

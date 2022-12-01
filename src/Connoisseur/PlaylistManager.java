@@ -83,8 +83,21 @@ public class PlaylistManager {
 		for (int i = 0; i < file_paths.size(); i++) {
 			playlist_contents.add(file_paths.get(i).getPath());
 		}
-		// TODO have it 
+		// TODO have it check for secondary tags that are common, if above a certain threshold add the entire tag category to the playlist
 		playlist_data.put(_tag, playlist_contents);
+		savePlaylist(playlist_data);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void buildPlaylist(String[] _tags) {
+		JSONArray playlist_contents = new JSONArray();
+		ArrayList<MediaFile> file_paths = ConnoisseurGUI.getTagManager().searchByTags(_tags);
+		// loops through adding each found path to the playlist_contents JSONArray
+		for (int i = 0; i < file_paths.size(); i++) {
+			playlist_contents.add(file_paths.get(i).getPath());
+		}
+		// TODO have it check for secondary tags that are common, if above a certain threshold add the entire tag category to the playlist
+		playlist_data.put(_tags, playlist_contents);
 		savePlaylist(playlist_data);
 	}
 	
