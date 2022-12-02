@@ -228,7 +228,7 @@ public class ConnoisseurGUI {
 		dir.Directory(_dir);
 		
 		
-		Object[] columns = {"", "Name", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
+		Object[] columns = {"", "Name","Tags", "Creation Date", "Last Access", "Last Modified", "Size"}; // Set column names
 		Object[] children = ViewDirectory.pathnames;
 		
 		//If given null or invalid path name, default to user.home as initial directory
@@ -273,7 +273,7 @@ public class ConnoisseurGUI {
 				private static final long serialVersionUID = -7048758524571061712L;
 	
 				public Class getColumnClass(int column) {
-		         	return getValueAt(1, column).getClass();
+		         	return getValueAt(1, 1).getClass();
 				}
 			};
 		}
@@ -310,8 +310,8 @@ public class ConnoisseurGUI {
 			ArrayList<String> mdata = ViewFile.mdata;
 			
 			// Fills table with each file's corresponding metadata
-			for (int j = 0; j < columns.length - 2; j++) {
-				dir_contents.setValueAt(mdata.get(j), i + move_down, j+2);
+			for (int j = 0; j < columns.length - 3; j++) {
+				dir_contents.setValueAt(mdata.get(j), i + move_down, j+3);
 			}
 		}
 		/*
