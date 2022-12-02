@@ -133,6 +133,23 @@ public class TagManager {
 	}
 	
 	/**
+	 * Searches our data for the file at the given path and returns a MediaFile object of that file. Return's null if there is no data for the given file in our system.  
+	 * @param file File to retrieve data on
+	 * @return MediaFile
+	 */
+	public MediaFile findFile(String path) {
+		File file = new File(path);
+		for (MediaDirectory dirs : directories) {
+			for (MediaFile mFile : dirs.getFiles()) {
+				if (mFile.getJavaFile().getPath().equalsIgnoreCase(file.getPath())) {
+					return mFile;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Adds the given MediaTag to the given file
 	 * @param file File to add the tag to
 	 * @param tag MediaTag to be added to the given file

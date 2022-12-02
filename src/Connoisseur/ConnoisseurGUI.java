@@ -1,12 +1,14 @@
 package Connoisseur;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 /*
-*	@authors: Justin Thompson, Jonathan Vallejo, Jacob Crawford
+*	@authors: Justin Thompson, Jonathan Vallejo, Jacob Crawford, Aristan Galindo
 */
 
 import java.awt.EventQueue;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -16,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -24,9 +27,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -52,17 +62,51 @@ public class ConnoisseurGUI {
 	 */
 	
 	private JScrollPane folder_contents; 
+	private JLabel folder_contents_label;
 	private JScrollPane folder_tree;
 	private JTree tree;
 	
 	private static ConnoisseurGUI instance;
 	private static FileManager fileManager;
 	private static TagManager tagManager;
+	private PlaylistManager playlist_manager;
 	
 	// Saves the path to the System.getProperty("user.home") for easy access
 	// This allows ViewDirectory code to work with Windows(tested), Linux(tested), and MacOS(untested)
 	private String default_dir;
 	private String current_dir;
+	private String selected_file;
+	
+	
+	/* 
+	 * Code by Aristan Galindo
+	 * START BLOCK
+	 */
+	
+	// Directory listing
+	private JTable table;
+	
+	private ListSelectionListener listSelectionListener;
+	
+	// Currently selected file
+	private File currentFile;
+	
+	// Gives the name of the files
+	private FileSystemView fileSystemView;
+	
+	// Table model for File
+    private FileTableModel fileTableModel;
+	
+	// file details
+	private JLabel fileName;
+	private JTextField path;
+	private JLabel date;
+	private JLabel size;
+	private JLabel tag;
+	
+	/*
+	 * END BLOCK
+	 */
 	
 	/*
 	 * Code by Justin Thompson
@@ -74,6 +118,7 @@ public class ConnoisseurGUI {
 		instance = this;
 		fileManager = new FileManager();
 		tagManager = new TagManager();
+		playlist_manager = new PlaylistManager();
 		ViewDirectory x = new ViewDirectory();
 		this.default_dir = x.getDefaultDir(); //Added by Jacob Crawford
 		this.current_dir = default_dir;
@@ -129,7 +174,7 @@ public class ConnoisseurGUI {
 
 	//Initialize the contents of the frame.
 	private void initialize() {
-		gui_frame = new JFrame();
+		gui_frame = new JFrame("Connoisseur");
 		gui_frame.setBounds(100, 100, 720, 480);
 		gui_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -143,6 +188,23 @@ public class ConnoisseurGUI {
 		CToolBar toolBar = new CToolBar(0, 0, 704, 25);
 		gui_frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
+		fileSystemView = FileSystemView.getFileSystemView();
+		
+		table = new JTable();
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setAutoCreateRowSorter(true);
+        table.setShowVerticalLines(false);
+		
+		listSelectionListener =
+                new ListSelectionListener() {
+                    @Override
+                    public void valueChanged(ListSelectionEvent lse) {
+                        int row = table.getSelectionModel().getLeadSelectionIndex();
+                        setFileDetails(((FileTableModel) table.getModel()).getFile(row));
+                    }
+                };
+		
+		
 		/*
 		 * Code by Justin Thompson
 		 * Rearranged/added descriptive names and comments by Jacob Crawford
@@ -155,24 +217,32 @@ public class ConnoisseurGUI {
 		 * Then the Bottom-Center section displaying the current file_metadata
 		 * Finally the Bottom-Right section displaying <undecided information, probably current file's tags>
 		 */
-		// TODO set minimum/maximum sizes for elements for better scalability
+		
 		JSplitPane main_hori_split = new JSplitPane();
 		main_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		main_hori_split.setDividerSize(5);
 		gui_frame.getContentPane().add(main_hori_split, BorderLayout.CENTER);
-		main_hori_split.setResizeWeight(0.4);
+		main_hori_split.setDividerLocation((int) (gui_frame.getWidth() * (0.3)));
 		
 		JSplitPane right_vert_split = new JSplitPane();
 		right_vert_split.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		right_vert_split.setDividerSize(5);
 		main_hori_split.setRightComponent(right_vert_split);
-		right_vert_split.setResizeWeight(0.7);
-
+		right_vert_split.setDividerLocation((int) (gui_frame.getHeight() * (0.5)));
+		right_vert_split.setResizeWeight(1); // only resize folder_contents panel automatically
+		
 		JSplitPane bot_right_hori_split = new JSplitPane();
 		bot_right_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		bot_right_hori_split.setDividerSize(5);
 		right_vert_split.setRightComponent(bot_right_hori_split);
-		bot_right_hori_split.setResizeWeight(.8);
-		/*
-		 * END BLOCK
-		 */
+		bot_right_hori_split.setResizeWeight(1);
+		
+		JSplitPane folder_contents_pane = new JSplitPane();
+		folder_contents_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		folder_contents_pane.setEnabled(false); // prevents resizing
+		folder_contents_pane.setDividerSize(0);
+		right_vert_split.setLeftComponent(folder_contents_pane);
+		
 		
 		// folder tree(left component of main_hori_split)
 		folder_tree = new JScrollPane();
@@ -188,21 +258,70 @@ public class ConnoisseurGUI {
 				
 		// folder contents(left component of right_vert_split, which is the right component of main_hori_split)
 		this.folder_contents = new JScrollPane(displayDirContents(default_dir));
-		right_vert_split.setLeftComponent(folder_contents);
+		folder_contents_pane.setRightComponent(folder_contents);
 		
-		//folder_contents.setViewportView(displayDirContents(default_dir));
-
+		folder_contents_label = new JLabel(getCurrentDir());
+		folder_contents_pane.setLeftComponent(folder_contents_label);
+		
 		// file metadata(left component of bot_right_hori_split, which is the right component of right_vert_split, which is the right component of main_hori_split)
-		JPanel file_metadata = new JPanel();
-		bot_right_hori_split.setLeftComponent(file_metadata);
+		/* 
+		 * Code by Aristan Galindo
+		 * START BLOCK
+		 */
+		JPanel fileMetadata = new JPanel();
+		bot_right_hori_split.setLeftComponent(fileMetadata);
+		
+		JPanel fileDetailsLabels = new JPanel(new GridLayout(0, 1, 2, 2));
+        fileMetadata.add(fileDetailsLabels, BorderLayout.WEST);
 
-		JLabel file_metadata_label = new JLabel("<change this name to current file name>");
-		file_metadata_label.setEnabled(false);
-		file_metadata_label.setVerticalAlignment(SwingConstants.NORTH);
-		file_metadata.add(file_metadata_label);
+        JPanel fileDetailsValues = new JPanel(new GridLayout(0, 1, 2, 2));
+        fileMetadata.add(fileDetailsValues, BorderLayout.CENTER);
+        
+        // displays the file/directory selected
+        fileDetailsLabels.add(new JLabel("File: ", JLabel.TRAILING));
+        fileName = new JLabel();
+        fileDetailsValues.add(fileName);
+        
+        // displays the path name of the file/folder selected
+        fileDetailsLabels.add(new JLabel("Path name: ", JLabel.TRAILING));
+        path = new JTextField(5);
+        path.setEditable(false);
+        fileDetailsValues.add(path);
+        
+        //displays the 'last modified' metadata of the selected file/directory
+        fileDetailsLabels.add(new JLabel("Last Modified: ", JLabel.TRAILING));
+        date = new JLabel();
+        fileDetailsValues.add(date);
+        
+        // displays the 'size' of the selected file/folder
+        fileDetailsLabels.add(new JLabel("Size: ", JLabel.TRAILING));
+        size = new JLabel();
+        fileDetailsValues.add(size);
+        
+        // displays the 'tag(s)' of the selected file/directory
+        fileDetailsLabels.add(new JLabel("Tags: ", JLabel.TRAILING));
+        tag = new JLabel();
+        fileDetailsValues.add(size);
+        
+        int count = fileDetailsLabels.getComponentCount();
+        for (int ii = 0; ii < count; ii++) {
+            fileDetailsLabels.getComponent(ii).setEnabled(false);
+        }
+        
+        /*
+         * END BLOCK
+         */
 		
 		// last/undecided panel SplitPane_3.setRightComponent()(right component of bot_right_hori_split)
+		JPanel file_thumbnail = new JPanel();
+		bot_right_hori_split.setRightComponent(file_thumbnail);
 
+		// size constraints for swing objects
+		gui_frame.setMinimumSize(new Dimension(720, 480));
+		folder_tree.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight())));
+		folder_contents_pane.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.4))));
+		bot_right_hori_split.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.2))));
+		file_thumbnail.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight() * (0.2))));
 	}
 	
 	/**
@@ -242,7 +361,6 @@ public class ConnoisseurGUI {
 		int table_columns = columns.length;// Used to create amount of columns for table
 		
 		// adds an additional row to the JTable IFF we aren't at our current main directory
-		// TODO access JSON to see what we have the directory set as
 		JSONObject systemData = ConnoisseurGUI.getFileManager().getSystemData();
 		
 		String defaultDir = (String) systemData.get("default-directory");
@@ -352,6 +470,93 @@ public class ConnoisseurGUI {
 		return tree;
 	}
 	
+	/*
+	 * Code by Aristan Galindo
+	 * START BLOCK
+	 */
+	
+	/** A TableModel to hold File[]. */
+	class FileTableModel extends AbstractTableModel {
+
+	    private File[] files;
+	    private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
+	    private String[] columns = {"File", "Path name", "Size", "Last Modified"};
+
+	    FileTableModel() {
+	        this(new File[0]);
+	    }
+
+	    FileTableModel(File[] files) {
+	        this.files = files;
+	    }
+
+	    public Object getValueAt(int row, int column) {
+	        File file = files[row];
+	        switch (column) {
+	            case 0:
+	                return fileSystemView.getSystemDisplayName(file);
+	            case 1:
+	                return file.getPath();
+	            case 2:
+	                return file.length();
+	            case 3:
+	                return file.lastModified();
+	            default:
+	                System.err.println("Logic Error");
+	        }
+	        return "";
+	    }
+
+	    public int getColumnCount() {
+	        return columns.length;
+	    }
+	    
+	    public Class <?> getColumnClass (int column) {
+	    	switch (column) {
+	    		case 0:
+	    		case 1:
+	    		case 2: return Long.class;
+	    		case 3: return Date.class;
+	    	}
+	    	return String.class;
+	    }
+
+	    public String getColumnName(int column) {
+	        return columns[column];
+	    }
+
+	    public int getRowCount() {
+	        return files.length;
+	    }
+
+	    public File getFile(int row) {
+	        return files[row];
+	    }
+
+	    public void setFiles(File[] files) {
+	        this.files = files;
+	        fireTableDataChanged();
+	    }
+	}
+	
+	// Update the file details for the selected file
+		private void setFileDetails (File file) {
+			
+			currentFile = file;
+			fileName.setText(fileSystemView.getSystemDisplayName(file));
+			path.setText(file.getPath());
+			date.setText(new Date(file.lastModified()).toString());
+			size.setText(file.length() + " bytes");
+			
+			gui_frame.repaint();
+			
+		}
+		
+		/*
+		 * END BLOCK
+		 */
+	
+	
 	public JTree getJTree() {return tree;}
 	public JScrollPane getFolderTree() {return folder_tree;}
 	public static ConnoisseurGUI getInstance() {return instance;}
@@ -361,4 +566,8 @@ public class ConnoisseurGUI {
 	public String getDefaultDir() {return default_dir;}
 	public JTable getDirContents() {return dir_contents;}
 	public String getCurrentDir() {return current_dir;}
+	public String getSelectedFile() {return selected_file;}
+	public JLabel getFolderContentsLabel() {return folder_contents_label;}
+
+	public void setSelectedFile(String _file) {this.selected_file = _file;}
 }

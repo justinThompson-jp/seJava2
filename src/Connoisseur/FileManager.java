@@ -1,5 +1,7 @@
 package Connoisseur;
 
+import java.awt.Component;
+
 /*
  * @author: Jonathan Vallejo
  * Edited by: Justin Thompson
@@ -11,6 +13,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import javax.swing.Icon;
+import javax.swing.JOptionPane;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -345,6 +350,30 @@ public class FileManager {
 			// maybe throw an exception: file was not deleted successfully
 			System.out.println("file at " + file.getPath() + " was not deleted");
 		}
+	}
+	
+	/**
+	 * This method will request the user's input and will keep re-asking for input until the user enters a valid directory
+	 * @param parentComponent
+	 * @param message
+	 * @param title
+	 * @param msgType
+	 * @param icon
+	 * @param selectionValues
+	 * @param initialSelectionValue
+	 * @return String user input
+	 */
+	public String requestUserInput(Component parentComponent, Object message, String title, int msgType, Icon icon,
+	        Object[] selectionValues, Object initialSelectionValue) {
+		String userInput = (String) JOptionPane.showInputDialog(parentComponent, message, title, msgType, icon, null, initialSelectionValue);
+		if (userInput == null) {
+			return requestUserInput(parentComponent, "[Error: Invalid Directory!] " + message, title, msgType, icon, selectionValues, initialSelectionValue);
+		}
+		File file = new File(userInput);
+		if (file == null || !file.exists() || !Files.isDirectory(Paths.get(userInput))) {
+			return requestUserInput(parentComponent, "[Error: Invalid Directory!] " + message, title, msgType, icon, selectionValues, initialSelectionValue);
+		}
+		return userInput;
 	}
 	
 	/**

@@ -8,12 +8,15 @@
 
 package Connoisseur.gui.event;
 
+import java.awt.Desktop;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
@@ -28,6 +31,7 @@ public class CMouseListener implements MouseListener {
 	private String file_clicked;
 	private String file_dragged_to;
 	
+	private static JComponent lastClicked;
 	
 	// Constructor(s)
 	/**
@@ -69,12 +73,17 @@ public class CMouseListener implements MouseListener {
 	}
 	public void setFileClicked(String _file_clicked) {
 		this.file_clicked = _file_clicked;
+		System.out.println("file clicked " + _file_clicked);
+		ConnoisseurGUI.getInstance().setSelectedFile(_file_clicked);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() instanceof JComponent) {
+			lastClicked = (JComponent)e.getSource();
+		}
+		
 		String new_clicked;
-		// TODO add alternative mouseClicked functionality for JTree and JScrollPane
 		// functionality for when this is called in a JTree
 		if (source_tree != null) {
 			// start guard clauses
@@ -95,39 +104,46 @@ public class CMouseListener implements MouseListener {
 			}
 			// checks if the selected object is not a directory
 			if (!Files.isDirectory(Paths.get(new_clicked))) {
-				System.out.println(" ERR: Must click a directory");
+				setFileClicked(new_clicked);
+				// double-clicked file from JTree
+				if (e.getClickCount() == 2) {
+					System.out.println("Launch/Open " + new_clicked + " from JTree");
+					try {
+						Desktop.getDesktop().open(new File(new_clicked));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				// single-click file from JTree
+				} else {
+					System.out.println("Focus file from JTree");
+				}
 				return;
 			}
-
 			// end guard clauses
 			
-			setFileClicked(new_clicked);
-
-			System.out.println("Open directory " + new_clicked);
-			//instance.getDirContents().removeMouseListener(instance.getFolderContents().getMouseListeners()[0]);
-			//instance.id--;
 			instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
+			instance.getFolderContentsLabel().setText(new_clicked);
 		}
 		// functionality for if this is called from a JTable
 		if (source_table != null) {
 			// double-click from folder_contents will change to directory in folder_contents JScrollPane or open file in either built in view or separate app
+			if (source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex()) == null) {
+				System.out.println(" ERR: Must click a directory or file");
+				return;
+			}
+			
+			// assigned selected row's Name column to the new_clicked variable
+			new_clicked = (String) source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex());
+			
+			String temp = new_clicked;
+			// formats the new_clicked variable to an absolute path to the file
+			new_clicked = instance.getCurrentDir() + "\\" + new_clicked;
+			if (temp == "..") {
+				new_clicked = new File(new_clicked).getParent();
+				new_clicked = new File(new_clicked).getParent();
+				
+			}
 			if (e.getClickCount() == 2) {
-				if (source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex()) == null) {
-					System.out.println(" ERR: Must click a directory or file");
-					return;
-				}
-				
-				// assigned selected row's Name column to the new_clicked variable
-				new_clicked = (String) source_table.getValueAt(source_table.getSelectedRow(), source_table.getColumn("Name").getModelIndex());
-				String temp = new_clicked;
-				// formats the new_clicked variable to an absolute path to the file
-				new_clicked = instance.getCurrentDir() + "\\" + new_clicked;
-				if (temp == "..") {
-					new_clicked = new File(new_clicked).getParent();
-					new_clicked = new File(new_clicked).getParent();
-					
-				}
-				
 
 				// checks if the selected object is not readable
 				if (!Files.isReadable(Paths.get(new_clicked))) {
@@ -135,23 +151,23 @@ public class CMouseListener implements MouseListener {
 					return;
 				}
 				// checks if the selected object is not a directory
+				// aka a file is double-clicked
 				if (!Files.isDirectory(Paths.get(new_clicked))) {
-					System.out.println(" ERR: Must click a directory");
+					setFileClicked(new_clicked);
+					System.out.println("Launch/Open " + new_clicked + " from JTable");
+					try {
+						Desktop.getDesktop().open(new File(new_clicked));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					return;
 				}
 				// end guard clauses
-				
-
-				setFileClicked(new_clicked);
-
-				System.out.println("Open directory " + new_clicked);
 
 				instance.getFolderContents().setViewportView(instance.displayDirContents(new_clicked));
-				//System.out.println(new_clicked);
-			// single click will bring focus on target directory or file and display info in file_metadata JPane
-			} else {
-				//System.out.println(" JTable: Focus on file/directory");
+				instance.getFolderContentsLabel().setText(new_clicked);
 			}
+			setFileClicked(new_clicked);
 		}
 	}
 
@@ -186,4 +202,9 @@ public class CMouseListener implements MouseListener {
 		} 
 		return path;
 	}
+	
+	public static JComponent getLastClicked() {
+		return lastClicked;
+	}
+	
 }
