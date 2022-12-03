@@ -391,7 +391,11 @@ public class ConnoisseurGUI {
 				private static final long serialVersionUID = -7048758524571061712L;
 	
 				public Class getColumnClass(int column) {
-		         	return getValueAt(1, 1).getClass();
+					if (column != 2) {
+		         	return getValueAt(1, column).getClass();
+					}else {
+						return getValueAt(1, 1).getClass();
+					}
 				}
 			};
 		}
