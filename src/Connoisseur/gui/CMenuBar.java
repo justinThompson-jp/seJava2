@@ -276,17 +276,17 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			ConnoisseurGUI.getInstance().getFolderContents().setViewportView(ConnoisseurGUI.getInstance().displayDirContents(targetDir.getPath()));
 		}
 		
-		if (e.getSource() == editTagsMenuItem && ConnoisseurGUI.getInstance().getSelectedFile() != null) {
+		if (e.getSource() == editTagsMenuItem) {
 			String userInput = "";
 			
 			ImageIcon errorIcon = new ImageIcon("resources/gui/menubar/icons8-cancel-30.png");
 			ImageIcon editIcon = new ImageIcon("resources/gui/menubar/icons8-pencil-16.png");
 			
-			String lastClicked = ConnoisseurGUI.getInstance().getSelectedFile();
-
+			String lastClicked = (ConnoisseurGUI.getInstance().getSelectedFile() == null) ? " " : ConnoisseurGUI.getInstance().getSelectedFile();
+			
 			File selected = new File(lastClicked);
-						
-			if (selected == null || !selected.exists()) {
+			
+			if (lastClicked.isEmpty() || selected == null || !selected.exists()) {
 				JOptionPane.showMessageDialog(null, "You must have a file selected to edit tags!", "Error", JOptionPane.ERROR_MESSAGE, errorIcon);	
 			} else {
 				
