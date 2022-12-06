@@ -550,18 +550,9 @@ public class FileManager {
 		ArrayList<File> searchResults = new ArrayList<File>();
 		
 		// first we will look for files that have tags that match the search query
-		this.log("Searching for tags matching: " + query);
+//		this.log("Searching for tags matching: " + query);
 		ArrayList<MediaFile> mediaFileResults = ConnoisseurGUI.getTagManager().searchByTags(query.split(","));
-		this.log("Tag search complete.");
-		
-		// next we will also search for any files/directories that match the search query by at least 50%
-		this.log("Traversing directories..");
-		if (Files.isDirectory(Paths.get(directory))) {
-			File currentDirectory = new File(directory);
-			for (File f : this.traverseFiles(searchFrame, currentDirectory, query)) {
-				searchResults.add(f);
-			}
-		}
+//		this.log("Tag search complete.");
 		
 		for (MediaFile mf : mediaFileResults) {
 			try {
@@ -582,6 +573,16 @@ public class FileManager {
 				continue;
 			}
 		}
+		
+		// next we will also search for any files/directories that match the search query by at least 50%
+		this.log("Traversing directories..");
+		if (Files.isDirectory(Paths.get(directory))) {
+			File currentDirectory = new File(directory);
+			for (File f : this.traverseFiles(searchFrame, currentDirectory, query)) {
+				searchResults.add(f);
+			}
+		}
+		
 		searchFrame.setBarProgress("Scanned " + filesScanned + " files");
 		searchFrame.getProgressBar().setIndeterminate(false);
 		searchFrame.getProgressBar().setValue(100);

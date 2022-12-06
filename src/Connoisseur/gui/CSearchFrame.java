@@ -93,7 +93,15 @@ public class CSearchFrame extends JPanel {
 	}
 	
 	public void addRow(Object[] row) {
-		((DefaultTableModel)this.getTable().getModel()).addRow(row);
+		SwingUtilities.invokeLater(new Runnable() {
+		    public void run() {
+		    	try {
+		    		((DefaultTableModel)table.getModel()).addRow(row);
+		    	} catch (Exception ex) {
+		    		System.out.println("An error happened while adding: " + row.toString() + " to the table.");
+		    	}
+		    }
+		});
 	}
 
 	public JTable getTable() {
