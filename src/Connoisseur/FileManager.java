@@ -1,6 +1,7 @@
 package Connoisseur;
 
 import java.awt.Component;
+import java.awt.Image;
 
 /*
  * @author: Jonathan Vallejo
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -639,6 +641,41 @@ public class FileManager {
 			searchFrame.setBarProgress("Files scanned: " + filesScanned);
 		}
 		return lastSearchResults;
+	}
+	
+	/**
+	 * Determines if a file is an image using the file path
+	 * @param path
+	 * @return
+	 */
+	public boolean isImage(String path) {
+        File f = new File(path);
+        try {
+            Image image = ImageIO.read(f);
+            if (image == null) {
+            	return false;
+            }
+        } catch (Exception ex) {
+        	return false;
+        }
+        return true;
+	}
+
+	/**
+	 * Determines if a file is an image
+	 * @param f
+	 * @return
+	 */
+	public boolean isImage(File f) {
+        try {
+            Image image = ImageIO.read(f);
+            if (image == null) {
+            	return false;
+            }
+        } catch (Exception ex) {
+        	return false;
+        }
+        return true;
 	}
 	
 	/**

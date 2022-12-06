@@ -41,6 +41,7 @@ import org.json.simple.parser.ParseException;
 
 import Connoisseur.file.MediaFile;
 import Connoisseur.file.TagManager;
+import Connoisseur.gui.CImagePanel;
 import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
 import Connoisseur.gui.FileSystemModel;
@@ -64,6 +65,7 @@ public class ConnoisseurGUI {
 	private JLabel folder_contents_label;
 	private JScrollPane folder_tree;
 	private JTree tree;
+	private CImagePanel file_thumbnail;
 	
 	private static ConnoisseurGUI instance;
 	private static FileManager fileManager;
@@ -302,7 +304,7 @@ public class ConnoisseurGUI {
          */
 		
 		// last/undecided panel SplitPane_3.setRightComponent()(right component of bot_right_hori_split)
-		JPanel file_thumbnail = new JPanel();
+        file_thumbnail = new CImagePanel();
 		bot_right_hori_split.setRightComponent(file_thumbnail);
 
 		// size constraints for swing objects
@@ -311,6 +313,10 @@ public class ConnoisseurGUI {
 		folder_contents_pane.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.4))));
 		bot_right_hori_split.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.2))));
 		file_thumbnail.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight() * (0.2))));
+		file_thumbnail.setSize((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight() * (0.2)));
+		file_thumbnail.setImage("resources/gui/view/icons8-empty-67.png");
+		file_thumbnail.setOverrideDimensions((file_thumbnail.getWidth()/2), (file_thumbnail.getHeight()/2), -32, 0);
+		file_thumbnail.setOverrrideDimensions(true);
 	}
 	
 	/**
@@ -512,6 +518,16 @@ public class ConnoisseurGUI {
 			
 		} catch (Exception ex) {
 			System.out.println("Something went wrong while reading file attributes..");
+		}
+		
+		//update the thumbnail preview
+		if (fileManager.isImage(_file)) {
+			file_thumbnail.setOverrrideDimensions(false);
+			file_thumbnail.setImage(_file);
+		} else {
+			file_thumbnail.setOverrrideDimensions(true);
+			file_thumbnail.setImage("resources/gui/view/icons8-empty-67.png");
+			System.out.println("no image");
 		}
 	}
 	
