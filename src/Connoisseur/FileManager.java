@@ -43,8 +43,8 @@ public class FileManager {
 	private int filesScanned = 0;
 	
 	private ImageIcon tagsIcon = new ImageIcon("resources/gui/menubar/icons8-pencil-16.png");
-	private ImageIcon fileIcon = new ImageIcon("resources/gui/view/folder.png");
-	private ImageIcon folderIcon = new ImageIcon("resources/gui/view/file.png");
+	private ImageIcon fileIcon = new ImageIcon("resources/gui/view/file.png");
+	private ImageIcon folderIcon = new ImageIcon("resources/gui/view/folder.png");
 
 	public FileManager() {
 		this.init();
