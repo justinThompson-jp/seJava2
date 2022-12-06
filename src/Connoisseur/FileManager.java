@@ -22,6 +22,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import Connoisseur.file.MediaFile;
+import Connoisseur.gui.CSearchFrame;
 
 public class FileManager {
 
@@ -37,7 +38,8 @@ public class FileManager {
 	private JSONObject directoryData;
 	
 	private ArrayList<File> lastSearchResults = new ArrayList<File>();
-	private double similaritySensitivity = 0.64;
+	private double similaritySensitivity = 0.77;
+	private int filesScanned = 0;
 
 	public FileManager() {
 		this.init();
@@ -537,12 +539,14 @@ public class FileManager {
 	
 	/**
 	 * Searches the files in the directory and returns anything that matches the given search query
+	 * @param search frame
 	 * @param directory
 	 * @param query
 	 * @return ArrayList<File> searchResults
 	 */
-	public ArrayList<File> searchDirectory(String directory, String query) {
+	public ArrayList<File> searchDirectory(CSearchFrame searchFrame, String directory, String query) {
 		this.resetSearchResults();
+		this.filesScanned = 0;
 		ArrayList<File> searchResults = new ArrayList<File>();
 		
 		// first we will look for files that have tags that match the search query
@@ -554,7 +558,7 @@ public class FileManager {
 		this.log("Traversing directories..");
 		if (Files.isDirectory(Paths.get(directory))) {
 			File currentDirectory = new File(directory);
-			for (File f : this.traverseFiles(currentDirectory, query)) {
+			for (File f : this.traverseFiles(searchFrame, currentDirectory, query)) {
 				searchResults.add(f);
 			}
 		}
@@ -571,36 +575,45 @@ public class FileManager {
 					continue;
 				}
 				searchResults.add(mf.getJavaFile());
+				filesScanned++;
+				searchFrame.setBarProgress("Files scanned: " + filesScanned);
+				searchFrame.addRow(new String[]{mf.getName(), mf.getPath()});
 			} catch (Exception ex) {
 				continue;
 			}
 		}
+		searchFrame.setBarProgress("Scanned " + filesScanned + " files");
+		searchFrame.getProgressBar().setIndeterminate(false);
+		searchFrame.getProgressBar().setValue(100);
 		return searchResults;
 	}
 
 	/**
 	 * Used to recursively traverse subfolders in a directory
+	 * @param search frame
 	 * @param start
 	 * @param query
 	 * @return
 	 */
-	public ArrayList<File> traverseFiles(File start, String query) {
+	public ArrayList<File> traverseFiles(CSearchFrame searchFrame, File start, String query) {
 		if (start.listFiles() == null) return lastSearchResults;
 //		this.log("Scanning: " + start.getName());
 		
 		if (this.similarity(query, start.getName()) >= similaritySensitivity || start.getName().equalsIgnoreCase(query) || start.getName().toLowerCase().contains(query.toLowerCase())) {
 			if (!lastSearchResults.contains(start)) {
+				searchFrame.addRow(new String[] {start.getName(), start.getPath()});
 				lastSearchResults.add(start);
 			}
 		}
 		for (File child : start.listFiles()) {
 			if (Files.isDirectory(Paths.get(child.getPath()))) {
-				this.traverseFiles(child, query);
+				this.traverseFiles(searchFrame, child, query);
 			}
 			
 //			ConnoisseurGUI.getFileManager().log("[" + query + " <-> " + child.getName() + "] " + similarity + "% similar");
 			if (this.similarity(query, child.getName()) >= similaritySensitivity || child.getName().equalsIgnoreCase(query) || child.getName().toLowerCase().contains(query.toLowerCase())) {
 				if (!lastSearchResults.contains(child)) {
+					searchFrame.addRow(new String[] {child.getName(), child.getPath()});
 					lastSearchResults.add(child);
 				}
 			}
@@ -609,11 +622,15 @@ public class FileManager {
 				for (String s : child.getName().split("[ -_]")) {
 					if (this.similarity(query, s) >= similaritySensitivity || s.equalsIgnoreCase(query) || s.toLowerCase().contains(query.toLowerCase())) {
 						if (!lastSearchResults.contains(child)) {
+							searchFrame.addRow(new String[] {child.getName(), child.getPath()});
 							lastSearchResults.add(child);
 						}
 					}
 				}
 			}
+			
+			filesScanned++;
+			searchFrame.setBarProgress("Files scanned: " + filesScanned);
 		}
 		return lastSearchResults;
 	}

@@ -2,12 +2,11 @@ package Connoisseur.gui.event;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.JTextField;
 
 import Connoisseur.ConnoisseurGUI;
+import Connoisseur.gui.CSearchFrame;
 
 /**
  * Custom KeyListener implementation for a JTextField.
@@ -18,6 +17,7 @@ import Connoisseur.ConnoisseurGUI;
 public class CKeyListener implements KeyListener {
 
 	private JTextField textField;
+	private CSearchFrame searchFrame;
 	private Thread searchThread;
 	private boolean searchStarted = false;
 	
@@ -42,15 +42,14 @@ public class CKeyListener implements KeyListener {
 			searchThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
+					searchFrame = new CSearchFrame("Search Results: " + textField.getText());
+					searchFrame.getProgressBar().setIndeterminate(true);
+					searchFrame.showFrame();
+					
 					long startTime = System.currentTimeMillis();
-					ArrayList<File> searchResults = ConnoisseurGUI.getFileManager().searchDirectory(ConnoisseurGUI.getInstance().getCurrentDir(), textField.getText());
-					System.out.println("   ");
-					System.out.println("   ");
+					ConnoisseurGUI.getFileManager().searchDirectory(searchFrame, ConnoisseurGUI.getInstance().getCurrentDir(), textField.getText());
 					double searchTime = ((System.currentTimeMillis() - startTime)/1000);
-					System.out.println("Search completed: Took " + searchTime + " seconds.");
-					for (File f : searchResults) {
-						System.out.println(f.getName());
-					}
+					searchFrame.setBarProgress(searchFrame.getProgressBar().getString() + " in " + searchTime + " seconds.");
 					searchThread.interrupt();
 					searchStarted = false;
 				}

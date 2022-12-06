@@ -30,13 +30,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -562,6 +560,7 @@ public class ConnoisseurGUI {
 	
 	
 	public JTree getJTree() {return tree;}
+	public JFrame getGUI() {return gui_frame;}
 	public JScrollPane getFolderTree() {return folder_tree;}
 	public static ConnoisseurGUI getInstance() {return instance;}
 	public static FileManager getFileManager() {return fileManager;}
