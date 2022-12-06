@@ -93,9 +93,6 @@ public class ConnoisseurGUI {
 	// Gives the name of the files
 	private FileSystemView fileSystemView;
 	
-	// Table model for File
-    private FileTableModel fileTableModel;
-	
 	// file details
 	private JLabel fileName;
 	private JTextField path;
@@ -193,15 +190,6 @@ public class ConnoisseurGUI {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoCreateRowSorter(true);
         table.setShowVerticalLines(false);
-		
-		listSelectionListener =
-                new ListSelectionListener() {
-                    @Override
-                    public void valueChanged(ListSelectionEvent lse) {
-                        int row = table.getSelectionModel().getLeadSelectionIndex();
-                        setFileDetails(((FileTableModel) table.getModel()).getFile(row));
-                    }
-                };
 		
 		
 		/*
@@ -479,70 +467,6 @@ public class ConnoisseurGUI {
 	 * Code by Aristan Galindo
 	 * START BLOCK
 	 */
-	
-	/** A TableModel to hold File[]. */
-	class FileTableModel extends AbstractTableModel {
-
-	    private File[] files;
-	    private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-	    private String[] columns = {"File", "Path name", "Size", "Last Modified"};
-
-	    FileTableModel() {
-	        this(new File[0]);
-	    }
-
-	    FileTableModel(File[] files) {
-	        this.files = files;
-	    }
-
-	    public Object getValueAt(int row, int column) {
-	        File file = files[row];
-	        switch (column) {
-	            case 0:
-	                return fileSystemView.getSystemDisplayName(file);
-	            case 1:
-	                return file.getPath();
-	            case 2:
-	                return file.length();
-	            case 3:
-	                return file.lastModified();
-	            default:
-	                System.err.println("Logic Error");
-	        }
-	        return "";
-	    }
-
-	    public int getColumnCount() {
-	        return columns.length;
-	    }
-	    
-	    public Class <?> getColumnClass (int column) {
-	    	switch (column) {
-	    		case 0:
-	    		case 1:
-	    		case 2: return Long.class;
-	    		case 3: return Date.class;
-	    	}
-	    	return String.class;
-	    }
-
-	    public String getColumnName(int column) {
-	        return columns[column];
-	    }
-
-	    public int getRowCount() {
-	        return files.length;
-	    }
-
-	    public File getFile(int row) {
-	        return files[row];
-	    }
-
-	    public void setFiles(File[] files) {
-	        this.files = files;
-	        fireTableDataChanged();
-	    }
-	}
 	
 	// Update the file details for the selected file
 			private void setFileDetails (File file) {
