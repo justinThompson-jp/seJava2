@@ -34,7 +34,7 @@ public class CKeyListener implements KeyListener {
 		// user pressed enter
 		if (e.getKeyCode() == 10) {
 			if (searchThread != null || searchStarted == true) {
-				ConnoisseurGUI.getFileManager().log("ABORTING PREVIOUS SEARCH, STARTING NEW SEARCH..");
+//				ConnoisseurGUI.getFileManager().log("ABORTING PREVIOUS SEARCH, STARTING NEW SEARCH..");
 				searchThread.interrupt();
 				searchStarted = false;
 			}
@@ -42,7 +42,7 @@ public class CKeyListener implements KeyListener {
 			searchThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					searchFrame = new CSearchFrame("Search Results: " + textField.getText());
+					searchFrame = new CSearchFrame("Search Results for \"" + textField.getText() + "\"");
 					searchFrame.getProgressBar().setIndeterminate(true);
 					searchFrame.showFrame();
 					

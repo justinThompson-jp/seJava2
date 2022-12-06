@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import org.json.simple.JSONObject;
@@ -40,6 +41,10 @@ public class FileManager {
 	private ArrayList<File> lastSearchResults = new ArrayList<File>();
 	private double similaritySensitivity = 0.77;
 	private int filesScanned = 0;
+	
+	private ImageIcon tagsIcon = new ImageIcon("resources/gui/menubar/icons8-pencil-16.png");
+	private ImageIcon fileIcon = new ImageIcon("resources/gui/view/folder.png");
+	private ImageIcon folderIcon = new ImageIcon("resources/gui/view/file.png");
 
 	public FileManager() {
 		this.init();
@@ -568,7 +573,7 @@ public class FileManager {
 				searchResults.add(mf.getJavaFile());
 				filesScanned++;
 				searchFrame.setBarProgress("Files scanned: " + filesScanned);
-				searchFrame.addRow(new String[]{"[✎] " + mf.getName(), mf.getPath()});
+				searchFrame.addRow(new Object[]{tagsIcon, mf.getName(), mf.getPath()});
 				searchFrame.getTable().getModel().getRowCount();
 			} catch (Exception ex) {
 				continue;
@@ -576,7 +581,6 @@ public class FileManager {
 		}
 		
 		// next we will also search for any files/directories that match the search query by at least 50%
-		this.log("Traversing directories..");
 		if (Files.isDirectory(Paths.get(directory))) {
 			File currentDirectory = new File(directory);
 			for (File f : this.traverseFiles(searchFrame, currentDirectory, query)) {
@@ -603,7 +607,7 @@ public class FileManager {
 		
 		if (this.similarity(query, start.getName()) >= similaritySensitivity || start.getName().equalsIgnoreCase(query) || start.getName().toLowerCase().contains(query.toLowerCase())) {
 			if (!lastSearchResults.contains(start)) {
-				searchFrame.addRow(new String[] {"📁 " + start.getName(), start.getPath()});
+				searchFrame.addRow(new Object[] {folderIcon, start.getName(), start.getPath()});
 				lastSearchResults.add(start);
 			}
 		}
@@ -615,7 +619,7 @@ public class FileManager {
 //			ConnoisseurGUI.getFileManager().log("[" + query + " <-> " + child.getName() + "] " + similarity + "% similar");
 			if (this.similarity(query, child.getName()) >= similaritySensitivity || child.getName().equalsIgnoreCase(query) || child.getName().toLowerCase().contains(query.toLowerCase())) {
 				if (!lastSearchResults.contains(child)) {
-					searchFrame.addRow(new String[] {"📝 " + child.getName(), child.getPath()});
+					searchFrame.addRow(new Object[] {fileIcon, child.getName(), child.getPath()});
 					lastSearchResults.add(child);
 				}
 			}
@@ -624,7 +628,7 @@ public class FileManager {
 				for (String s : child.getName().split("[ -_]")) {
 					if (this.similarity(query, s) >= similaritySensitivity || s.equalsIgnoreCase(query) || s.toLowerCase().contains(query.toLowerCase())) {
 						if (!lastSearchResults.contains(child)) {
-							searchFrame.addRow(new String[] {"📝 " + child.getName(), child.getPath()});
+							searchFrame.addRow(new Object[] {fileIcon, child.getName(), child.getPath()});
 							lastSearchResults.add(child);
 						}
 					}

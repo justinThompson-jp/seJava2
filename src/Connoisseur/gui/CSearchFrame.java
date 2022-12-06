@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -57,7 +58,27 @@ public class CSearchFrame extends JPanel {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(500, 250));
 
-		DefaultTableModel tableModel = new DefaultTableModel();
+		DefaultTableModel tableModel = new DefaultTableModel() {
+			/**
+			 * Auto generated serial version ID
+			 */
+			private static final long serialVersionUID = -4320293916449487858L;
+
+			@Override
+			public Class<?> getColumnClass(int column) {
+				if (column == 0) {
+					return ImageIcon.class;
+				} else {
+					return Object.class;
+				}
+			}
+			
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		tableModel.addColumn("");
 		tableModel.addColumn("File Name");
 		tableModel.addColumn("File Path");
 
@@ -68,9 +89,11 @@ public class CSearchFrame extends JPanel {
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.setShowHorizontalLines(false);
 		table.setShowVerticalLines(true);
-
-		table.getColumnModel().getColumn(0).setPreferredWidth((table.getColumnModel().getColumn(0).getPreferredWidth() - 50));
-		table.getColumnModel().getColumn(1).setPreferredWidth((table.getColumnModel().getColumn(1).getPreferredWidth() * 2));
+		
+		table.getColumnModel().getColumn(0).setMinWidth(20);
+		table.getColumnModel().getColumn(0).setMaxWidth(20);
+		table.getColumnModel().getColumn(1).setPreferredWidth((table.getColumnModel().getColumn(0).getPreferredWidth() - 50));
+		table.getColumnModel().getColumn(2).setPreferredWidth((table.getColumnModel().getColumn(1).getPreferredWidth() * 2));
 
 		JScrollPane pane = new JScrollPane(table);
 		add(pane, BorderLayout.CENTER);
