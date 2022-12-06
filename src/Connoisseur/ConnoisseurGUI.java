@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,15 +32,14 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import Connoisseur.file.MediaFile;
 import Connoisseur.file.TagManager;
 import Connoisseur.gui.CMenuBar;
 import Connoisseur.gui.CToolBar;
@@ -390,6 +390,7 @@ public class ConnoisseurGUI {
 		}
 		dir_contents.addMouseListener(new CMouseListener(dir_contents, instance));
 		dir_contents.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		dir_contents.getTableHeader().setReorderingAllowed(false); //added to disallow moving columns
 		dir_contents.getColumn("").setMinWidth(20);
 		dir_contents.getColumn("").setMaxWidth(20);
 		
@@ -484,7 +485,35 @@ public class ConnoisseurGUI {
 			/*
 			 * END BLOCK
 			 */
-	
+	public void setSelectedFile(String _file) {
+		this.selected_file = _file;
+		
+		// update file view on bottom of gui
+		try {
+			File selected = new File(_file);
+			MediaFile mediaFile = tagManager.findFile(selected);
+			BasicFileAttributes attr = Files.readAttributes(Paths.get(selected_file), BasicFileAttributes.class);
+			
+			String fileName = selected.getName();
+			String filePath = selected.getPath();
+			String lastModified = attr.lastModifiedTime().toString();
+			long fileSize = attr.size();
+			String tags = "";
+			
+			if (mediaFile != null) {
+				tags = mediaFile.getTagsString();
+			}
+			
+			this.fileName.setText(fileName);
+			this.path.setText(filePath);
+			this.date.setText(lastModified);
+			this.size.setText(String.valueOf(fileSize));
+			this.tag.setText(tags);
+			
+		} catch (Exception ex) {
+			System.out.println("Something went wrong while reading file attributes..");
+		}
+	}
 	
 	public JTree getJTree() {return tree;}
 	public JFrame getGUI() {return gui_frame;}
@@ -498,6 +527,4 @@ public class ConnoisseurGUI {
 	public String getCurrentDir() {return current_dir;}
 	public String getSelectedFile() {return selected_file;}
 	public JLabel getFolderContentsLabel() {return folder_contents_label;}
-
-	public void setSelectedFile(String _file) {this.selected_file = _file;}
 }

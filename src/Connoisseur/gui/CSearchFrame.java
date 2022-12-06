@@ -83,7 +83,7 @@ public class CSearchFrame extends JPanel {
 		tableModel.addColumn("File Path");
 
 		table = new JTable(tableModel);
-
+		table.getTableHeader().setReorderingAllowed(false);
 		// Turn off JTable's auto resize so that JScrollPane will show a horizontal
 		// scroll bar.
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
