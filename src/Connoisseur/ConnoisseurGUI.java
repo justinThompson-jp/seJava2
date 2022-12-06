@@ -30,6 +30,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileSystemView;
@@ -266,7 +267,9 @@ public class ConnoisseurGUI {
 		 * Code by Aristan Galindo
 		 * START BLOCK
 		 */
-		JPanel fileMetadata = new JPanel();
+		JPanel fileMetadata = new JPanel(new BorderLayout(4, 2));
+		fileMetadata.setBorder(new EmptyBorder(0, 6, 0, 6));
+		
 		bot_right_hori_split.setLeftComponent(fileMetadata);
 		
 		JPanel fileDetailsLabels = new JPanel(new GridLayout(0, 1, 2, 2));
@@ -291,8 +294,8 @@ public class ConnoisseurGUI {
         date = new JLabel();
         fileDetailsValues.add(date);
         
-        // displays the 'size' of the selected file/folder
-        fileDetailsLabels.add(new JLabel("Size: ", JLabel.TRAILING));
+        // displays the 'file size' of the selected file/folder
+        fileDetailsLabels.add(new JLabel("File size: ", JLabel.TRAILING));
         size = new JLabel();
         fileDetailsValues.add(size);
         
@@ -542,21 +545,21 @@ public class ConnoisseurGUI {
 	}
 	
 	// Update the file details for the selected file
-		private void setFileDetails (File file) {
+			private void setFileDetails (File file) {
+				
+				currentFile = file;
+				fileName.setText(fileSystemView.getSystemDisplayName(file));
+				path.setText(file.getPath());
+				date.setText(new Date(file.lastModified()).toString());
+				size.setText(file.length() + " bytes");
+				
+				gui_frame.repaint();
+				
+			}
 			
-			currentFile = file;
-			fileName.setText(fileSystemView.getSystemDisplayName(file));
-			path.setText(file.getPath());
-			date.setText(new Date(file.lastModified()).toString());
-			size.setText(file.length() + " bytes");
-			
-			gui_frame.repaint();
-			
-		}
-		
-		/*
-		 * END BLOCK
-		 */
+			/*
+			 * END BLOCK
+			 */
 	
 	
 	public JTree getJTree() {return tree;}
