@@ -186,6 +186,16 @@ public class ConnoisseurGUI {
 		
 		fileSystemView = FileSystemView.getFileSystemView();
 		
+		/*
+		JScrollPane treeScroll = new JScrollPane(tree);
+		
+		Dimension preferredSize = treeScroll.getPreferredSize();
+		Dimension widePreferred = new Dimension(200, (int) preferredSize.getHeight());
+		treeScroll.setPreferredSize(widePreferred);
+		
+		JPanel fileDetailView = new JPanel(new BorderLayout(3, 3));
+		*/
+		
 		table = new JTable();
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoCreateRowSorter(true);
@@ -297,6 +307,17 @@ public class ConnoisseurGUI {
             fileDetailsLabels.getComponent(ii).setEnabled(false);
         }
         
+        /*
+        JPanel fileView = new JPanel(new BorderLayout (3, 3));
+        
+        fileView.add(fileMetadata, BorderLayout.CENTER);
+        
+        fileDetailView.add(fileView, BorderLayout.SOUTH);
+        
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScroll, fileDetailView);
+        gui_frame.add(splitPane, BorderLayout.CENTER);
+        
+        /*
         /*
          * END BLOCK
          */
@@ -464,27 +485,6 @@ public class ConnoisseurGUI {
 		return tree;
 	}
 	
-	/*
-	 * Code by Aristan Galindo
-	 * START BLOCK
-	 */
-	
-	// Update the file details for the selected file
-			private void setFileDetails (File file) {
-				
-				currentFile = file;
-				fileName.setText(fileSystemView.getSystemDisplayName(file));
-				path.setText(file.getPath());
-				date.setText(new Date(file.lastModified()).toString());
-				size.setText(file.length() + " bytes");
-				
-				gui_frame.repaint();
-				
-			}
-			
-			/*
-			 * END BLOCK
-			 */
 	public void setSelectedFile(String _file) {
 		this.selected_file = _file;
 		
@@ -507,7 +507,7 @@ public class ConnoisseurGUI {
 			this.fileName.setText(fileName);
 			this.path.setText(filePath);
 			this.date.setText(lastModified);
-			this.size.setText(String.valueOf(fileSize));
+			this.size.setText(String.valueOf(fileSize) + " bytes");
 			this.tag.setText(tags);
 			
 		} catch (Exception ex) {
