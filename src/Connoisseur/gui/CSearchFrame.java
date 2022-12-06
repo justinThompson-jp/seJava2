@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Connoisseur.ConnoisseurGUI;
 
+
 /**
  * Code adapted from:
  * https://kodejava.org/how-do-i-create-a-scrollable-jtable-component/
@@ -30,8 +31,9 @@ public class CSearchFrame extends JPanel {
 	private JFrame frame;
 	private JTable table;
 	private JProgressBar progressBar;
+	
 	private String frameTitle = "Search Results";
-
+	
 	public CSearchFrame() {
 		initializeUI();
 	}

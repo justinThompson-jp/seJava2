@@ -568,7 +568,8 @@ public class FileManager {
 				searchResults.add(mf.getJavaFile());
 				filesScanned++;
 				searchFrame.setBarProgress("Files scanned: " + filesScanned);
-				searchFrame.addRow(new String[]{mf.getName(), mf.getPath()});
+				searchFrame.addRow(new String[]{"[✎] " + mf.getName(), mf.getPath()});
+				searchFrame.getTable().getModel().getRowCount();
 			} catch (Exception ex) {
 				continue;
 			}
@@ -602,7 +603,7 @@ public class FileManager {
 		
 		if (this.similarity(query, start.getName()) >= similaritySensitivity || start.getName().equalsIgnoreCase(query) || start.getName().toLowerCase().contains(query.toLowerCase())) {
 			if (!lastSearchResults.contains(start)) {
-				searchFrame.addRow(new String[] {start.getName(), start.getPath()});
+				searchFrame.addRow(new String[] {"📁 " + start.getName(), start.getPath()});
 				lastSearchResults.add(start);
 			}
 		}
@@ -614,7 +615,7 @@ public class FileManager {
 //			ConnoisseurGUI.getFileManager().log("[" + query + " <-> " + child.getName() + "] " + similarity + "% similar");
 			if (this.similarity(query, child.getName()) >= similaritySensitivity || child.getName().equalsIgnoreCase(query) || child.getName().toLowerCase().contains(query.toLowerCase())) {
 				if (!lastSearchResults.contains(child)) {
-					searchFrame.addRow(new String[] {child.getName(), child.getPath()});
+					searchFrame.addRow(new String[] {"📝 " + child.getName(), child.getPath()});
 					lastSearchResults.add(child);
 				}
 			}
@@ -623,7 +624,7 @@ public class FileManager {
 				for (String s : child.getName().split("[ -_]")) {
 					if (this.similarity(query, s) >= similaritySensitivity || s.equalsIgnoreCase(query) || s.toLowerCase().contains(query.toLowerCase())) {
 						if (!lastSearchResults.contains(child)) {
-							searchFrame.addRow(new String[] {child.getName(), child.getPath()});
+							searchFrame.addRow(new String[] {"📝 " + child.getName(), child.getPath()});
 							lastSearchResults.add(child);
 						}
 					}
