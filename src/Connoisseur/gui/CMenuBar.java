@@ -315,6 +315,9 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 					// updating MediaFile object
 					mFile = ConnoisseurGUI.getTagManager().findFile(selected);
 					ConnoisseurGUI.getFileManager().log("Set tags of: " + selected.getName() + " to: " + mFile.getTagsString());
+					
+					// update gui
+					ConnoisseurGUI.getInstance().getFolderContents().setViewportView(ConnoisseurGUI.getInstance().displayDirContents(ConnoisseurGUI.getInstance().getCurrentDir()));
 				}
 			}
 		}

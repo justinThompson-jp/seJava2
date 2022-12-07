@@ -471,8 +471,9 @@ public class FileManager {
 				if (searchResults.contains(mf.getJavaFile())) {
 					continue;
 				}
-				searchResults.add(mf.getJavaFile());
+				
 				filesScanned++;
+				searchResults.add(mf.getJavaFile());
 				searchFrame.setBarProgress("Files scanned: " + filesScanned);
 				searchFrame.addRow(new Object[]{tagsIcon, mf.getName(), mf.getPath()});
 				searchFrame.getTable().getModel().getRowCount();
