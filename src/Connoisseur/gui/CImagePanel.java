@@ -2,15 +2,12 @@ package Connoisseur.gui;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 /***
- * Extension of JLabel to show images
+ * Extension of JLabel to show a thumbnail icon
  * 
  * @author jonat
  *
@@ -62,11 +59,23 @@ public class CImagePanel extends JLabel {
 		this.overrideDimensions = bool;
 	}
 	
+	/**
+	 * Set the width and height overrides
+	 * @param width
+	 * @param height
+	 */
 	public void setOverrideDimensions(int width, int height) {
 		this.overrideWidth = width;
 		this.overrideHeight = height;
 	}
 	
+	/**
+	 * Set the width, height, offset width and offset height overrides
+	 * @param width
+	 * @param height
+	 * @param offsetWidth
+	 * @param offsetHeight
+	 */
 	public void setOverrideDimensions(int width, int height, int offsetWidth, int offsetHeight) {
 		this.overrideWidth = width;
 		this.overrideHeight = height;
@@ -74,36 +83,76 @@ public class CImagePanel extends JLabel {
 		this.offsetHeight = offsetHeight;
 	}
 	
+	/**
+	 * Set the width override
+	 * @param width
+	 */
 	public void setOverrideWidth(int width) {
 		this.overrideWidth = width;
 	}
 	
+	/**
+	 * Set the height override
+	 * @param height
+	 */
 	public void setOverrideHeight(int height) {
 		this.overrideHeight = height;
 	}
 	
+	/**
+	 * Set the override offset width
+	 * @param offsetWidth
+	 */
 	public void setOverrideOffsetX(int offsetWidth) {
 		this.offsetWidth = offsetWidth;
 	}
 	
+	/**
+	 * Set the override offset height
+	 * @param offsetHeight
+	 */
 	public void setOverrideOffsetY(int offsetHeight) {
 		this.offsetHeight = offsetHeight;
 	}
 	
+	/**
+	 * Get the override width
+	 * @return override width
+	 */
 	public int getOverrideWidth() {
 		return overrideWidth;
 	}
 	
+	/**
+	 * Get the override height
+	 * @return override height
+	 */
 	public int getOverrideHeight() {
 		return overrideHeight;
 	}
 	
+	/**
+	 * Get the override offset width
+	 * @return override offset width
+	 */
 	public int getOverrideOffsetX() {
 		return offsetWidth;
 	}
 	
+	/**
+	 * Get the override offset height
+	 * @return override offset height
+	 */
 	public int getOverrideOffsetY() {
 		return offsetHeight;
+	}
+	
+	/**
+	 * Check whether this panel is currently overriding the default dimensions
+	 * @return boolean
+	 */
+	public boolean isOverridingDimensions() {
+		return overrideDimensions;
 	}
 
 }

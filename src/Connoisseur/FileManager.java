@@ -126,70 +126,6 @@ public class FileManager {
 	}
 
 	/**
-	 * Creates a file with the given name located at the given path
-	 * 
-	 * @param path     - path where file will be created
-	 * @param fileName - name of file to be created
-	 * @author Jonathan Vallejo
-	 */
-	public void createFile(String path, String fileName) {
-		// gets the user's home path regardless of the OS (e.g. windows =
-		// "C:\Users\<user>")
-		String home = System.getProperty("user.home");
-
-		String dir = home + SP + path;
-		File f = new File(dir + SP + fileName);
-
-		// if path does not exist, create path
-		if (!Files.exists(Paths.get(path))) {
-			new File(dir).mkdirs();
-		}
-
-		// if file doesn't exist, create file
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			// if file exists, maybe throw exception and catch it -> display file already
-			// exists warning to user?
-		} else {
-			System.out.println("File already exists, so not doing anything for now");
-		}
-	}
-
-	/**
-	 * Creates a file with the given name located at the given path, without
-	 * figuring out the home directory, used by the CMenuBar
-	 * 
-	 * @param path     - path where file will be created
-	 * @param fileName - name of file to be created
-	 * @author Jonathan Vallejo
-	 */
-	public void createFileDirectly(String path, String fileName) {
-		File f = new File(path + SP + fileName);
-
-		// if path does not exist, create path
-		if (!Files.exists(Paths.get(path))) {
-			new File(path).mkdirs();
-		}
-
-		// if file doesn't exist, create file
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			// if file exists, maybe throw exception and catch it -> display file already
-			// exists warning to user?
-		} else {
-			System.out.println("File already exists, so not doing anything for now");
-		}
-	}
-
-	/**
 	 * Creates and returns a file with the given name located at the given path,
 	 * without figuring out the home directory, used by the CMenuBar
 	 * 
@@ -219,7 +155,6 @@ public class FileManager {
 		}
 		return f;
 	}
-
 	/**
 	 * Creates a file at the given path, without figuring out the home directory,
 	 * used by the CMenuBar
@@ -280,43 +215,7 @@ public class FileManager {
 		}
 		return f;
 	}
-
-	/**
-	 * Creates a file with the given name located at the given path and returns the
-	 * file
-	 * 
-	 * @param path     - path where file will be created
-	 * @param fileName - name of file to be created
-	 * @author Jonathan Vallejo
-	 */
-	public File newFile(String path, String fileName) {
-		// gets the user's home path regardless of the OS (e.g. windows =
-		// "C:\Users\<user>")
-		String home = System.getProperty("user.home");
-
-		String dir = home + SP + path;
-		File f = new File(dir, fileName);
-
-		// if path does not exist, create path
-		if (!Files.exists(Paths.get(path))) {
-			new File(dir).mkdirs();
-		}
-
-		// if file doesn't exist, create file
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			// if file exists, maybe throw exception and catch it -> display file already
-			// exists warning to user?
-		} else {
-			System.out.println("File already exists, so not doing anything for now");
-		}
-		return f;
-	}
-
+	
 	/**
 	 * Deletes a directory or file located at the given path
 	 * 

@@ -312,6 +312,7 @@ public class ConnoisseurGUI {
 		folder_tree.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight())));
 		folder_contents_pane.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.4))));
 		bot_right_hori_split.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.2))));
+		
 		file_thumbnail.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight() * (0.2))));
 		file_thumbnail.setSize((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight() * (0.2)));
 		file_thumbnail.setImage("resources/gui/view/icons8-empty-67.png");
