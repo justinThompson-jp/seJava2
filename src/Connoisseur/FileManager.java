@@ -41,6 +41,7 @@ public class FileManager {
 	private JSONObject directoryData;
 	
 	private ArrayList<File> lastSearchResults = new ArrayList<File>();
+	
 	private double similaritySensitivity = 0.77;
 	private int filesScanned = 0;
 	
@@ -58,7 +59,6 @@ public class FileManager {
 	@SuppressWarnings("unchecked")
 	private void init() {
 		this.appDataDir = System.getenv("APPDATA") + SP + PROGRAM_NAME;
-
 		// create the system data file
 		String systemDataPath = appDataDir + SP + "system-data.json";
 		systemDataFile = new File(systemDataPath);
