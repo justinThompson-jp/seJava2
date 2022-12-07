@@ -18,6 +18,7 @@ import org.jaudiotagger.tag.TagException;
 
 /**
  * 
+ * Code by: Aristan Galindo
  * This class will be used for extracting mp3 ID tags and filling in the IdTag java class.
  *
  */

@@ -2,6 +2,8 @@ package Connoisseur;
 
 import java.io.Serializable;
 
+// Code by: Aristan Galindo
+
 public class IdTag implements Serializable {
 
 	// Needed for serialization of the class

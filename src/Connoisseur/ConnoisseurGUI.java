@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -299,10 +301,11 @@ public class ConnoisseurGUI {
         size = new JLabel();
         fileDetailsValues.add(size);
         
-        // displays the 'tag(s)' of the selected file/directory
+        /* displays the 'tag(s)' of the selected file/directory
         fileDetailsLabels.add(new JLabel("Tags: ", JLabel.TRAILING));
         tag = new JLabel();
         fileDetailsValues.add(size);
+        */
         
         int count = fileDetailsLabels.getComponentCount();
         for (int ii = 0; ii < count; ii++) {
@@ -510,8 +513,12 @@ public class ConnoisseurGUI {
 			
 			String fileName = selected.getName();
 			String filePath = selected.getPath();
-			String lastModified = attr.lastModifiedTime().toString();
-			long fileSize = attr.size();
+			
+			FileTime dateModified = attr.lastModifiedTime();
+			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+	        String lastModified = df.format(dateModified.toMillis());
+			
+	        String fileSize = attr.size() + " bytes";
 			String tags = "";
 			
 			if (mediaFile != null) {
@@ -522,6 +529,7 @@ public class ConnoisseurGUI {
 			this.path.setText(filePath);
 			this.date.setText(lastModified);
 			this.size.setText(String.valueOf(fileSize) + " bytes");
+			this.size.setText(fileSize);
 			this.tag.setText(tags);
 			
 		} catch (Exception ex) {
