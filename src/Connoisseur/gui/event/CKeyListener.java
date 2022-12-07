@@ -47,7 +47,7 @@ public class CKeyListener implements KeyListener {
 					searchFrame.showFrame();
 					
 					long startTime = System.currentTimeMillis();
-					ConnoisseurGUI.getFileManager().searchDirectory(searchFrame, ConnoisseurGUI.getInstance().getCurrentDir(), textField.getText());
+					ConnoisseurGUI.getFileManager().searchDirectory(searchFrame, ConnoisseurGUI.getInstance().getDefaultDir(), textField.getText());
 					double searchTime = ((System.currentTimeMillis() - startTime)/1000);
 					searchFrame.setBarProgress(searchFrame.getProgressBar().getString() + " in " + searchTime + " seconds.");
 					searchThread.interrupt();

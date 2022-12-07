@@ -333,6 +333,7 @@ public class ConnoisseurGUI {
 		folder_tree.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight())));
 		folder_contents_pane.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.4))));
 		bot_right_hori_split.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.2))));
+		
 		file_thumbnail.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight() * (0.2))));
 		file_thumbnail.setSize((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight() * (0.2)));
 		file_thumbnail.setImage("resources/gui/view/icons8-empty-67.png");
@@ -448,6 +449,13 @@ public class ConnoisseurGUI {
 			ViewFile.FileAttributes(i_file_path);
 			ArrayList<String> mdata = ViewFile.mdata;
 			
+			// Add tag info to "Tags" column
+			File current = new File(i_file_path);
+			MediaFile mfCurrent = tagManager.findFile(current);
+			if (mfCurrent != null) {
+				dir_contents.setValueAt(mfCurrent.getTagsString().replace("[", "").replace("]", ""), i + move_down, 2);
+			}
+			
 			// Fills table with each file's corresponding metadata
 			for (int j = 0; j < columns.length - 3; j++) {
 				dir_contents.setValueAt(mdata.get(j), i + move_down, j+3);
@@ -527,8 +535,11 @@ public class ConnoisseurGUI {
 		} else {
 			file_thumbnail.setOverrrideDimensions(true);
 			file_thumbnail.setImage("resources/gui/view/icons8-empty-67.png");
-			System.out.println("no image");
 		}
+	}
+	
+	public void setDefaultDir(String dir) {
+		this.default_dir = dir;
 	}
 	
 	public JTree getJTree() {return tree;}

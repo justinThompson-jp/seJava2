@@ -270,6 +270,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			systemData.put("default-directory", userInput);
 			ConnoisseurGUI.getFileManager().log("Set default dir to " + userInput);
 			ConnoisseurGUI.getFileManager().saveSystemData();
+			ConnoisseurGUI.getInstance().setDefaultDir(userInput);
 			
 			// update the GUI
 			ConnoisseurGUI.getInstance().getFolderTree().setViewportView(ConnoisseurGUI.getInstance().displayFolderTree(targetDir.getPath()));
@@ -314,6 +315,9 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 					// updating MediaFile object
 					mFile = ConnoisseurGUI.getTagManager().findFile(selected);
 					ConnoisseurGUI.getFileManager().log("Set tags of: " + selected.getName() + " to: " + mFile.getTagsString());
+					
+					// update gui
+					ConnoisseurGUI.getInstance().getFolderContents().setViewportView(ConnoisseurGUI.getInstance().displayDirContents(ConnoisseurGUI.getInstance().getCurrentDir()));
 				}
 			}
 		}
