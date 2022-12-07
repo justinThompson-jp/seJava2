@@ -16,11 +16,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
 import Connoisseur.ConnoisseurGUI;
+import Connoisseur.file.MediaFile;
 
 public class CMouseListener implements MouseListener {
 
@@ -137,7 +140,6 @@ public class CMouseListener implements MouseListener {
 				
 			}
 			if (e.getClickCount() == 2) {
-
 				// checks if the selected object is not readable
 				if (!Files.isReadable(Paths.get(new_clicked))) {
 					System.out.println(" ERR: Unreadable file");
@@ -147,6 +149,42 @@ public class CMouseListener implements MouseListener {
 				// aka a file is double-clicked
 				if (!Files.isDirectory(Paths.get(new_clicked))) {
 					setFileClicked(new_clicked);
+					
+					// if "Tags" column is double-clicked, it will attempt to edit tags of selected file
+					if (source_table.getSelectedColumn() == 2) {
+						String userInput = "";
+						
+						ImageIcon editIcon = new ImageIcon("resources/gui/menubar/icons8-pencil-16.png");
+						
+						File selected = new File(new_clicked);
+						
+						// fetch data within our system for the selected file
+						MediaFile mFile = ConnoisseurGUI.getTagManager().findFile(selected);
+						
+						// there is no data in our data base for the selected file
+						if (mFile == null) {
+							userInput = (String) JOptionPane.showInputDialog(null, "Editing tags for: " + selected.getName().toString(), "Edit Tags", JOptionPane.QUESTION_MESSAGE, editIcon, null, "exampleTag, anotherTag");
+						} else {
+							// tag data exists in our data base
+							String tags = mFile.getTagsString().replace("[", "").replace("]", "");
+							userInput = (String) JOptionPane.showInputDialog(null, "Editing tags for: " + selected.getName().toString(), "Edit Tags", JOptionPane.QUESTION_MESSAGE, editIcon, null, tags);
+						}
+						
+						// user actually entered something
+						if (userInput != null && userInput != "" && userInput != " ") {
+							String[] tagsEntered = userInput.replace(" ", "").split(",");
+							
+							ConnoisseurGUI.getTagManager().setTags(selected, tagsEntered);
+							// updating MediaFile object
+							mFile = ConnoisseurGUI.getTagManager().findFile(selected);
+							ConnoisseurGUI.getFileManager().log("Set tags of: " + selected.getName() + " to: " + mFile.getTagsString());
+							
+							// update gui
+							ConnoisseurGUI.getInstance().getFolderContents().setViewportView(ConnoisseurGUI.getInstance().displayDirContents(ConnoisseurGUI.getInstance().getCurrentDir()));
+						}
+						return;
+					}
+					
 					System.out.println("Launch/Open " + new_clicked + " from JTable");
 					try {
 						Desktop.getDesktop().open(new File(new_clicked));
