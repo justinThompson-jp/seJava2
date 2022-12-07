@@ -3,7 +3,7 @@
  * CS4800 - Software Engineering
  * Group - Java2
  * 
- * Class initially created by Jacob Crawford
+ * Class initially created by Jacob Crawford, small edit added by Jonathan Vallejo
  */
 
 package Connoisseur.gui.event;
@@ -150,6 +150,7 @@ public class CMouseListener implements MouseListener {
 				if (!Files.isDirectory(Paths.get(new_clicked))) {
 					setFileClicked(new_clicked);
 					
+					//Code START by Jonathan Vallejo lines 155-187
 					// if "Tags" column is double-clicked, it will attempt to edit tags of selected file
 					if (source_table.getSelectedColumn() == 2) {
 						String userInput = "";
@@ -184,6 +185,7 @@ public class CMouseListener implements MouseListener {
 						}
 						return;
 					}
+					//Code END by Jonathan Vallejo lines 153-187
 					
 					System.out.println("Launch/Open " + new_clicked + " from JTable");
 					try {
