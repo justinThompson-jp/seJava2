@@ -528,8 +528,11 @@ public class ConnoisseurGUI {
 		} else {
 			file_thumbnail.setOverrrideDimensions(true);
 			file_thumbnail.setImage("resources/gui/view/icons8-empty-67.png");
-			System.out.println("no image");
 		}
+	}
+	
+	public void setDefaultDir(String dir) {
+		this.default_dir = dir;
 	}
 	
 	public JTree getJTree() {return tree;}

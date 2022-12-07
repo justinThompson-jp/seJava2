@@ -270,6 +270,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			systemData.put("default-directory", userInput);
 			ConnoisseurGUI.getFileManager().log("Set default dir to " + userInput);
 			ConnoisseurGUI.getFileManager().saveSystemData();
+			ConnoisseurGUI.getInstance().setDefaultDir(userInput);
 			
 			// update the GUI
 			ConnoisseurGUI.getInstance().getFolderTree().setViewportView(ConnoisseurGUI.getInstance().displayFolderTree(targetDir.getPath()));
