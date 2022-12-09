@@ -155,7 +155,7 @@ public class CMouseListener implements MouseListener {
 					if (source_table.getSelectedColumn() == 2) {
 						String userInput = "";
 						
-						ImageIcon editIcon = new ImageIcon("resources/gui/menubar/icons8-pencil-16.png");
+						ImageIcon editIcon = new ImageIcon(getClass().getResource("/gui/menubar/icons8-pencil-16.png"));
 						
 						File selected = new File(new_clicked);
 						

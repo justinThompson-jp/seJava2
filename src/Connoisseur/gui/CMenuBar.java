@@ -65,11 +65,11 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		
 		// initialize the "New" sub-menu items
 		newFileMenuItem = new JMenuItem("New File");
-		newFileMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-add-file-16.png"));
+		newFileMenuItem.setIcon(new ImageIcon(getClass().getResource("/gui/menubar/icons8-add-file-16.png")));
 		newFileMenuItem.addActionListener(this);
 		
 		newDirectoryMenuItem = new JMenuItem("New Directory");
-		newDirectoryMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-add-folder-16.png"));
+		newDirectoryMenuItem.setIcon(new ImageIcon(getClass().getResource("/gui/menubar/icons8-add-folder-16.png")));
 		newDirectoryMenuItem.addActionListener(this);
 		setDefaultDirMenuItem = new JMenuItem("Set Default Directory");
 //		setDefaultDirMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-folder-16.png"));
@@ -94,7 +94,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		
 		// create "Edit Tags" option within the "Edit" menu
 		editTagsMenuItem = new JMenuItem("Edit Tags");
-		editTagsMenuItem.setIcon(new ImageIcon("resources/gui/menubar/icons8-pencil-16.png"));
+		editTagsMenuItem.setIcon(new ImageIcon(getClass().getResource("/gui/menubar/icons8-pencil-16.png")));
 		editTagsMenuItem.addActionListener(this);
 		
 		// add "edit tags" to "Edit" menu
@@ -120,7 +120,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 
 		// initialize the playlist menu items
 		new_playlist_menu_item = new JMenuItem("New Playlist");
-		new_playlist_menu_item.setIcon(new ImageIcon("resources/gui/menubar/icon-playlist"));
+		new_playlist_menu_item.setIcon(new ImageIcon(getClass().getResource("/gui/menubar/icon-playlist.png")));
 		new_playlist_menu_item.addActionListener(this);
 		
 		delete_playlist_submenu = new JMenu("Delete Playlist");
@@ -178,7 +178,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		TreePath[] pathsSelected = files.getSelectionPaths();
 		
 		if (e.getSource() == newFileMenuItem) {
-			ImageIcon icon = new ImageIcon("resources/gui/menubar/icons8-add-file-16.png");
+			ImageIcon icon = new ImageIcon(getClass().getResource("/gui/menubar/icons8-add-file-16.png"));
 			
 			String defaultPath = ConnoisseurGUI.getInstance().getDefaultDir() + File.separator;
 			String targetPath = "";
@@ -248,8 +248,8 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		}
 		
 		if (e.getSource() == setDefaultDirMenuItem) {
-			ImageIcon icon = new ImageIcon("resources/gui/menubar/icons8-folder-16.png");
-			ImageIcon errorIcon = new ImageIcon("resources/gui/menubar/icons8-cancel-30.png");
+			ImageIcon icon = new ImageIcon(getClass().getResource("/gui/menubar/icons8-folder-16.png"));
+			ImageIcon errorIcon = new ImageIcon(getClass().getResource("/gui/menubar/icons8-cancel-30.png"));
 			JSONObject systemData = ConnoisseurGUI.getFileManager().getSystemData();
 			
 			String defaultDir = (String) systemData.get("default-directory");
@@ -280,8 +280,8 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		if (e.getSource() == editTagsMenuItem) {
 			String userInput = "";
 			
-			ImageIcon errorIcon = new ImageIcon("resources/gui/menubar/icons8-cancel-30.png");
-			ImageIcon editIcon = new ImageIcon("resources/gui/menubar/icons8-pencil-16.png");
+			ImageIcon errorIcon = new ImageIcon(getClass().getResource("/gui/menubar/icons8-cancel-30.png"));
+			ImageIcon editIcon = new ImageIcon(getClass().getResource("/gui/menubar/icons8-pencil-16.png"));
 			
 			String lastClicked = (ConnoisseurGUI.getInstance().getSelectedFile() == null) ? " " : ConnoisseurGUI.getInstance().getSelectedFile();
 			

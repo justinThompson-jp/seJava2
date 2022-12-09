@@ -68,7 +68,7 @@ public class CSearchField extends JTextField {
 		// add image
 		int marginImage = 5;
 		int imageSize = buttonSize - marginImage * 2;
-		Image img = new ImageIcon("resources/gui/toolbar/icons8-search-16.png").getImage();
+		Image img = new ImageIcon(getClass().getResource("/gui/toolbar/icons8-search-16.png")).getImage();
 		g2D.drawImage(img, width - height + marginImage + 2, marginButton + marginImage, imageSize, imageSize, null);
 
 		super.paintComponent(g);

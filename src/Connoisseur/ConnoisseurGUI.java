@@ -429,7 +429,7 @@ public class ConnoisseurGUI {
 		if (move_down == 1) {
 			// setting up return to previous directory
 			dir_contents.setValueAt("..", 0, 1);
-			dir_contents.setValueAt(new ImageIcon("resources/gui/view/back.png"), 0, 0);
+			dir_contents.setValueAt(new ImageIcon(getClass().getResource("/gui/view/back.png")), 0, 0);
 		}
 		
 		// For loop for filling out JTable
@@ -437,12 +437,11 @@ public class ConnoisseurGUI {
 			// Concatenates current directory and each value of the first column into 
 			// a string to form its absolute file path.
 	        String i_file_path = _dir + "\\" + children[i].toString();
-	        
 			// Fill first column with icon differentiating files and folders
 	        if (Files.isDirectory(Paths.get(i_file_path))) {
-	        	dir_contents.setValueAt(new ImageIcon("resources/gui/view/folder.png"), i + move_down, 0);
+	        	dir_contents.setValueAt(new ImageIcon(getClass().getResource("/gui/view/folder.png")), i + move_down, 0);
 	        } else {
-	        	dir_contents.setValueAt(new ImageIcon("resources/gui/view/file.png"), i + move_down, 0);
+	        	dir_contents.setValueAt(new ImageIcon(getClass().getResource("/gui/view/file.png")), i + move_down, 0);
 	        }
 
 	        // Fill second column with names of files pulled from ViewDirectory
